@@ -13,26 +13,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { aiTools, categories, type Category, type AITool } from "@/lib/ai-tools-data";
+import { categoryColors, categoryGlowColors } from "@/lib/tool-styles";
 import { Search, ExternalLink, Sparkles, Star } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-
-const categoryColors: Record<string, string> = {
-  text: "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  image: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-  video: "bg-red-500/10 text-red-400 border-red-500/20",
-  coding: "bg-green-500/10 text-green-400 border-green-500/20",
-  music: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
-  other: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
-};
-
-const categoryGlowColors: Record<string, string> = {
-  text: "hover:shadow-blue-500/10",
-  image: "hover:shadow-purple-500/10",
-  video: "hover:shadow-red-500/10",
-  coding: "hover:shadow-green-500/10",
-  music: "hover:shadow-yellow-500/10",
-  other: "hover:shadow-cyan-500/10",
-};
+import Link from "next/link";
 
 function ToolCard({ tool }: { tool: AITool }) {
   const colorClass = categoryColors[tool.category];
@@ -40,8 +24,9 @@ function ToolCard({ tool }: { tool: AITool }) {
   const categoryLabel = categories.find((c) => c.value === tool.category);
 
   return (
+    <Link href={`/tools/${tool.id}`} className="block">
     <Card
-      className={`group relative flex flex-col bg-card border-border/50 transition-all duration-300 hover:border-border hover:shadow-xl ${glowClass} hover:-translate-y-0.5`}
+      className={`group relative flex flex-col bg-card border-border/50 transition-all duration-300 hover:border-border hover:shadow-xl ${glowClass} hover:-translate-y-0.5 cursor-pointer`}
     >
       {tool.popular && (
         <div className="absolute -top-2 -right-2 z-10">
@@ -94,22 +79,20 @@ function ToolCard({ tool }: { tool: AITool }) {
       </CardContent>
 
       <CardFooter className="pt-0">
-        <a
-          href={tool.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full"
+        <Button
+          variant="outline"
+          className="w-full gap-2 border-border/50 hover:border-border hover:bg-accent transition-all group/btn"
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(tool.url, "_blank", "noopener,noreferrer");
+          }}
         >
-          <Button
-            variant="outline"
-            className="w-full gap-2 border-border/50 hover:border-border hover:bg-accent transition-all group/btn"
-          >
-            <span>사이트 방문</span>
-            <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-          </Button>
-        </a>
+          <span>사이트 방문</span>
+          <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+        </Button>
       </CardFooter>
     </Card>
+    </Link>
   );
 }
 
