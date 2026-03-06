@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { aiTools, categories } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ReviewsSection } from "@/components/reviews-section";
 import {
   ArrowLeft,
   ExternalLink,
   Sparkles,
   Star,
-  MessageSquare,
 } from "lucide-react";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -124,32 +124,8 @@ export default async function ToolDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Ratings & Comments Placeholder */}
-            <div className="rounded-xl border border-border/50 bg-card p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                <h2 className="text-sm font-semibold text-foreground">별점 & 코멘트</h2>
-                <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                  준비 중
-                </span>
-              </div>
-              <div className="flex flex-col items-center justify-center py-10 text-center rounded-lg border border-dashed border-border/50">
-                <div className="flex gap-1 mb-3">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star
-                      key={i}
-                      className="h-6 w-6 text-border"
-                    />
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground mb-1">
-                  아직 등록된 리뷰가 없습니다
-                </p>
-                <p className="text-xs text-muted-foreground/60">
-                  별점과 코멘트 기능이 곧 추가될 예정입니다
-                </p>
-              </div>
-            </div>
+            {/* Ratings & Comments */}
+            <ReviewsSection toolSlug={tool.id} />
           </div>
 
           {/* Right: Sidebar */}
