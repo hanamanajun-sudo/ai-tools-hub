@@ -10,5 +10,6 @@ export type Review = {
   tool_slug: string;
   rating: number;
   comment: string;
+  hidden: boolean;
   created_at: string;
 };

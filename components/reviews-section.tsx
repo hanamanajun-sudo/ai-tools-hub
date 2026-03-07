@@ -86,6 +86,7 @@ export function ReviewsSection({ toolSlug }: ReviewsSectionProps) {
       .from("reviews")
       .select("*")
       .eq("tool_slug", toolSlug)
+      .eq("hidden", false)
       .order("created_at", { ascending: false });
 
     if (!error && data) setReviews(data);
