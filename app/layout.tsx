@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  verification: {
-    google: "Cq9MTjxE5w7Q37DWUmxXYEkN62pEfKGaVZ1mabP3Y8c",
+  other: {
+    "google-site-verification": "X3wLx-M7XBhDQNx05evWnSZeDGDmn-ETAPwgnp9O1jc",
   },
   title: "AI Tools Hub - 최고의 AI 도구 모음",
   description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
