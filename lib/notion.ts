@@ -51,36 +51,44 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
   const dbId = process.env.NOTION_BLOG_DATABASE_ID;
   if (!dbId) return [];
 
-  const response = await notion.databases.query({
-    database_id: dbId,
-    filter: { property: "Published", checkbox: { equals: true } },
-    sorts: [{ property: "PublishedAt", direction: "descending" }],
-  });
+  try {
+    const response = await notion.databases.query({
+      database_id: dbId,
+      filter: { property: "Published", checkbox: { equals: true } },
+      sorts: [{ property: "PublishedAt", direction: "descending" }],
+    });
 
-  return response.results
-    .filter((p): p is PageObjectResponse => p.object === "page")
-    .map(pageToPost);
+    return response.results
+      .filter((p): p is PageObjectResponse => p.object === "page")
+      .map(pageToPost);
+  } catch {
+    return [];
+  }
 }
 
 export async function getBlogPost(slug: string): Promise<{ post: BlogPost; markdown: string } | null> {
   const dbId = process.env.NOTION_BLOG_DATABASE_ID;
   if (!dbId) return null;
 
-  const response = await notion.databases.query({
-    database_id: dbId,
-    filter: {
-      and: [
-        { property: "Published", checkbox: { equals: true } },
-        { property: "Slug", rich_text: { equals: slug } },
-      ],
-    },
-  });
+  try {
+    const response = await notion.databases.query({
+      database_id: dbId,
+      filter: {
+        and: [
+          { property: "Published", checkbox: { equals: true } },
+          { property: "Slug", rich_text: { equals: slug } },
+        ],
+      },
+    });
 
-  const page = response.results.find((p): p is PageObjectResponse => p.object === "page");
-  if (!page) return null;
+    const page = response.results.find((p): p is PageObjectResponse => p.object === "page");
+    if (!page) return null;
 
-  const mdBlocks = await n2m.pageToMarkdown(page.id);
-  const markdown = n2m.toMarkdownString(mdBlocks).parent;
+    const mdBlocks = await n2m.pageToMarkdown(page.id);
+    const markdown = n2m.toMarkdownString(mdBlocks).parent;
 
-  return { post: pageToPost(page), markdown };
+    return { post: pageToPost(page), markdown };
+  } catch {
+    return null;
+  }
 }

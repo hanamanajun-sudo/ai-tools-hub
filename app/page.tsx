@@ -5,7 +5,7 @@ import { ToolsSection } from "@/components/tools-section";
 import { getBlogPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
 
-export const revalidate = 3600;
+export const revalidate = false;
 
 const CATEGORY_COLORS: Record<string, string> = {
   "AI 도구 리뷰": "bg-violet-500/10 text-violet-400 border-violet-500/20",

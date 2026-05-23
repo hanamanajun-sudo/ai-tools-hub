@@ -7,7 +7,7 @@ import { getBlogPost, getBlogPosts } from "@/lib/notion";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const revalidate = 3600;
+export const revalidate = false;
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
