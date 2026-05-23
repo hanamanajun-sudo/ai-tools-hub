@@ -58,10 +58,14 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
       sorts: [{ property: "PublishedAt", direction: "descending" }],
     });
 
-    return response.results
+    const posts = response.results
       .filter((p): p is PageObjectResponse => p.object === "page")
       .map(pageToPost);
-  } catch {
+
+    console.log(`[Notion] getBlogPosts: ${posts.length}개 로드됨`);
+    return posts;
+  } catch (e) {
+    console.error("[Notion] getBlogPosts 오류:", e);
     return [];
   }
 }
