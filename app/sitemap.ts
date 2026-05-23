@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 import { aiTools } from "@/lib/ai-tools-data";
 
-const BASE_URL = "https://ai-tools-hub-inky-theta.vercel.app";
+const BASE_URL = "https://ai.ktoolu.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages: MetadataRoute.Sitemap = aiTools.map((tool) => ({

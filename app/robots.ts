@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://ai-tools-hub-inky-theta.vercel.app/sitemap.xml",
+    sitemap: "https://ai.ktoolu.com/sitemap.xml",
   };
 }
