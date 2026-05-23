@@ -5,7 +5,7 @@ import type {
   RichTextItemResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
-const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const notion = new Client({ auth: process.env.NOTION_API_KEY ?? "placeholder" });
 const n2m = new NotionToMarkdown({ notionClient: notion });
 
 export type BlogPost = {
