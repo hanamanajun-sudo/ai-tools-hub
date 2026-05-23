@@ -130,10 +130,13 @@ export default function HomePage() {
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-lg font-bold tracking-tight">AI Tools Hub</span>
+            <span className="text-lg font-bold tracking-tight">ai.ktoolu</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground">{aiTools.length}개의 AI 도구</span>
+            <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              블로그
+            </Link>
             <ThemeToggle />
           </div>
         </div>
@@ -275,7 +278,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-8 text-center">
           <p className="text-sm text-muted-foreground">
             <Sparkles className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />
-            AI Tools Hub — 최고의 AI 도구들을 한곳에서
+            ai.ktoolu — 최고의 AI 도구들을 한곳에서
           </p>
         </div>
       </footer>

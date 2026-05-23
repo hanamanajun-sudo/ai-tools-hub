@@ -32,17 +32,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const categoryLabel = categories.find((c) => c.value === tool.category);
 
   return {
-    title: `${tool.name} - AI Tools Hub`,
+    title: `${tool.name} - ai.ktoolu`,
     description: tool.description,
     openGraph: {
-      title: `${tool.name} - AI Tools Hub`,
+      title: `${tool.name} - ai.ktoolu`,
       description: tool.description,
       type: "website",
-      siteName: "AI Tools Hub",
+      siteName: "ai.ktoolu",
     },
     twitter: {
       card: "summary",
-      title: `${tool.name} - AI Tools Hub`,
+      title: `${tool.name} - ai.ktoolu`,
       description: tool.description,
     },
     keywords: [tool.name, ...tool.tags, categoryLabel?.label ?? "", "AI 도구", "AI tools"],
@@ -71,7 +71,7 @@ export default async function ToolDetailPage({ params }: Props) {
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            AI Tools Hub
+            ai.ktoolu
           </Link>
           <ThemeToggle />
         </div>
@@ -293,7 +293,7 @@ export default async function ToolDetailPage({ params }: Props) {
         <div className="mx-auto max-w-4xl px-4 py-8 text-center">
           <p className="text-sm text-muted-foreground">
             <Sparkles className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />
-            AI Tools Hub — 최고의 AI 도구들을 한곳에서
+            ai.ktoolu — 최고의 AI 도구들을 한곳에서
           </p>
         </div>
       </footer>
