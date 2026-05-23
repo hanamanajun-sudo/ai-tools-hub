@@ -12,6 +12,10 @@ import {
   ExternalLink,
   Sparkles,
   Star,
+  CheckCircle2,
+  XCircle,
+  Lightbulb,
+  CreditCard,
 } from "lucide-react";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -101,13 +105,78 @@ export default async function ToolDetailPage({ params }: Props) {
             {tool.name}
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-            {tool.description}
+            {tool.longDescription ?? tool.description}
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Left: Main Info */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Features */}
+            {tool.features && tool.features.length > 0 && (
+              <div className="rounded-xl border border-border/50 bg-card p-6">
+                <h2 className="text-sm font-semibold text-foreground mb-3">주요 기능</h2>
+                <ul className="space-y-2">
+                  {tool.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0 text-emerald-500" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Pros & Cons */}
+            {(tool.pros || tool.cons) && (
+              <div className="rounded-xl border border-border/50 bg-card p-6">
+                <h2 className="text-sm font-semibold text-foreground mb-4">장단점</h2>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {tool.pros && (
+                    <div>
+                      <p className="text-xs font-medium text-emerald-500 mb-2">장점</p>
+                      <ul className="space-y-1.5">
+                        {tool.pros.map((p) => (
+                          <li key={p} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-500" />
+                            {p}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {tool.cons && (
+                    <div>
+                      <p className="text-xs font-medium text-red-400 mb-2">단점</p>
+                      <ul className="space-y-1.5">
+                        {tool.cons.map((c) => (
+                          <li key={c} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <XCircle className="h-3.5 w-3.5 mt-0.5 shrink-0 text-red-400" />
+                            {c}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Use Cases */}
+            {tool.useCases && tool.useCases.length > 0 && (
+              <div className="rounded-xl border border-border/50 bg-card p-6">
+                <h2 className="text-sm font-semibold text-foreground mb-3">활용 사례</h2>
+                <div className="flex flex-wrap gap-2">
+                  {tool.useCases.map((u) => (
+                    <span key={u} className="inline-flex items-center gap-1 rounded-lg bg-secondary/50 px-3 py-1.5 text-sm text-muted-foreground">
+                      <Lightbulb className="h-3 w-3 shrink-0" />
+                      {u}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Tags */}
             <div className="rounded-xl border border-border/50 bg-card p-6">
               <h2 className="text-sm font-semibold text-foreground mb-3">태그</h2>
@@ -167,6 +236,29 @@ export default async function ToolDetailPage({ params }: Props) {
                 </div>
               </div>
             </div>
+
+            {/* Pricing */}
+            {tool.pricing && (
+              <div className="rounded-xl border border-border/50 bg-card p-6 space-y-3">
+                <h2 className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                  <CreditCard className="h-4 w-4" /> 가격
+                </h2>
+                <div className="space-y-2 text-sm">
+                  {tool.pricing.free && (
+                    <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/20 p-3">
+                      <p className="text-xs font-medium text-emerald-500 mb-1">무료</p>
+                      <p className="text-muted-foreground">{tool.pricing.free}</p>
+                    </div>
+                  )}
+                  {tool.pricing.paid && (
+                    <div className="rounded-lg bg-orange-500/5 border border-orange-500/20 p-3">
+                      <p className="text-xs font-medium text-orange-400 mb-1">유료</p>
+                      <p className="text-muted-foreground">{tool.pricing.paid}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
