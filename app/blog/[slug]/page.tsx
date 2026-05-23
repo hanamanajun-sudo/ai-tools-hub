@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const result = await getBlogPost(slug);
   if (!result) return {};
   const { post } = result;
+
   return {
     title: `${post.title} - ai.ktoolu 블로그`,
     description: post.description,
@@ -44,7 +45,7 @@ export default async function BlogPostPage({ params }: Props) {
   const result = await getBlogPost(slug);
   if (!result) notFound();
 
-  const { post, markdown } = result;
+  const { post, html } = result;
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,7 +103,7 @@ export default async function BlogPostPage({ params }: Props) {
             prose-blockquote:border-l-primary prose-blockquote:text-muted-foreground
             prose-ul:text-muted-foreground prose-ol:text-muted-foreground
             prose-li:marker:text-muted-foreground"
-          dangerouslySetInnerHTML={{ __html: markdownToHtml(markdown) }}
+          dangerouslySetInnerHTML={{ __html: html }}
         />
 
         {post.tags.length > 0 && (
@@ -125,23 +126,4 @@ export default async function BlogPostPage({ params }: Props) {
       </footer>
     </div>
   );
-}
-
-function markdownToHtml(md: string): string {
-  return md
-    .replace(/^### (.+)$/gm, "<h3>$1</h3>")
-    .replace(/^## (.+)$/gm, "<h2>$1</h2>")
-    .replace(/^# (.+)$/gm, "<h1>$1</h1>")
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.+?)\*/g, "<em>$1</em>")
-    .replace(/`(.+?)`/g, "<code>$1</code>")
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
-    .replace(/^> (.+)$/gm, "<blockquote>$1</blockquote>")
-    .replace(/^- (.+)$/gm, "<li>$1</li>")
-    .replace(/(<li>.*<\/li>\n?)+/g, "<ul>$&</ul>")
-    .replace(/\n\n/g, "</p><p>")
-    .replace(/^(?!<[hbuliop])/gm, "")
-    .replace(/^(.+)(?<!>)$/gm, (line) =>
-      line.startsWith("<") ? line : `<p>${line}</p>`
-    );
 }
