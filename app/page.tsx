@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, ArrowRight, Calendar } from "lucide-react";
+import { Sparkles, BookOpen, ArrowRight, Calendar, Newspaper } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ToolsSection } from "@/components/tools-section";
 import { getBlogPosts } from "@/lib/notion";
@@ -39,6 +39,13 @@ export default async function HomePage() {
                   {allPosts.length}
                 </span>
               )}
+            </Link>
+            <Link
+              href="/news"
+              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            >
+              <Newspaper className="h-4 w-4" />
+              AI 뉴스
             </Link>
             <ThemeToggle />
           </nav>
