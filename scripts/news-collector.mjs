@@ -211,13 +211,20 @@ async function saveToSupabase(article) {
 }
 
 async function summarizeWithOllama(title, contentPreview) {
-  const prompt = `다음 영어 AI 뉴스를 한국어로 분석해줘.
+  // system 역할로 분리해서 qwen이 프롬프트 텍스트를 출력에 섞지 않도록 방지
+  const prompt = `<|im_start|>system
+You must respond ONLY with a valid JSON object. All values must be written in Korean (한국어). No English in values except proper nouns. No extra text outside the JSON.
+<|im_end|>
+<|im_start|>user
+다음 AI 뉴스를 분석해서 JSON으로만 답해줘. 값은 모두 한국어로 작성. 영어 키 이름은 그대로 유지.
+
+형식:
+{"summary":"여기에 핵심 내용 3문장 (한국어)","explanation":"여기에 초보자 설명 2문장 (한국어)","importance":"여기에 중요한 이유 1문장 (한국어)","tags":["한국어태그1","한국어태그2","한국어태그3"]}
 
 제목: ${title}
-내용: ${contentPreview || '(내용 없음)'}
-
-반드시 아래 JSON 형식으로만 응답해. 다른 텍스트 없이:
-{"summary":"핵심 내용 3문장 요약","explanation":"초보자도 이해하기 쉬운 설명 2문장","importance":"이 뉴스가 중요한 이유 1문장","tags":["태그1","태그2","태그3"]}`;
+내용: ${(contentPreview || '').slice(0, 400)}
+<|im_end|>
+<|im_start|>assistant`;
 
   try {
     const response = await fetch(`${OLLAMA_URL}/api/generate`, {
@@ -227,7 +234,7 @@ async function summarizeWithOllama(title, contentPreview) {
         model: MODEL,
         prompt,
         stream: false,
-        options: { temperature: 0.2, num_predict: 600 },
+        options: { temperature: 0.1, num_predict: 500, stop: ['<|im_end|>', '<|im_start|>'] },
       }),
       signal: AbortSignal.timeout(90000),
     });
@@ -237,18 +244,26 @@ async function summarizeWithOllama(title, contentPreview) {
     const data = await response.json();
     const text = (data.response || '').trim();
 
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      try {
-        return JSON.parse(jsonMatch[0]);
-      } catch { /* fallthrough */ }
+    // 첫 번째 '{' 위치부터 매칭되는 '}' 까지 추출
+    const start = text.indexOf('{');
+    if (start !== -1) {
+      let depth = 0, end = -1;
+      for (let i = start; i < text.length; i++) {
+        if (text[i] === '{') depth++;
+        else if (text[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+      }
+      if (end !== -1) {
+        try {
+          return JSON.parse(text.slice(start, end + 1));
+        } catch { /* fallthrough */ }
+      }
     }
 
-    return { summary: text.slice(0, 400), explanation: '', importance: '', tags: [] };
+    return { summary: contentPreview?.slice(0, 200) || title, explanation: '', importance: '', tags: [] };
   } catch (err) {
     process.stdout.write(` [Ollama오류: ${err.message.slice(0, 20)}]`);
     return {
-      summary: contentPreview?.slice(0, 300) || title,
+      summary: contentPreview?.slice(0, 200) || title,
       explanation: '',
       importance: '',
       tags: [],
