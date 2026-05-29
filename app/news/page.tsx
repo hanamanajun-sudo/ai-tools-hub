@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Newspaper, ExternalLink, Clock, Tag, AlertCircle } from "lucide-react";
+import { Sparkles, BookOpen, Newspaper, ExternalLink, Clock, Tag } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getLatestNews, getNewsCount } from "@/lib/news";
 import type { Metadata } from "next";
@@ -99,13 +99,7 @@ export default async function NewsPage() {
         {news.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-24 text-center">
             <AlertCircle className="h-10 w-10 text-muted-foreground/40" />
-            <div>
-              <p className="font-semibold text-foreground mb-1">아직 수집된 뉴스가 없습니다</p>
-              <p className="text-sm text-muted-foreground">
-                n8n 워크플로우를 활성화하거나<br />
-                <code className="bg-muted px-1 rounded text-xs">node scripts/news-collector.mjs</code>를 실행해보세요
-              </p>
-            </div>
+            <p className="font-semibold text-foreground">아직 수집된 뉴스가 없습니다</p>
           </div>
         ) : (
           <div className="space-y-4">
