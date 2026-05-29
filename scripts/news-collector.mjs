@@ -113,8 +113,8 @@ async function validateLink(url) {
       headers: { 'User-Agent': 'Mozilla/5.0' },
       redirect: 'follow',
     });
-    // 405 = HEAD 미지원이지만 살아있는 링크
-    return res.status < 400 || res.status === 405;
+    // 403 = 봇 차단이지만 페이지 존재 / 405 = HEAD 미지원이지만 존재
+    return res.status < 400 || res.status === 403 || res.status === 405;
   } catch {
     return false;
   }
