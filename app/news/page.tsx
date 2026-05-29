@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "매일 자동 수집·요약되는 최신 AI 뉴스. OpenAI, Anthropic, Google DeepMind 등 주요 AI 트렌드를 한국어로 쉽게 읽어보세요.",
 };
 
-export const revalidate = 3600; // 1시간마다 갱신
+export const revalidate = 300; // 5분마다 갱신
 
 const SOURCE_COLORS: Record<string, string> = {
   "The Verge AI":   "bg-violet-500/10 text-violet-400 border-violet-500/20",
