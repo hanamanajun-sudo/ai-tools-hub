@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Newspaper, ExternalLink, Clock, Tag, Zap, AlertCircle } from "lucide-react";
+import { Sparkles, BookOpen, Newspaper, ExternalLink, Clock, Tag, AlertCircle } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getLatestNews, getNewsCount } from "@/lib/news";
 import type { Metadata } from "next";
@@ -86,15 +86,11 @@ export default async function NewsPage() {
       <main className="mx-auto max-w-4xl px-4 pb-16">
         {/* Hero */}
         <section className="py-10 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground mb-4">
-            <Zap className="h-3 w-3 text-amber-400" />
-            Ollama AI가 자동 요약 · 6시간마다 업데이트
-          </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl mb-3">
-            AI 뉴스 자동 브리핑
+            가장 빠른 AI 뉴스 모음
           </h1>
           <p className="text-base text-muted-foreground max-w-xl mx-auto">
-            해외 주요 AI 뉴스를 수집해 로컬 AI가 한국어로 요약합니다.
+            해외 주요 AI 뉴스를 수집해 한국어로 요약 전달합니다.
             {totalCount > 0 && <span className="ml-1 text-primary font-medium">총 {totalCount}개 뉴스 수록</span>}
           </p>
         </section>
