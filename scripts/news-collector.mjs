@@ -23,7 +23,8 @@ const env = Object.fromEntries(
 const SUPABASE_URL = env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const OLLAMA_URL = 'http://127.0.0.1:11434';
-const MODEL = 'qwen2.5:7b';
+const MODEL = 'qwen2.5:7b';         // 연결 확인용
+const HERMES_MODEL = 'hermes3:latest'; // 번역/요약 파이프라인용
 const MAX_ARTICLES_PER_RUN = 8;
 const LOCAL_CACHE_PATH = join(__dirname, '..', 'public', 'news-cache.json');
 
@@ -258,55 +259,116 @@ async function saveToSupabase(article) {
   }
 }
 
-// ── Ollama 요약 ──────────────────────────────────────────
-async function summarizeWithOllama(title, contentPreview) {
-  const prompt = `<|im_start|>system
-You must respond ONLY with a valid JSON object. All values must be written in Korean (한국어). No extra text outside the JSON.
-<|im_end|>
-<|im_start|>user
-다음 AI 뉴스를 분석해서 JSON으로만 답해줘. 값은 모두 한국어로 작성.
+// ── Ollama 3단계 파이프라인 ─────────────────────────────
 
-형식:
-{"summary":"핵심 내용 3문장 (한국어)","explanation":"초보자 설명 2문장 (한국어)","importance":"중요한 이유 1문장 (한국어)","tags":["한국어태그1","한국어태그2","한국어태그3"]}
+// hermes3 호출 공통 헬퍼
+async function callOllama(model, systemMsg, userMsg, maxTokens = 700) {
+  const prompt = `<|im_start|>system\n${systemMsg}\n<|im_end|>\n<|im_start|>user\n${userMsg}\n<|im_end|>\n<|im_start|>assistant`;
+  const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      prompt,
+      stream: false,
+      options: { temperature: 0.1, num_predict: maxTokens, stop: ['<|im_end|>', '<|im_start|>'] },
+    }),
+    signal: AbortSignal.timeout(90000),
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const data = await response.json();
+  return (data.response || '').trim();
+}
 
-제목: ${title}
-내용: ${(contentPreview || '').slice(0, 400)}
-<|im_end|>
-<|im_start|>assistant`;
-
-  try {
-    const response = await fetch(`${OLLAMA_URL}/api/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: MODEL,
-        prompt,
-        stream: false,
-        options: { temperature: 0.1, num_predict: 500, stop: ['<|im_end|>', '<|im_start|>'] },
-      }),
-      signal: AbortSignal.timeout(90000),
-    });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    const text = (data.response || '').trim();
-
-    const start = text.indexOf('{');
-    if (start !== -1) {
-      let depth = 0, end = -1;
-      for (let i = start; i < text.length; i++) {
-        if (text[i] === '{') depth++;
-        else if (text[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
-      }
-      if (end !== -1) {
-        try { return JSON.parse(text.slice(start, end + 1)); } catch { /* fallthrough */ }
-      }
-    }
-    return { summary: contentPreview?.slice(0, 200) || title, explanation: '', importance: '', tags: [] };
-  } catch (err) {
-    process.stdout.write(` [Ollama오류: ${err.message.slice(0, 20)}]`);
-    return { summary: contentPreview?.slice(0, 200) || title, explanation: '', importance: '', tags: [] };
+// JSON 추출 헬퍼 (brace-depth 방식)
+function parseJSON(text) {
+  const start = text.indexOf('{');
+  if (start === -1) return null;
+  let depth = 0, end = -1;
+  for (let i = start; i < text.length; i++) {
+    if (text[i] === '{') depth++;
+    else if (text[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
   }
+  if (end === -1) return null;
+  try { return JSON.parse(text.slice(start, end + 1)); } catch { return null; }
+}
+
+// 3단계 파이프라인: 추출 → 번역 → 요약
+async function summarizeWithPipeline(title, contentPreview) {
+  const fallback = { summary: contentPreview?.slice(0, 200) || title, explanation: '', importance: '', tags: [] };
+  const content = (contentPreview || '').slice(0, 500);
+
+  // ── Step 1: 영어로 핵심 사실 추출 ──────────────────────
+  let facts = null;
+  try {
+    process.stdout.write(' [S1]');
+    const raw1 = await callOllama(
+      HERMES_MODEL,
+      'You are a precise AI news analyst. Extract only verified facts from the article. Respond with valid JSON only, no other text.',
+      `Extract key facts from this AI news article into structured JSON.
+
+Title: ${title}
+Content: ${content}
+
+Respond with ONLY this JSON:
+{"what":"What happened or was announced (1-2 sentences)","who":"Which company/person is involved","why_matters":"Why this matters in AI field (1-2 sentences)","context":"Relevant background (1 sentence)","impact":"Potential impact on users or industry (1 sentence)"}`
+    );
+    facts = parseJSON(raw1);
+  } catch (e) {
+    process.stdout.write('(S1실패)');
+  }
+
+  // Step1 실패 시: 원본을 그대로 Step2에 전달
+  const step1Input = facts
+    ? JSON.stringify(facts, null, 2)
+    : `Title: ${title}\nContent: ${content}`;
+
+  // ── Step 2: 한국어 번역 ────────────────────────────────
+  let koreanFacts = null;
+  try {
+    process.stdout.write(' [S2]');
+    const raw2 = await callOllama(
+      HERMES_MODEL,
+      'You are a professional Korean translator specializing in technology and AI news. Translate accurately and naturally into Korean.',
+      `Translate the following English AI news facts to natural Korean.
+Keep JSON keys in English, translate only the values.
+
+Input:
+${step1Input}
+
+Respond with ONLY the translated JSON (same structure, Korean values):`
+    );
+    koreanFacts = parseJSON(raw2);
+  } catch (e) {
+    process.stdout.write('(S2실패)');
+  }
+
+  // Step2 실패 시: Step1 결과(영어)를 Step3에 전달
+  const step2Input = koreanFacts
+    ? JSON.stringify(koreanFacts, null, 2)
+    : step1Input;
+
+  // ── Step 3: 독자용 한국어 요약 완성 ───────────────────
+  try {
+    process.stdout.write(' [S3]');
+    const raw3 = await callOllama(
+      HERMES_MODEL,
+      'You are a Korean IT journalist. Write clear, engaging summaries for general Korean readers. No jargon. Respond with valid JSON only.',
+      `Using these Korean facts about an AI news article, write a polished Korean summary for general readers.
+
+Facts:
+${step2Input}
+
+Respond with ONLY this JSON:
+{"summary":"핵심 내용 3문장 (자연스러운 한국어)","explanation":"기술을 모르는 사람도 이해할 수 있는 설명 2문장","importance":"이 뉴스가 왜 중요한지 1문장","tags":["태그1","태그2","태그3"]}`
+    );
+    const result = parseJSON(raw3);
+    if (result?.summary) return result;
+  } catch (e) {
+    process.stdout.write('(S3실패)');
+  }
+
+  return fallback;
 }
 
 async function checkSupabase() {
@@ -388,7 +450,7 @@ async function main() {
     const article = validArticles[i];
     process.stdout.write(`\n[${i + 1}/${validArticles.length}] (점수:${article.score}) ${article.source} — ${article.title.slice(0, 40)}...`);
 
-    const analysis = await summarizeWithOllama(article.title, article.content_preview);
+    const analysis = await summarizeWithPipeline(article.title, article.content_preview);
     const enriched = {
       ...article,
       summary: analysis.summary || '',
