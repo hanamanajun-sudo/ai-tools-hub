@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Newspaper, ExternalLink, Clock, Tag } from "lucide-react";
+import { Sparkles, BookOpen, Newspaper, ExternalLink, Clock, Tag, AlertCircle } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getLatestNews, getNewsCount } from "@/lib/news";
 import type { Metadata } from "next";
