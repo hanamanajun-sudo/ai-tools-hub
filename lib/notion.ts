@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 const NOTION_API_BASE = "https://api.notion.com/v1";
 const NOTION_VERSION = "2022-06-28";
 
@@ -16,7 +18,7 @@ type RichTextItem = {
   text?: { content: string; link: { url: string } | null };
 };
 
-type NotionBlock = { type: string; [key: string]: any };
+type NotionBlock = { id: string; type: string; [key: string]: any };
 
 export type BlogPost = {
   id: string;
@@ -28,6 +30,57 @@ export type BlogPost = {
   publishedAt: string;
   cover: string | null;
 };
+
+// ── Supabase Image Persistence ────────────────────────────────────────────
+
+async function persistNotionImage(fileUrl: string, key: string): Promise<string> {
+  try {
+    const ext = fileUrl.match(/\.(png|jpe?g|gif|webp|svg)/i)?.[1]?.toLowerCase() ?? "jpg";
+    const path = `notion/${key}.${ext}`;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from("blog-assets")
+      .getPublicUrl(path);
+
+    // Check if already cached in Supabase (avoid re-downloading)
+    const { data: existing } = await supabase.storage
+      .from("blog-assets")
+      .list("notion", { search: `${key}.${ext}` });
+
+    if (existing && existing.length > 0) return publicUrl;
+
+    // Download from Notion and upload to Supabase
+    const res = await fetch(fileUrl);
+    if (!res.ok) return fileUrl;
+    const buffer = await res.arrayBuffer();
+    const contentType = res.headers.get("content-type") ?? `image/${ext}`;
+
+    const { error } = await supabase.storage
+      .from("blog-assets")
+      .upload(path, buffer, { contentType, upsert: false });
+
+    // "already exists" is fine — another request raced us
+    if (error && !error.message.toLowerCase().includes("already exists")) {
+      console.error("[notion] image upload error:", error.message);
+      return fileUrl;
+    }
+
+    return publicUrl;
+  } catch {
+    return fileUrl; // fallback: return original (temporary) URL
+  }
+}
+
+async function resolveCover(page: any): Promise<string | null> {
+  if (!page.cover) return null;
+  if (page.cover.type === "external") return page.cover.external?.url ?? null;
+  if (page.cover.type === "file" && page.cover.file?.url) {
+    return persistNotionImage(page.cover.file.url, `cover-${page.id}`);
+  }
+  return null;
+}
+
+// ── HTML Rendering ────────────────────────────────────────────────────────
 
 function getText(prop: any): string {
   if (!prop) return "";
@@ -48,7 +101,8 @@ function richTextToHtml(items: RichTextItem[]): string {
   }).join("");
 }
 
-function blockToHtml(block: NotionBlock): string {
+// imageUrlMap: block.id → resolved permanent URL (for Notion-hosted images)
+function blockToHtml(block: NotionBlock, imageUrlMap?: Map<string, string>): string {
   const b = block[block.type];
   if (!b) return "";
   switch (block.type) {
@@ -66,9 +120,11 @@ function blockToHtml(block: NotionBlock): string {
     }
     case "divider": return "<hr />";
     case "image": {
-      const url = b.type === "external" ? b.external?.url : b.file?.url ?? "";
+      // Use persisted URL if available, otherwise fall back
+      const url = imageUrlMap?.get(block.id)
+        ?? (b.type === "external" ? b.external?.url : b.file?.url ?? "");
       const caption = b.caption?.length ? richTextToHtml(b.caption) : "";
-      return `<figure><img src="${url}" alt="${caption}" />${caption ? `<figcaption>${caption}</figcaption>` : ""}</figure>`;
+      return `<figure><img src="${url}" alt="${caption}" loading="lazy" />${caption ? `<figcaption>${caption}</figcaption>` : ""}</figure>`;
     }
     case "callout":
       return `<div class="callout"><span>${b.icon?.emoji ?? "💡"}</span><div>${richTextToHtml(b.rich_text)}</div></div>`;
@@ -76,24 +132,43 @@ function blockToHtml(block: NotionBlock): string {
   }
 }
 
-function blocksToHtml(blocks: NotionBlock[]): string {
+function blocksToHtml(blocks: NotionBlock[], imageUrlMap?: Map<string, string>): string {
   const parts: string[] = [];
   let i = 0;
   while (i < blocks.length) {
     if (blocks[i].type === "bulleted_list_item") {
       const items: string[] = [];
-      while (i < blocks.length && blocks[i].type === "bulleted_list_item") items.push(blockToHtml(blocks[i++]));
+      while (i < blocks.length && blocks[i].type === "bulleted_list_item")
+        items.push(blockToHtml(blocks[i++], imageUrlMap));
       parts.push(`<ul>${items.join("")}</ul>`);
     } else if (blocks[i].type === "numbered_list_item") {
       const items: string[] = [];
-      while (i < blocks.length && blocks[i].type === "numbered_list_item") items.push(blockToHtml(blocks[i++]));
+      while (i < blocks.length && blocks[i].type === "numbered_list_item")
+        items.push(blockToHtml(blocks[i++], imageUrlMap));
       parts.push(`<ol>${items.join("")}</ol>`);
     } else {
-      parts.push(blockToHtml(blocks[i++]));
+      parts.push(blockToHtml(blocks[i++], imageUrlMap));
     }
   }
   return parts.join("\n");
 }
+
+// Pre-resolve Notion-hosted images → Supabase permanent URLs
+async function resolveImageBlocks(blocks: NotionBlock[]): Promise<Map<string, string>> {
+  const map = new Map<string, string>();
+  const imageBlocks = blocks.filter(
+    (b) => b.type === "image" && b.image?.type === "file" && b.image?.file?.url
+  );
+  await Promise.all(
+    imageBlocks.map(async (b) => {
+      const url = await persistNotionImage(b.image.file.url, b.id);
+      map.set(b.id, url);
+    })
+  );
+  return map;
+}
+
+// ── Public API ────────────────────────────────────────────────────────────
 
 function pageToPost(page: any): BlogPost {
   const p = page.properties;
@@ -105,9 +180,7 @@ function pageToPost(page: any): BlogPost {
     category: p.Category?.select?.name ?? "",
     tags: (p.Tags?.multi_select ?? []).map((t: { name: string }) => t.name),
     publishedAt: p.PublishedAt?.date?.start ?? "",
-    cover:
-      page.cover?.type === "external" ? page.cover.external.url :
-      page.cover?.type === "file" ? page.cover.file.url : null,
+    cover: null, // resolved asynchronously after
   };
 }
 
@@ -125,7 +198,16 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     });
     if (!res.ok) return [];
     const data = await res.json() as any;
-    return (data.results ?? []).filter((p: any) => p.object === "page").map(pageToPost);
+    const pages = (data.results ?? []).filter((p: any) => p.object === "page");
+
+    // Resolve cover images in parallel
+    return Promise.all(
+      pages.map(async (page: any) => {
+        const post = pageToPost(page);
+        post.cover = await resolveCover(page);
+        return post;
+      })
+    );
   } catch (e) {
     console.error("[Notion] getBlogPosts 오류:", e);
     return [];
@@ -157,9 +239,19 @@ export async function getBlogPost(slug: string): Promise<{ post: BlogPost; html:
       headers: notionHeaders(),
     });
     const blocksData = blocksRes.ok ? await blocksRes.json() as any : { results: [] };
-    const html = blocksToHtml(blocksData.results ?? []);
+    const blocks: NotionBlock[] = blocksData.results ?? [];
 
-    return { post: pageToPost(page), html };
+    // Resolve inline images and cover in parallel
+    const [imageUrlMap, cover] = await Promise.all([
+      resolveImageBlocks(blocks),
+      resolveCover(page),
+    ]);
+
+    const html = blocksToHtml(blocks, imageUrlMap);
+    const post = pageToPost(page);
+    post.cover = cover;
+
+    return { post, html };
   } catch (e) {
     console.error("[Notion] getBlogPost 오류:", e);
     return null;

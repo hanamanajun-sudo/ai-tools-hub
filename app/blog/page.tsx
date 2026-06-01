@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Sparkles, ArrowLeft, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, Tag } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getBlogPosts } from "@/lib/notion";
 
@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 export const revalidate = false;
 
 const CATEGORY_COLORS: Record<string, string> = {
-  "AI 도구 리뷰": "bg-violet-500/10 text-violet-400 border-violet-500/20",
-  "AI 트렌드 뉴스": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  "카테고리별 추천": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  "AI 활용 팁": "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  "AI 도구 리뷰": "bg-violet-500/10 text-violet-600 border-violet-500/25 dark:text-violet-400",
+  "AI 트렌드 뉴스": "bg-blue-500/10 text-blue-600 border-blue-500/25 dark:text-blue-400",
+  "카테고리별 추천": "bg-emerald-500/10 text-emerald-600 border-emerald-500/25 dark:text-emerald-400",
+  "AI 활용 팁": "bg-amber-500/10 text-amber-600 border-amber-500/25 dark:text-amber-400",
 };
 
 export default async function BlogPage() {
@@ -52,37 +52,61 @@ export default async function BlogPage() {
               <Link
                 key={post.id}
                 href={`/blog/${post.slug}`}
-                className="group block rounded-xl border border-border/50 bg-card p-6 transition-all hover:border-border hover:-translate-y-0.5"
+                className="group flex overflow-hidden rounded-xl border border-border/50 bg-card transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-sm"
               >
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  {post.category && (
-                    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${CATEGORY_COLORS[post.category] ?? "bg-secondary/50 text-muted-foreground border-border"}`}>
-                      {post.category}
-                    </span>
-                  )}
-                  {post.publishedAt && (
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Calendar className="h-3 w-3" />
-                      {new Date(post.publishedAt).toLocaleDateString("ko-KR")}
-                    </span>
-                  )}
-                </div>
-                <h2 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-2">
-                  {post.title}
-                </h2>
-                {post.description && (
-                  <p className="text-sm text-muted-foreground line-clamp-2">{post.description}</p>
-                )}
-                {post.tags.length > 0 && (
-                  <div className="flex items-center gap-1.5 mt-3">
-                    <Tag className="h-3 w-3 text-muted-foreground" />
-                    {post.tags.map((tag) => (
-                      <span key={tag} className="text-xs text-muted-foreground">
-                        #{tag}
-                      </span>
-                    ))}
+                {/* Thumbnail */}
+                {post.cover && (
+                  <div className="hidden sm:block w-44 shrink-0 overflow-hidden bg-muted">
+                    <img
+                      src={post.cover}
+                      alt={post.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
                   </div>
                 )}
+
+                {/* Content */}
+                <div className="flex flex-1 flex-col justify-between p-5">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2 mb-2.5">
+                      {post.category && (
+                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${CATEGORY_COLORS[post.category] ?? "bg-secondary/50 text-muted-foreground border-border"}`}>
+                          {post.category}
+                        </span>
+                      )}
+                      {post.publishedAt && (
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(post.publishedAt).toLocaleDateString("ko-KR")}
+                        </span>
+                      )}
+                    </div>
+
+                    <h2
+                      className="text-base font-bold text-foreground group-hover:text-primary transition-colors mb-1.5 leading-snug"
+                      style={{ wordBreak: "keep-all" }}
+                    >
+                      {post.title}
+                    </h2>
+
+                    {post.description && (
+                      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed" style={{ wordBreak: "keep-all" }}>
+                        {post.description}
+                      </p>
+                    )}
+                  </div>
+
+                  {post.tags.length > 0 && (
+                    <div className="flex items-center gap-1.5 mt-3">
+                      <Tag className="h-3 w-3 text-muted-foreground" />
+                      {post.tags.map((tag) => (
+                        <span key={tag} className="text-xs text-muted-foreground">
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
@@ -92,7 +116,6 @@ export default async function BlogPage() {
       <footer className="border-t border-border/40 bg-muted/10 mt-16">
         <div className="mx-auto max-w-4xl px-4 py-8 text-center">
           <p className="text-sm text-muted-foreground">
-            <Sparkles className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />
             ai.ktoolu — 최고의 AI 도구들을 한곳에서
           </p>
         </div>
