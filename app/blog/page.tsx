@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: "AI 도구 리뷰, 트렌드 뉴스, 활용 팁을 공유합니다.",
 };
 
-export const revalidate = false;
+export const revalidate = 3600;
 
 const CATEGORY_COLORS: Record<string, string> = {
   "AI 도구 리뷰": "bg-violet-500/10 text-violet-600 border-violet-500/25 dark:text-violet-400",

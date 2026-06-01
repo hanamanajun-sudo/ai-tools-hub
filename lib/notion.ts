@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 const NOTION_API_BASE = "https://api.notion.com/v1";
 const NOTION_VERSION = "2022-06-28";
@@ -31,43 +31,40 @@ export type BlogPost = {
   cover: string | null;
 };
 
-// ── Supabase Image Persistence ────────────────────────────────────────────
+// ── Cloudflare R2 Image Persistence ──────────────────────────────────────
+
+function getR2Bucket(): any | null {
+  try {
+    const { env } = getCloudflareContext();
+    return (env as any).BLOG_ASSETS ?? null;
+  } catch {
+    // Outside Cloudflare Workers context (e.g. local Next.js dev / static build)
+    return null;
+  }
+}
 
 async function persistNotionImage(fileUrl: string, key: string): Promise<string> {
   try {
-    const ext = fileUrl.match(/\.(png|jpe?g|gif|webp|svg)/i)?.[1]?.toLowerCase() ?? "jpg";
-    const path = `notion/${key}.${ext}`;
+    const bucket = getR2Bucket();
+    if (!bucket) return fileUrl; // fallback during local dev / static build
 
-    const { data: { publicUrl } } = supabase.storage
-      .from("blog-assets")
-      .getPublicUrl(path);
+    const r2Key = `notion/${key}`;
+    const proxyUrl = `/api/r2/${r2Key}`;
 
-    // Check if already cached in Supabase (avoid re-downloading)
-    const { data: existing } = await supabase.storage
-      .from("blog-assets")
-      .list("notion", { search: `${key}.${ext}` });
+    // Skip download if already cached
+    const existing = await bucket.head(r2Key);
+    if (existing) return proxyUrl;
 
-    if (existing && existing.length > 0) return publicUrl;
-
-    // Download from Notion and upload to Supabase
+    // Download from Notion and upload to R2
     const res = await fetch(fileUrl);
     if (!res.ok) return fileUrl;
     const buffer = await res.arrayBuffer();
-    const contentType = res.headers.get("content-type") ?? `image/${ext}`;
+    const contentType = res.headers.get("content-type") ?? "image/jpeg";
 
-    const { error } = await supabase.storage
-      .from("blog-assets")
-      .upload(path, buffer, { contentType, upsert: false });
-
-    // "already exists" is fine — another request raced us
-    if (error && !error.message.toLowerCase().includes("already exists")) {
-      console.error("[notion] image upload error:", error.message);
-      return fileUrl;
-    }
-
-    return publicUrl;
+    await bucket.put(r2Key, buffer, { httpMetadata: { contentType } });
+    return proxyUrl;
   } catch {
-    return fileUrl; // fallback: return original (temporary) URL
+    return fileUrl;
   }
 }
 
