@@ -7,12 +7,8 @@ import { getBlogPost, getBlogPosts } from "@/lib/notion";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const revalidate = 0; // R2 이미지 즉시 갱신 (배포 후 3600으로 되돌릴 것)
-
-export async function generateStaticParams() {
-  const posts = await getBlogPosts();
-  return posts.map((p) => ({ slug: p.slug }));
-}
+// force-dynamic: 빌드 시 정적 생성 안 함 → Worker에서 렌더링 → R2 접근 가능 → 이미지 영구 캐싱
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
