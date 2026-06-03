@@ -2,12 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteHeader } from "@/components/site-header";
 import { getBlogPost, getBlogPosts } from "@/lib/notion";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const revalidate = 3600;
+export const revalidate = 0; // R2 이미지 즉시 갱신 (배포 후 3600으로 되돌릴 것)
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -75,19 +75,7 @@ export default async function BlogPostPage({ params }: Props) {
       {/* Category gradient top bar */}
       <div className={`h-[3px] w-full bg-gradient-to-r ${cat.gradient}`} />
 
-      {/* Sticky header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-12 max-w-3xl items-center justify-between px-5">
-          <Link
-            href="/blog"
-            className="group flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
-            블로그
-          </Link>
-          <ThemeToggle />
-        </div>
-      </header>
+      <SiteHeader activePage="blog" />
 
       <main className="mx-auto max-w-3xl px-5">
         {/* Hero */}
