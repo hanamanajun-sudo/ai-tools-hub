@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, ArrowRight, Calendar, Newspaper } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Sparkles, BookOpen, ArrowRight, Calendar } from "lucide-react";
+import { SiteHeader } from "@/components/site-header";
 import { ToolsSection } from "@/components/tools-section";
 import { getBlogPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
@@ -20,37 +20,7 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-lg font-bold tracking-tight">ai.ktoolu</span>
-          </Link>
-          <nav className="flex items-center gap-1">
-            <Link
-              href="/blog"
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            >
-              <BookOpen className="h-4 w-4" />
-              블로그
-              {latestPosts.length > 0 && (
-                <span className="rounded-full bg-primary/15 px-1.5 py-0.5 text-xs font-mono text-primary leading-none">
-                  {allPosts.length}
-                </span>
-              )}
-            </Link>
-            <Link
-              href="/news"
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            >
-              <Newspaper className="h-4 w-4" />
-              AI 뉴스
-            </Link>
-            <ThemeToggle />
-          </nav>
-        </div>
-      </header>
+      <SiteHeader blogCount={allPosts.length} />
 
       <main className="mx-auto max-w-7xl px-4 pb-16">
         {/* Hero */}

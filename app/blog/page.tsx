@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft, Calendar, Tag } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Calendar, Tag } from "lucide-react";
+import { SiteHeader } from "@/components/site-header";
 import { getBlogPosts } from "@/lib/notion";
 
 export const metadata: Metadata = {
@@ -23,18 +23,7 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            ai.ktoolu
-          </Link>
-          <ThemeToggle />
-        </div>
-      </header>
+      <SiteHeader activePage="blog" blogCount={posts.length} />
 
       <main className="mx-auto max-w-4xl px-4 py-10">
         <div className="mb-10">

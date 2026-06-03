@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Newspaper, ExternalLink, Clock, Tag, AlertCircle } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Sparkles, ExternalLink, Clock, Tag, AlertCircle } from "lucide-react";
+import { SiteHeader } from "@/components/site-header";
 import { getLatestNews, getNewsCount } from "@/lib/news";
 import type { Metadata } from "next";
 
@@ -56,32 +56,7 @@ export default async function NewsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-lg font-bold tracking-tight">ai.ktoolu</span>
-          </Link>
-          <nav className="flex items-center gap-1">
-            <Link
-              href="/blog"
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            >
-              <BookOpen className="h-4 w-4" />
-              블로그
-            </Link>
-            <Link
-              href="/news"
-              className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground bg-accent"
-            >
-              <Newspaper className="h-4 w-4" />
-              AI 뉴스
-            </Link>
-            <ThemeToggle />
-          </nav>
-        </div>
-      </header>
+      <SiteHeader activePage="news" />
 
       <main className="mx-auto max-w-4xl px-4 pb-16">
         {/* Hero */}
