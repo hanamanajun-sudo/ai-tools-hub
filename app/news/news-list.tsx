@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { ExternalLink, Clock, Tag, AlertCircle, RefreshCw } from "lucide-react";
+import { ExternalLink, Clock, Tag, AlertCircle, RefreshCw, X } from "lucide-react";
 
 type AiNews = {
   id: number;
@@ -54,10 +54,27 @@ function TimeAgo({ dateStr }: { dateStr: string }) {
   );
 }
 
+function getDateGroup(dateStr: string): string {
+  const now = new Date();
+  const date = new Date(dateStr);
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const yesterdayStart = new Date(todayStart.getTime() - 86400000);
+  const weekStart = new Date(todayStart.getTime() - 6 * 86400000);
+
+  if (date >= todayStart) return "오늘";
+  if (date >= yesterdayStart) return "어제";
+  if (date >= weekStart) return "이번 주";
+  return "이전";
+}
+
+const DATE_GROUP_ORDER = ["오늘", "어제", "이번 주", "이전"];
+
 export function NewsList() {
   const [news, setNews] = useState<AiNews[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [activeSource, setActiveSource] = useState<string | null>(null);
 
   async function fetchNews() {
     setLoading(true);
@@ -72,7 +89,7 @@ export function NewsList() {
         .select("id,title,url,source,summary,explanation,importance,collected_at,is_visible,tags")
         .eq("is_visible", true)
         .order("collected_at", { ascending: false })
-        .limit(30);
+        .limit(50);
 
       if (error) throw error;
       setNews(data || []);
@@ -84,6 +101,42 @@ export function NewsList() {
   }
 
   useEffect(() => { fetchNews(); }, []);
+
+  const allSources = useMemo(() => {
+    const sources = new Set(news.map(item => item.source).filter(Boolean));
+    return Array.from(sources).sort();
+  }, [news]);
+
+  const allTags = useMemo(() => {
+    const tagCount: Record<string, number> = {};
+    news.forEach(item => {
+      (item.tags || []).forEach(tag => {
+        tagCount[tag] = (tagCount[tag] || 0) + 1;
+      });
+    });
+    return Object.entries(tagCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12)
+      .map(([tag]) => tag);
+  }, [news]);
+
+  const filteredNews = useMemo(() => {
+    return news.filter(item => {
+      if (activeSource && item.source !== activeSource) return false;
+      if (activeTag && !item.tags?.includes(activeTag)) return false;
+      return true;
+    });
+  }, [news, activeTag, activeSource]);
+
+  const groupedNews = useMemo(() => {
+    const groups: Record<string, AiNews[]> = {};
+    filteredNews.forEach(item => {
+      const group = getDateGroup(item.collected_at);
+      if (!groups[group]) groups[group] = [];
+      groups[group].push(item);
+    });
+    return groups;
+  }, [filteredNews]);
 
   if (loading) {
     return (
@@ -129,62 +182,149 @@ export function NewsList() {
   }
 
   return (
-    <div className="space-y-4">
-      {news.map((item) => (
-        <article
-          key={item.id}
-          className="rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:shadow-sm"
-        >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <SourceBadge source={item.source} />
-            <TimeAgo dateStr={item.collected_at} />
+    <div>
+      {/* 필터 */}
+      <div className="space-y-2 mb-6">
+        {/* 소스 필터 */}
+        {allSources.length > 0 && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs text-muted-foreground w-8 shrink-0">출처</span>
+            {allSources.map(source => (
+              <button
+                key={source}
+                onClick={() => setActiveSource(activeSource === source ? null : source)}
+                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                  activeSource === source
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-secondary/60 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                {source}
+              </button>
+            ))}
           </div>
+        )}
 
-          <a
-            href={item.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block mb-3"
+        {/* 태그 필터 */}
+        {allTags.length > 0 && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs text-muted-foreground w-8 shrink-0">태그</span>
+            {allTags.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                  activeTag === tag
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-secondary/60 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* 필터 해제 */}
+        {(activeTag || activeSource) && (
+          <button
+            onClick={() => { setActiveTag(null); setActiveSource(null); }}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
-            <h2 className="font-bold text-foreground group-hover:text-primary transition-colors text-base leading-snug line-clamp-2 flex items-start gap-1.5">
-              {item.title}
-              <ExternalLink className="h-3.5 w-3.5 shrink-0 mt-0.5 opacity-0 group-hover:opacity-60 transition-opacity" />
+            <X className="h-3 w-3" />
+            필터 해제
+          </button>
+        )}
+      </div>
+
+      {/* 날짜 그룹별 뉴스 */}
+      <div className="space-y-8">
+        {DATE_GROUP_ORDER.filter(g => groupedNews[g]?.length > 0).map(group => (
+          <section key={group}>
+            <h2 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+              <span className="h-px flex-1 bg-border/60" />
+              {group}
+              <span className="h-px flex-1 bg-border/60" />
             </h2>
-          </a>
-
-          {item.summary && (
-            <div className="mb-3 rounded-lg bg-muted/40 px-4 py-3 border border-border/30">
-              <p className="text-sm text-foreground/80 leading-relaxed">{item.summary}</p>
-            </div>
-          )}
-
-          {item.explanation && (
-            <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-              💡 {item.explanation}
-            </p>
-          )}
-
-          {item.importance && (
-            <p className="text-xs text-primary/80 font-medium mb-3">
-              ⚡ {item.importance}
-            </p>
-          )}
-
-          {item.tags && item.tags.length > 0 && (
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <Tag className="h-3 w-3 text-muted-foreground" />
-              {item.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-md bg-secondary/60 px-2 py-0.5 text-xs text-muted-foreground"
+            <div className="space-y-4">
+              {groupedNews[group].map(item => (
+                <article
+                  key={item.id}
+                  className="rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:shadow-sm"
                 >
-                  {tag}
-                </span>
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <SourceBadge source={item.source} />
+                    <TimeAgo dateStr={item.collected_at} />
+                  </div>
+
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block mb-4"
+                  >
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors text-base leading-snug line-clamp-2 flex items-start gap-1.5">
+                      {item.title}
+                      <ExternalLink className="h-3.5 w-3.5 shrink-0 mt-0.5 opacity-0 group-hover:opacity-60 transition-opacity" />
+                    </h3>
+                  </a>
+
+                  {item.summary && (
+                    <div className="mb-4">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">기사 3줄 요약</p>
+                      <div className="rounded-lg bg-muted/40 px-4 py-3 border border-border/30">
+                        <p className="text-sm text-foreground/80 leading-relaxed">{item.summary}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {item.explanation && (
+                    <div className="mb-4">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">ktoolu 설명</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{item.explanation}</p>
+                    </div>
+                  )}
+
+                  {item.importance && (
+                    <div className="mb-4">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">인사이트 & 시사점</p>
+                      <p className="text-sm text-primary/80 font-medium leading-relaxed">{item.importance}</p>
+                    </div>
+                  )}
+
+                  {item.tags && item.tags.length > 0 && (
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {item.tags.map(tag => (
+                        <button
+                          key={tag}
+                          onClick={() => setActiveTag(tag)}
+                          className="rounded-md bg-secondary/60 px-2 py-0.5 text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </article>
               ))}
             </div>
-          )}
-        </article>
-      ))}
+          </section>
+        ))}
+
+        {filteredNews.length === 0 && activeTag && (
+          <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <p className="text-muted-foreground text-sm">
+              <span className="font-medium text-foreground">#{activeTag}</span> 태그의 기사가 없습니다
+            </p>
+            <button
+              onClick={() => setActiveTag(null)}
+              className="text-xs text-primary hover:underline"
+            >
+              전체 보기
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

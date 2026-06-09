@@ -44,18 +44,63 @@ AI 도구들을 한눈에 볼 수 있는 종합 디렉토리 사이트.
 - **워크플로우 파일**: C:\Users\hanam\OneDrive\바탕 화면\클로드cowork\ai.ktoolu\n8n-workflow-ai-news.json
 - **실행 주기**: 6시간마다 (로컬 n8n)
 - **뉴스 소스**: VentureBeat AI, TechCrunch AI, Ars Technica, MIT Tech Review, IEEE Spectrum, HackerNews API
+- **저장**: Supabase ai_news 테이블
+- **흐름**: RSS 수집 → AI 필터링/정렬(48h 이내만) → 중복 URL 제거 → 하나씩 처리 → 프롬프트 준비 → AI 요약 → 결과 파싱 → Supabase 저장
+
+### 🧪 현재 테스트 중: DeepSeek API (2026-06-05~)
+- **API**: DeepSeek Chat (`https://api.deepseek.com/v1/chat/completions`)
+- **모델**: `deepseek-chat`
+- **목적**: Ollama 대비 API 비용 및 한국어 품질 비교 검증 중
+- **API 키 위치**: n8n-workflow-ai-news.json 헤더에 직접 하드코딩
+
+### ⏸️ 기존 Ollama 설정 (테스트 후 복구 가능)
 - **AI 요약**: Ollama 로컬 실행 (http://127.0.0.1:11434)
 - **현재 사용 모델**: hermes3:latest
 - **추천 모델**: qwen2.5:7b (한국어 품질 더 좋음, 설치 완료)
 - **설치된 Ollama 모델**: hermes3:latest, qwen2.5:7b, llama3.1:8b
-- **저장**: Supabase ai_news 테이블
-- **흐름**: RSS 수집 → AI 필터링/정렬 → 하나씩 처리 → 프롬프트 준비(ollamaRequest 문자열 생성) → Ollama 요약 → 결과 파싱 → Supabase 저장
+- Ollama 복구 시: 프롬프트 준비 노드를 ollamaRequest 형식으로 되돌리고, HTTP 노드 URL을 `http://127.0.0.1:11434/api/generate`로 변경
 
 ### n8n 워크플로우 핵심 주의사항
-- Ollama HTTP 노드: `contentType: "raw"`, body = `={{ $json.ollamaRequest }}` (프롬프트 준비 노드에서 미리 JSON.stringify한 문자열)
+- DeepSeek HTTP 노드: `contentType: "raw"`, body = `={{ $json.deepseekRequest }}`
 - JSON.stringify를 HTTP 노드 body 표현식에서 직접 호출하면 n8n이 이중 직렬화해서 400 에러 발생
-- Supabase "This is an item, but it's empty" = 정상 (return=minimal 옵션)
-- 현재 미해결: ai_news.url UNIQUE 제약조건 없어서 같은 기사 중복 저장 가능
+- Supabase "This is an item, but it's empty" = 정상처럼 보이지만 실제 INSERT 여부는 별도 확인 필요
+- ai_news.url UNIQUE 제약조건: `ai_news_url_unique` 이름으로 이미 존재함 (확인 완료)
+- Supabase RLS: ai_news 테이블 RLS 비활성화 완료 (UNRESTRICTED 상태)
+
+---
+
+## ✅ 해결된 버그: Supabase INSERT (2026-06-05)
+
+### 증상
+- n8n 워크플로우가 끝까지 실행됨 (모든 노드 초록불)
+- DeepSeek API 호출 성공, 한국어 번역 정상 작동
+- "Supabase 저장" 노드가 "Success in ~200ms" + "This is an item, but it's empty" 표시
+- 그런데 Supabase ai_news 테이블에 데이터가 없음
+
+### 확인된 사실
+- SQL Editor에서 직접 INSERT → 성공 (id=26 생성됨) → 테이블 자체는 정상
+- 현재 테이블 상태: id=26 (테스트 레코드 1개만 존재), UNRESTRICTED (RLS disabled)
+- ai_news_url_unique UNIQUE 제약조건 존재
+- 기존 25개 레코드는 이전 세션에서 삭제됨 (Purge 실행한 것으로 추정)
+- `GRANT SELECT, INSERT ON ai_news TO anon` 실행했으나 효과 없었음
+- `GRANT USAGE, SELECT ON SEQUENCE ai_news_id_seq TO anon` 실행했으나 효과 없었음
+
+### 시도했으나 실패한 것들
+- `resolution=ignore-duplicates` 제거 → 효과 없음
+- RLS 정책 추가/수정 → 효과 없음  
+- RLS 완전 비활성화 → 효과 없음
+- GRANT 권한 부여 → 효과 없음
+
+### 의심되는 원인
+PostgREST가 anon 키로 INSERT 시 HTTP 200/201 빈 응답을 돌려주는데 실제로는 INSERT가 안 되는 상태. 가능한 원인:
+1. **anon 롤에 실제 DB 수준 GRANT가 없음** (information_schema 확인 필요)
+2. **published_at 컬럼 타입 불일치** - RSS pubDate가 "Mon, 19 Jan 2026 14:00:00 GMT" (RFC 2822) 형식인데 PostgreSQL timestamptz가 이를 거부할 수 있음
+3. **n8n body 직렬화 문제** - `=JSON.stringify($json)` 표현식이 예상과 다르게 동작할 수 있음
+
+### 해결 방법
+- body를 `=JSON.stringify($json)` → `={{ JSON.stringify({title: $json.title, url: $json.url, ...}) }}` 로 변경
+- `={{ }}` 문법 + 명시적 필드 지정이 핵심이었음
+- published_at도 `new Date(orig._pubDate).toISOString()` 으로 ISO 형식 변환 적용
 
 ---
 
@@ -103,12 +148,15 @@ npm install @opennextjs/cloudflare wrangler --save-dev
 - 컨텐츠 볼륨업 (40개 툴 상세화)
 - 커스텀 도메인 ai.ktoolu.com
 - 블로그 (Notion CMS)
-- AI 뉴스 자동수집 n8n 워크플로우 (Ollama 동작 확인)
+- AI 뉴스 자동수집 n8n 워크플로우 → Hermes 에이전트로 전환 예정 (n8n 중단)
+- AI 뉴스 페이지 개선: 섹션 타이틀, 날짜 그루핑, 소스/태그 필터
 
 ### 🔜 다음 작업
-1. **n8n 프롬프트 업그레이드**: hermes3 → qwen2.5:7b 전환 + 더 깊은 기사 형식 (핵심내용/인사이트/인용구 포함), num_predict 2000~3000
-2. **Supabase url UNIQUE 제약조건**: `ALTER TABLE ai_news ADD CONSTRAINT ai_news_url_unique UNIQUE (url);`
-3. **n8n 중복 URL 사전 필터링**: Ollama 처리 전에 이미 저장된 URL 제외
+1. Hermes 에이전트 뉴스 수집 스크립트 구축 및 실행
+2. 뉴스 충분히 쌓이면 스케줄 주기 조정
+
+### 🗓️ 트래픽 늘면 고려
+- 이메일 구독 뉴스레터 (Resend 또는 Mailchimp 연동)
 
 ---
 
