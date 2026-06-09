@@ -69,6 +69,19 @@ function getDateGroup(dateStr: string): string {
 
 const DATE_GROUP_ORDER = ["오늘", "어제", "이번 주", "이전"];
 
+function parseSummaryLines(text: string): string[] {
+  // 불릿 형식: • line1\n• line2
+  if (text.includes("•")) {
+    return text.split("\n").map(l => l.replace(/^[•\-]\s*/, "").trim()).filter(Boolean).slice(0, 3);
+  }
+  // 숫자 형식: 1. line1\n2. line2
+  if (/^\d+\./.test(text.trim())) {
+    return text.split("\n").map(l => l.replace(/^\d+\.\s*/, "").trim()).filter(Boolean).slice(0, 3);
+  }
+  // 문장 단위 분리
+  return text.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+}
+
 export function NewsList() {
   const [news, setNews] = useState<AiNews[]>([]);
   const [loading, setLoading] = useState(true);
@@ -270,25 +283,32 @@ export function NewsList() {
                   </a>
 
                   {item.summary && (
-                    <div className="mb-4">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">기사 3줄 요약</p>
-                      <div className="rounded-lg bg-muted/40 px-4 py-3 border border-border/30">
-                        <p className="text-sm text-foreground/80 leading-relaxed">{item.summary}</p>
-                      </div>
+                    <div className="mb-3 rounded-xl bg-muted/50 border border-border/40 px-4 py-3">
+                      <p className="text-xs font-semibold text-muted-foreground mb-2">📋 기사 3줄 요약</p>
+                      <ol className="space-y-1.5">
+                        {parseSummaryLines(item.summary).map((line, i) => (
+                          <li key={i} className="flex items-start gap-2 text-sm text-foreground/80 leading-relaxed">
+                            <span className="shrink-0 mt-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-muted-foreground/20 text-[10px] font-bold text-muted-foreground">
+                              {i + 1}
+                            </span>
+                            {line}
+                          </li>
+                        ))}
+                      </ol>
                     </div>
                   )}
 
                   {item.explanation && (
-                    <div className="mb-4">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">ktoolu 설명</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{item.explanation}</p>
+                    <div className="mb-3 rounded-xl bg-blue-500/5 border border-blue-500/20 px-4 py-3">
+                      <p className="text-xs font-semibold text-blue-400 mb-1.5">💡 ktoolu 설명</p>
+                      <p className="text-sm text-foreground/75 leading-relaxed">{item.explanation}</p>
                     </div>
                   )}
 
                   {item.importance && (
-                    <div className="mb-4">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1.5">인사이트 & 시사점</p>
-                      <p className="text-sm text-primary/80 font-medium leading-relaxed">{item.importance}</p>
+                    <div className="mb-3 rounded-xl bg-amber-500/5 border border-amber-500/20 px-4 py-3">
+                      <p className="text-xs font-semibold text-amber-400 mb-1.5">⚡ 인사이트 & 시사점</p>
+                      <p className="text-sm text-foreground/75 leading-relaxed">{item.importance}</p>
                     </div>
                   )}
 
