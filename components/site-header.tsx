@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Newspaper } from "lucide-react";
+import { Sparkles, BookOpen, Newspaper, LibraryBig } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const AI_TOOLS = [
@@ -31,7 +31,7 @@ const AI_TOOLS = [
 ];
 
 interface SiteHeaderProps {
-  activePage?: "blog" | "news";
+  activePage?: "blog" | "news" | "glossary";
   blogCount?: number;
 }
 
@@ -73,6 +73,17 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
           >
             <Newspaper className="h-4 w-4" />
             <span className="hidden sm:inline">AI 뉴스</span>
+          </Link>
+          <Link
+            href="/glossary"
+            className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
+              activePage === "glossary"
+                ? "text-foreground bg-accent"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
+            }`}
+          >
+            <LibraryBig className="h-4 w-4" />
+            <span className="hidden sm:inline">용어해설</span>
           </Link>
 
           {/* Divider */}

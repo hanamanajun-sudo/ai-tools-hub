@@ -15,7 +15,19 @@ type AiNews = {
   collected_at: string;
   is_visible: boolean;
   tags: string[];
+  terms: string[] | null;
 };
+
+type GlossaryTerm = {
+  slug: string;
+  term: string;
+  definition: string;
+};
+
+function splitSentences(text: string): string[] {
+  const parts = text.split(/(?<=[다됩니임했않]\.)\s+/);
+  return parts.map(s => s.trim()).filter(Boolean);
+}
 
 const SOURCE_COLORS: Record<string, string> = {
   "The Verge AI":   "bg-violet-500/10 text-violet-400 border-violet-500/20",
@@ -88,6 +100,7 @@ export function NewsList() {
   const [error, setError] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeSource, setActiveSource] = useState<string | null>(null);
+  const [glossary, setGlossary] = useState<Record<string, GlossaryTerm>>({});
   const [copiedId, setCopiedId] = useState<number | null>(null);
 
   function copyArticleLink(id: number) {
@@ -119,13 +132,25 @@ export function NewsList() {
       );
       const { data, error } = await supabase
         .from("ai_news")
-        .select("id,title,url,source,summary,explanation,importance,collected_at,is_visible,tags")
+        .select("id,title,url,source,summary,explanation,importance,collected_at,is_visible,tags,terms")
         .eq("is_visible", true)
         .order("collected_at", { ascending: false })
         .limit(50);
 
       if (error) throw error;
       setNews(data || []);
+
+      // 기사에 등장하는 용어 slugs 수집 후 glossary fetch
+      const allSlugs = [...new Set((data || []).flatMap(n => n.terms || []))];
+      if (allSlugs.length > 0) {
+        const { data: terms } = await supabase
+          .from("glossary")
+          .select("slug,term,definition")
+          .in("slug", allSlugs);
+        if (terms) {
+          setGlossary(Object.fromEntries(terms.map(t => [t.slug, t])));
+        }
+      }
     } catch {
       setError(true);
     } finally {
@@ -333,15 +358,47 @@ export function NewsList() {
 
                   {item.explanation && (
                     <div className="mb-3 rounded-xl bg-blue-500/5 border border-blue-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-blue-400 mb-1.5">💡 ktoolu 설명</p>
-                      <p className="text-sm text-foreground/75 leading-relaxed">{item.explanation}</p>
+                      <p className="text-xs font-semibold text-blue-400 mb-2">💡 ktoolu 설명</p>
+                      <div className="space-y-1.5">
+                        {splitSentences(item.explanation).map((s, i) => (
+                          <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
+                        ))}
+                      </div>
                     </div>
                   )}
 
                   {item.importance && (
                     <div className="mb-3 rounded-xl bg-amber-500/5 border border-amber-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-amber-400 mb-1.5">⚡ 인사이트 & 시사점</p>
-                      <p className="text-sm text-foreground/75 leading-relaxed">{item.importance}</p>
+                      <p className="text-xs font-semibold text-amber-400 mb-2">⚡ 인사이트 & 시사점</p>
+                      <div className="space-y-1.5">
+                        {splitSentences(item.importance).map((s, i) => (
+                          <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {item.terms && item.terms.length > 0 && (
+                    <div className="mb-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 px-4 py-3">
+                      <p className="text-xs font-semibold text-emerald-400 mb-2">📖 용어해설</p>
+                      <div className="space-y-2">
+                        {item.terms.map(slug => {
+                          const g = glossary[slug];
+                          if (!g) return null;
+                          return (
+                            <div key={slug}>
+                              <a
+                                href={`/glossary/${slug}`}
+                                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors mb-0.5"
+                              >
+                                {g.term}
+                                <ExternalLink className="h-2.5 w-2.5" />
+                              </a>
+                              <p className="text-xs text-foreground/60 leading-relaxed line-clamp-2">{g.definition}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
 
