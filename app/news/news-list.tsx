@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { ExternalLink, Clock, Tag, AlertCircle, RefreshCw, X } from "lucide-react";
+import { ExternalLink, Clock, Tag, AlertCircle, RefreshCw, X, Link2, Check } from "lucide-react";
 
 type AiNews = {
   id: number;
@@ -88,6 +88,26 @@ export function NewsList() {
   const [error, setError] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeSource, setActiveSource] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+
+  function copyArticleLink(id: number) {
+    const url = `${window.location.origin}/news#article-${id}`;
+    navigator.clipboard.writeText(url);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  }
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash.startsWith("#article-")) return;
+    const el = document.getElementById(hash.slice(1));
+    if (!el) return;
+    setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.add("ring-2", "ring-primary/40");
+      setTimeout(() => el.classList.remove("ring-2", "ring-primary/40"), 2500);
+    }, 400);
+  }, []);
 
   async function fetchNews() {
     setLoading(true);
@@ -263,11 +283,24 @@ export function NewsList() {
               {groupedNews[group].map(item => (
                 <article
                   key={item.id}
-                  className="rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:shadow-sm"
+                  id={`article-${item.id}`}
+                  className="rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:shadow-sm scroll-mt-6"
                 >
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <SourceBadge source={item.source} />
-                    <TimeAgo dateStr={item.collected_at} />
+                    <div className="flex items-center gap-2">
+                      <TimeAgo dateStr={item.collected_at} />
+                      <button
+                        onClick={() => copyArticleLink(item.id)}
+                        title="요약 링크 복사"
+                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {copiedId === item.id
+                          ? <><Check className="h-3 w-3 text-green-500" /><span className="text-green-500">복사됨</span></>
+                          : <Link2 className="h-3 w-3" />
+                        }
+                      </button>
+                    </div>
                   </div>
 
                   <a
