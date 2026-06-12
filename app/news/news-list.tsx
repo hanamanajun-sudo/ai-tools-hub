@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { ExternalLink, Clock, Tag, AlertCircle, RefreshCw, X, Link2, Check, Star } from "lucide-react";
+import { ExternalLink, Clock, AlertCircle, RefreshCw, X, Link2, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 // 🔥 편집자 픽 — 수동 관리: 이 배열에 article.id를 넣으면 상단에 뱃지 표시
 const EDITOR_PICKS: number[] = [53];
@@ -50,37 +50,6 @@ function SourceBadge({ source }: { source: string }) {
   );
 }
 
-function TimeAgo({ dateStr }: { dateStr: string }) {
-  const date = new Date(dateStr);
-  const diffMs = Date.now() - date.getTime();
-  const diffH = Math.floor(diffMs / 3600000);
-  const diffM = Math.floor(diffMs / 60000);
-
-  let label: string;
-  if (diffM < 60) label = `${diffM}분 전`;
-  else if (diffH < 24) label = `${diffH}시간 전`;
-  else label = `${Math.floor(diffH / 24)}일 전`;
-
-  return (
-    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-      <Clock className="h-3 w-3" />
-      {label}
-    </span>
-  );
-}
-
-function DateBadge({ dateStr }: { dateStr: string }) {
-  const date = new Date(dateStr);
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, "0");
-  const d = String(date.getDate()).padStart(2, "0");
-  return (
-    <span className="inline-flex items-center rounded-md bg-secondary/40 px-2 py-0.5 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
-      {y}.{m}.{d}
-    </span>
-  );
-}
-
 function EditorPickBadge() {
   return (
     <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-[11px] font-bold text-amber-500 border border-amber-500/30 shrink-0">
@@ -106,16 +75,31 @@ function getDateGroup(dateStr: string): string {
 const DATE_GROUP_ORDER = ["오늘", "어제", "이번 주", "이전"];
 
 function parseSummaryLines(text: string): string[] {
-  // 불릿 형식: • line1\n• line2
   if (text.includes("•")) {
     return text.split("\n").map(l => l.replace(/^[•\-]\s*/, "").trim()).filter(Boolean).slice(0, 3);
   }
-  // 숫자 형식: 1. line1\n2. line2
   if (/^\d+\./.test(text.trim())) {
     return text.split("\n").map(l => l.replace(/^\d+\.\s*/, "").trim()).filter(Boolean).slice(0, 3);
   }
-  // 문장 단위 분리
   return text.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+}
+
+/** YYYY-MM-DD 문자열로 변환 */
+function toDateKey(dateStr: string): string {
+  const d = new Date(dateStr);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+/** YYYY.M.D 형식으로 표시 */
+function formatDateShort(dateStr: string): string {
+  const d = new Date(dateStr);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+
+/** 오늘 날짜 키 */
+function todayKey(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 export function NewsList() {
@@ -123,15 +107,23 @@ export function NewsList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
-  const [activeSource, setActiveSource] = useState<string | null>(null);
+  const [activeDate, setActiveDate] = useState<string | null>(null); // YYYY-MM-DD
   const [glossary, setGlossary] = useState<Record<string, GlossaryTerm>>({});
   const [copiedId, setCopiedId] = useState<number | null>(null);
+
+  const dateScrollRef = useRef<HTMLDivElement>(null);
 
   function copyArticleLink(id: number) {
     const url = `${window.location.origin}/news#article-${id}`;
     navigator.clipboard.writeText(url);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  }
+
+  function shareOnX(id: number, title: string) {
+    const url = `${window.location.origin}/news#article-${id}`;
+    const text = encodeURIComponent(`${title}\n${url}`);
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank", "noopener,noreferrer");
   }
 
   useEffect(() => {
@@ -164,7 +156,6 @@ export function NewsList() {
       if (error) throw error;
       setNews(data || []);
 
-      // 기사에 등장하는 용어 slugs 수집 후 glossary fetch
       const allSlugs = [...new Set((data || []).flatMap(n => n.terms || []))];
       if (allSlugs.length > 0) {
         const { data: terms } = await supabase
@@ -183,6 +174,24 @@ export function NewsList() {
   }
 
   useEffect(() => { fetchNews(); }, []);
+
+  // 고유 날짜 목록 (최신순)
+  const dateList = useMemo(() => {
+    const keys = new Set(news.map(n => toDateKey(n.collected_at)));
+    return Array.from(keys).sort().reverse();
+  }, [news]);
+
+  // 날짜 스크롤: 오늘로 이동
+  function scrollToToday() {
+    setActiveDate(null);
+  }
+
+  // 날짜 스크롤: 좌우
+  function scrollDates(dir: "left" | "right") {
+    if (!dateScrollRef.current) return;
+    const amount = 180;
+    dateScrollRef.current.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+  }
 
   const allSources = useMemo(() => {
     const sources = new Set(news.map(item => item.source).filter(Boolean));
@@ -204,11 +213,11 @@ export function NewsList() {
 
   const filteredNews = useMemo(() => {
     return news.filter(item => {
-      if (activeSource && item.source !== activeSource) return false;
       if (activeTag && !item.tags?.includes(activeTag)) return false;
+      if (activeDate && toDateKey(item.collected_at) !== activeDate) return false;
       return true;
     });
-  }, [news, activeTag, activeSource]);
+  }, [news, activeTag, activeDate]);
 
   const groupedNews = useMemo(() => {
     const groups: Record<string, AiNews[]> = {};
@@ -220,7 +229,6 @@ export function NewsList() {
     return groups;
   }, [filteredNews]);
 
-  // 편집자 픽 기사를 각 그룹 맨 앞으로 정렬
   const sortedGroupedNews = useMemo(() => {
     const result: Record<string, AiNews[]> = {};
     for (const [group, items] of Object.entries(groupedNews)) {
@@ -278,67 +286,58 @@ export function NewsList() {
 
   return (
     <div>
-      {/* 필터 */}
-      <div className="space-y-2 mb-6">
-        {/* 소스 필터 */}
-        {allSources.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-muted-foreground w-8 shrink-0">출처</span>
-            {allSources.map(source => (
-              <button
-                key={source}
-                onClick={() => setActiveSource(activeSource === source ? null : source)}
-                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                  activeSource === source
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-secondary/60 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                {source}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* 태그 필터 */}
-        {allTags.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-muted-foreground w-8 shrink-0">태그</span>
-            {allTags.map(tag => (
-              <button
-                key={tag}
-                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                  activeTag === tag
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-secondary/60 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
-                }`}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* 필터 해제 */}
-        {(activeTag || activeSource) && (
+      {/* ── 날짜 선택 바 ── */}
+      {dateList.length > 0 && (
+        <div className="flex items-center gap-1 mb-6">
           <button
-            onClick={() => { setActiveTag(null); setActiveSource(null); }}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => scrollDates("left")}
+            className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full hover:bg-accent transition-colors text-muted-foreground"
           >
-            <X className="h-3 w-3" />
-            필터 해제
+            <ChevronLeft className="h-4 w-4" />
           </button>
-        )}
-      </div>
 
-      {/* 날짜 그룹별 뉴스 */}
+          <div
+            ref={dateScrollRef}
+            className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide flex-1"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {dateList.map(dateKey => {
+              const isActive = activeDate === dateKey;
+              const isToday = dateKey === todayKey();
+              const label = isToday ? "오늘" : formatDateShort(dateKey);
+              return (
+                <button
+                  key={dateKey}
+                  onClick={() => setActiveDate(isActive ? null : dateKey)}
+                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-secondary/60 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => scrollToToday()}
+            className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full hover:bg-accent transition-colors text-muted-foreground"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
+      {/* ── 날짜 그룹별 뉴스 ── */}
       <div className="space-y-8">
         {DATE_GROUP_ORDER.filter(g => sortedGroupedNews[g]?.length > 0).map(group => (
           <section key={group}>
             <h2 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
               <span className="h-px flex-1 bg-border/60" />
               {group}
+              {activeDate && <span className="text-xs text-primary">({formatDateShort(activeDate)})</span>}
               <span className="h-px flex-1 bg-border/60" />
             </h2>
             <div className="space-y-4">
@@ -352,21 +351,16 @@ export function NewsList() {
                       : "border-border/50 bg-card"
                   } p-5 transition-all hover:border-border hover:shadow-sm scroll-mt-6`}
                 >
-                  {/* ── 상단 영역: 편집자픽 + 태그 (좌) / 날짜 (우) ── */}
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                  {/* ── 상단: 편집자픽 + 날짜 ── */}
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-1.5">
                       {EDITOR_PICKS.includes(item.id) && <EditorPickBadge />}
-                      {item.tags && item.tags.length > 0 && item.tags.map(tag => (
-                        <button
-                          key={tag}
-                          onClick={() => setActiveTag(tag)}
-                          className="rounded-md bg-secondary/60 px-2 py-0.5 text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors shrink-0"
-                        >
-                          {tag}
-                        </button>
-                      ))}
                     </div>
-                    <DateBadge dateStr={item.collected_at} />
+                    <span className="inline-flex items-center rounded-md bg-secondary/40 px-2 py-0.5 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
+                      {new Date(item.collected_at).toLocaleDateString("ko-KR", {
+                        year: "numeric", month: "2-digit", day: "2-digit"
+                      })}
+                    </span>
                   </div>
 
                   {/* 제목 */}
@@ -444,20 +438,26 @@ export function NewsList() {
                     </div>
                   )}
 
-                  {/* ── 하단 영역: 출처 + 시간 + 링크복사 ── */}
+                  {/* ── 하단: 출처 + 퍼가기 ── */}
                   <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/20 mt-1">
                     <SourceBadge source={item.source} />
-                    <div className="flex items-center gap-2">
-                      <TimeAgo dateStr={item.collected_at} />
+                    <div className="flex items-center gap-1.5">
                       <button
                         onClick={() => copyArticleLink(item.id)}
-                        title="요약 링크 복사"
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                        title="링크 복사"
+                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                       >
                         {copiedId === item.id
                           ? <><Check className="h-3 w-3 text-green-500" /><span className="text-green-500">복사됨</span></>
-                          : <Link2 className="h-3 w-3" />
+                          : <><Link2 className="h-3 w-3" /> 링크</>
                         }
+                      </button>
+                      <button
+                        onClick={() => shareOnX(item.id, item.title)}
+                        title="X로 퍼가기"
+                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                      >
+                        <span className="font-bold text-[11px]">𝕏</span> 퍼가기
                       </button>
                     </div>
                   </div>
@@ -467,17 +467,50 @@ export function NewsList() {
           </section>
         ))}
 
-        {filteredNews.length === 0 && activeTag && (
+        {filteredNews.length === 0 && (activeTag || activeDate) && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <p className="text-muted-foreground text-sm">
-              <span className="font-medium text-foreground">#{activeTag}</span> 태그의 기사가 없습니다
+              {activeTag && <><span className="font-medium text-foreground">#{activeTag}</span> 태그의 </>}
+              {activeDate && <><span className="font-medium text-foreground">{formatDateShort(activeDate)}</span> 날짜의 </>}
+              기사가 없습니다
             </p>
             <button
-              onClick={() => setActiveTag(null)}
+              onClick={() => { setActiveTag(null); setActiveDate(null); }}
               className="text-xs text-primary hover:underline"
             >
               전체 보기
             </button>
+          </div>
+        )}
+
+        {/* ── 하단 태그 필터 ── */}
+        {allTags.length > 0 && (
+          <div className="pt-6 border-t border-border/30">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-xs text-muted-foreground font-medium shrink-0">태그</span>
+              {allTags.map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                    activeTag === tag
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-secondary/60 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+              {activeTag && (
+                <button
+                  onClick={() => setActiveTag(null)}
+                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                  해제
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>
