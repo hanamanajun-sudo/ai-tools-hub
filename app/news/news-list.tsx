@@ -2,7 +2,10 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { ExternalLink, Clock, Tag, AlertCircle, RefreshCw, X, Link2, Check } from "lucide-react";
+import { ExternalLink, Clock, Tag, AlertCircle, RefreshCw, X, Link2, Check, Star } from "lucide-react";
+
+// 🔥 편집자 픽 — 수동 관리: 이 배열에 article.id를 넣으면 상단에 뱃지 표시
+const EDITOR_PICKS: number[] = [53];
 
 type AiNews = {
   id: number;
@@ -62,6 +65,27 @@ function TimeAgo({ dateStr }: { dateStr: string }) {
     <span className="flex items-center gap-1 text-xs text-muted-foreground">
       <Clock className="h-3 w-3" />
       {label}
+    </span>
+  );
+}
+
+function DateBadge({ dateStr }: { dateStr: string }) {
+  const date = new Date(dateStr);
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return (
+    <span className="inline-flex items-center rounded-md bg-secondary/40 px-2 py-0.5 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
+      {y}.{m}.{d}
+    </span>
+  );
+}
+
+function EditorPickBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-[11px] font-bold text-amber-500 border border-amber-500/30 shrink-0">
+      <Star className="h-3 w-3 fill-amber-500" />
+      편집자 픽
     </span>
   );
 }
@@ -196,6 +220,19 @@ export function NewsList() {
     return groups;
   }, [filteredNews]);
 
+  // 편집자 픽 기사를 각 그룹 맨 앞으로 정렬
+  const sortedGroupedNews = useMemo(() => {
+    const result: Record<string, AiNews[]> = {};
+    for (const [group, items] of Object.entries(groupedNews)) {
+      result[group] = [...items].sort((a, b) => {
+        const aPick = EDITOR_PICKS.includes(a.id) ? 0 : 1;
+        const bPick = EDITOR_PICKS.includes(b.id) ? 0 : 1;
+        return aPick - bPick;
+      });
+    }
+    return result;
+  }, [groupedNews]);
+
   if (loading) {
     return (
       <div className="space-y-4">
@@ -297,7 +334,7 @@ export function NewsList() {
 
       {/* 날짜 그룹별 뉴스 */}
       <div className="space-y-8">
-        {DATE_GROUP_ORDER.filter(g => groupedNews[g]?.length > 0).map(group => (
+        {DATE_GROUP_ORDER.filter(g => sortedGroupedNews[g]?.length > 0).map(group => (
           <section key={group}>
             <h2 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
               <span className="h-px flex-1 bg-border/60" />
@@ -305,29 +342,34 @@ export function NewsList() {
               <span className="h-px flex-1 bg-border/60" />
             </h2>
             <div className="space-y-4">
-              {groupedNews[group].map(item => (
+              {sortedGroupedNews[group].map(item => (
                 <article
                   key={item.id}
                   id={`article-${item.id}`}
-                  className="rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:shadow-sm scroll-mt-6"
+                  className={`rounded-xl border ${
+                    EDITOR_PICKS.includes(item.id)
+                      ? "border-amber-500/30 bg-amber-500/[0.02]"
+                      : "border-border/50 bg-card"
+                  } p-5 transition-all hover:border-border hover:shadow-sm scroll-mt-6`}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <SourceBadge source={item.source} />
-                    <div className="flex items-center gap-2">
-                      <TimeAgo dateStr={item.collected_at} />
-                      <button
-                        onClick={() => copyArticleLink(item.id)}
-                        title="요약 링크 복사"
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-                      >
-                        {copiedId === item.id
-                          ? <><Check className="h-3 w-3 text-green-500" /><span className="text-green-500">복사됨</span></>
-                          : <Link2 className="h-3 w-3" />
-                        }
-                      </button>
+                  {/* ── 상단 영역: 편집자픽 + 태그 (좌) / 날짜 (우) ── */}
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                      {EDITOR_PICKS.includes(item.id) && <EditorPickBadge />}
+                      {item.tags && item.tags.length > 0 && item.tags.map(tag => (
+                        <button
+                          key={tag}
+                          onClick={() => setActiveTag(tag)}
+                          className="rounded-md bg-secondary/60 px-2 py-0.5 text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors shrink-0"
+                        >
+                          {tag}
+                        </button>
+                      ))}
                     </div>
+                    <DateBadge dateStr={item.collected_at} />
                   </div>
 
+                  {/* 제목 */}
                   <a
                     href={item.url}
                     target="_blank"
@@ -402,19 +444,23 @@ export function NewsList() {
                     </div>
                   )}
 
-                  {item.tags && item.tags.length > 0 && (
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      {item.tags.map(tag => (
-                        <button
-                          key={tag}
-                          onClick={() => setActiveTag(tag)}
-                          className="rounded-md bg-secondary/60 px-2 py-0.5 text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                        >
-                          {tag}
-                        </button>
-                      ))}
+                  {/* ── 하단 영역: 출처 + 시간 + 링크복사 ── */}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/20 mt-1">
+                    <SourceBadge source={item.source} />
+                    <div className="flex items-center gap-2">
+                      <TimeAgo dateStr={item.collected_at} />
+                      <button
+                        onClick={() => copyArticleLink(item.id)}
+                        title="요약 링크 복사"
+                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {copiedId === item.id
+                          ? <><Check className="h-3 w-3 text-green-500" /><span className="text-green-500">복사됨</span></>
+                          : <Link2 className="h-3 w-3" />
+                        }
+                      </button>
                     </div>
-                  )}
+                  </div>
                 </article>
               ))}
             </div>
