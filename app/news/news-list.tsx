@@ -30,7 +30,12 @@ type GlossaryTerm = {
 };
 
 function splitSentences(text: string): string[] {
-  const parts = text.split(/(?<=[다됩니임했않]\.)\s+/);
+  // 우선 \n 줄바꿈이 있으면 그걸로 분할
+  if (text.includes("\n")) {
+    return text.split("\n").map(s => s.trim()).filter(Boolean);
+  }
+  // 없으면 문장 부호로 분할
+  const parts = text.split(/(?<=[다됩니임했않요도죠함]\.)\s+/);
   return parts.map(s => s.trim()).filter(Boolean);
 }
 
@@ -396,7 +401,7 @@ export function NewsList() {
 
                   {item.explanation && (
                     <div className="mb-3 rounded-xl bg-blue-500/5 border border-blue-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-blue-400 mb-2">💡 초등학생도 이해하는 ktoolu 설명</p>
+                      <p className="text-xs font-semibold text-blue-400 mb-2">👩‍🏫 초등학생도 이해하는 ktoolu 설명</p>
                       <div className="space-y-1.5">
                         {splitSentences(item.explanation).map((s, i) => (
                           <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
