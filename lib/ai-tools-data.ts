@@ -193,6 +193,27 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/gemini-1.png","https://ai.ktoolu.com/screenshots/gemini-2.png"],
     expertRating:{accuracy:4.2,easeOfUse:4.6,features:4.5,performance:4.3,value:4.8,innovation:4.4},
     whoIsFor:["Google 생태계 사용자","연구자 — 100만 토큰","일반 사용자"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 Gemini를 'ChatGPT 대비 가성비 우수, 구글 생태계와의 강력한 연동'으로 평가합니다. 네이버 블로그와 MLBPARK 등에서 수집한 리뷰에 따르면, Gemini는 ChatGPT보다 분석 수준과 글 퀄리티가 우수하다는 평가를 받으며, 특히 구글 검색·지메일·지도·드라이브·NotebookLM 등 연계 서비스 인프라가 가장 큰 강점입니다. 가격도 ChatGPT Plus(월 29,000원) 대비 Gemini Advanced(월 11,000원)가 훨씬 저렴해 많은 사용자가 갈아타고 있습니다.",
+      pros: [
+        { keyword: "분석 품질", content: "ChatGPT보다 분석 수준과 글 퀄리티가 우수하고, 수정 요청을 정확히 반영" },
+        { keyword: "구글 연동", content: "구글 검색, Gmail, 지도, 유튜브, 드라이브와 완벽 연동. NotebookLM 등 연계 프로그램 인프라가 강점" },
+        { keyword: "가성비", content: "ChatGPT Plus(월 29,000원) 대비 Gemini Advanced(월 11,000원)로 훨씬 저렴" },
+        { keyword: "사진 속 글 인식", content: "사진 속 글자를 인식하고 정리하는 능력이 ChatGPT보다 편리" },
+      ],
+      cons: [
+        { keyword: "영어 다듬기", content: "영어 문장을 매끄럽게 다듬는 작업에서는 ChatGPT가 약간 더 나음" },
+        { keyword: "긍정 편향", content: "너무 긍정적인 응답 스타일, 냉정한 분석을 원하면 별도 프롬프트 필요" },
+        { keyword: "한국어 지원", content: "ChatGPT 대비 한국어 처리 정확도와 자연스러움에서 약간 차이" },
+      ],
+      sources: [
+        { name: "네이버 블로그", title: "ChatGPT, Google Gemini Plus 비교, 실사용 후기", excerpt: "1년 넘게 쓴 ChatGPT Plus를 해지하고 Gemini Plus로 갈아탄 후기. 분석 수준과 글 퀄리티가 더 좋고, 수정 요청을 정확히 반영. 구글 서비스 연동이 가장 큰 이유." },
+        { name: "네이버 블로그", title: "구글 AI Gemini Advanced 사용 후기", excerpt: "ChatGPT와 무료 Gemini를 쓰다가 Gemini Advanced 2개월 무료 체험 후기." },
+        { name: "네이버 블로그", title: "제미나이 직접 사용 후기 | 장점·단점·ChatGPT 비교", excerpt: "무료는 Gemini 3 Flash 모델. 유료 Pro(29,000원)는 3.1 Pro·Deep Think 제공. 안드로이드 기본 AI로 설정 가능." },
+        { name: "네이버 블로그", title: "무료 AI 뭐가 다를까? 챗GPT·제미나이·클로드 사용후기", excerpt: "사진 속 글 정리는 제미나이가 편함. 긴 글 작업은 클로드. 셋 다 무료 버전만으로도 할 수 있는 게 많음." },
+        { name: "MLBPARK", title: "챗지피티 제미나이 둘 다 써보고 느낀 점", excerpt: "영어 문장 다듬기는 챗GPT가 약간 더 나음. 둘 다 너무 우쭈쭈해주는 모드라 냉정한 프롬프트 추가 필요." },
+      ],
+    },
   },
   {
     id: "perplexity",
@@ -276,6 +297,27 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/deepseek-1.png","https://ai.ktoolu.com/screenshots/deepseek-2.png"],
     expertRating:{accuracy:4.6,easeOfUse:4.0,features:4.1,performance:4.5,value:5.0,innovation:4.8},
     whoIsFor:["비용 민감 사용자","개발자 — 저렴한 API","AI 리서처"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 DeepSeek을 'ChatGPT o1급 성능을 완전 무료로' 사용할 수 있는 혁신적인 도구로 평가합니다. 네이버 블로그, 디시인사이드 등에서 수집한 리뷰에 따르면, 추론 과정을 투명하게 공개하는 점이 가장 큰 강점이며, 한국어 처리도 자연스럽고 깔끔합니다. 코드 생성 능력도 GPT-4o에 필적합니다. 다만 추론 속도가 느리고 멀티모달 기능이 OCR 수준에 그치는 점이 단점입니다.",
+      pros: [
+        { keyword: "완전 무료", content: "ChatGPT o1급 추론 모델(R1)을 무료로, 그것도 무제한으로 사용 가능" },
+        { keyword: "추론 과정 공개", content: "결론 도출까지의 사고과정을 텍스트로 보여줘 학습 도구로 활용 가능. 왜 그 답변에 이르렀는지 과정까지 확인" },
+        { keyword: "한국어 품질", content: "한국어 말맛이 깔끔하고 직설적이며 부드럽고 자연스러움. 응답 속도 체감상 빠름" },
+        { keyword: "코딩 성능", content: "코드 생성 및 디버깅에서 높은 성능. 1,000줄 이상 코드를 한 번에 생성 가능" },
+      ],
+      cons: [
+        { keyword: "추론 속도", content: "추론이 오래 걸리는 경우가 많음. 복잡한 문제는 출력까지 몇 분 기다려야 할 때도 있음" },
+        { keyword: "멀티모달 부족", content: "이미지 이해가 단순 OCR 수준. GPT처럼 그림을 보고 설명하거나 파악하는 능력은 없음" },
+        { keyword: "중국 기반 우려", content: "중국 기업이 운영하는 서비스라 데이터 프라이버시에 대한 우려가 있음" },
+      ],
+      sources: [
+        { name: "네이버 블로그", title: "DeepSeek R1 사용 후기 - 추론 과정 공개", excerpt: "ChatGPT와 달리 결론 도출 과정을 알려줘 학습 도구로 활용하기 좋음. 생각의 사슬을 텍스트로 뽑아주는 게 인상적." },
+        { name: "네이버 블로그", title: "직장인의 AI 도구 6개월 사용 후기", excerpt: "한도 넉넉, 추론 무료. 한국어 말맛 깔끔하고 자연스러움. 발견보다 연산 능력으로 문제 해결." },
+        { name: "디시인사이드", title: "DeepSeek R1 무료 체험 후기", excerpt: "성능 좋고 자신의 생각을 알려줌. 멀티모달은 OCR 수준이라 그림 파악은 GPT 필요. 무료로 O1 능력을 쓸 수 있음." },
+        { name: "다음 검색", title: "DeepSeek 단점 - 추론 속도 이슈", excerpt: "추론이 오래 걸리는 게 고질병. 완전 무료에 오픈소스인 점은 놀라움." },
+        { name: "네이버 뷰", title: "DeepSeek vs ChatGPT 비교", excerpt: "코딩 작업에서 강력. 1,000줄 이상 버그 없는 코드 생성 가능. 완전 무료." },
+      ],
+    },
   },
   {
     id: "grok",
@@ -357,6 +399,26 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/midjourney-1.png","https://ai.ktoolu.com/screenshots/midjourney-2.png"],
     expertRating:{accuracy:3.5,easeOfUse:3.8,features:4.6,performance:4.8,value:4.2,innovation:4.7},
     whoIsFor:["디자이너·아티스트","광고·마케팅","게임·영화"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 Midjourney를 'AI 이미지 생성의 최상급 퀄리티'로 평가합니다. 네이버 블로그에서 수집한 리뷰에 따르면, 디테일 표현, 색감, 질감, 스타일 통일성에서 무료 툴을 압도합니다. 특히 인물화, 일러스트, 컨셉 아트 스타일에서 감탄이 나올 정도의 퀄리티를 보여줍니다. V8 알파에서는 프롬프트와 스타일을 분리해 AI가 사용자 취향을 학습하는 방식으로 진화했습니다. 다만 월 3만 원의 구독비는 취미 사용자에게 부담입니다.",
+      pros: [
+        { keyword: "최상급 퀄리티", content: "디테일 표현, 색감, 질감, 구도, 스타일 통일성에서 무료 툴 대비 압도적. 인물화·일러스트·컨셉 아트에 강함" },
+        { keyword: "V8 진화", content: "프롬프트와 스타일 분리, 사용자 취향 학습. 알파 단계에서도 변화 폭이 상당함" },
+        { keyword: "Discord·웹 지원", content: "Discord 기반으로 작동하며 웹 인터페이스도 제공. 커뮤니티 활성화" },
+      ],
+      cons: [
+        { keyword: "비용 부담", content: "월 3만 원의 구독비, 학생이나 취미 사용자에게 부담스러운 수준" },
+        { keyword: "영어 프롬프트", content: "한국어보다 영어 프롬프트가 더 좋은 결과물을 생성하는 경향" },
+        { keyword: "무료 크레딧 부족", content: "무료 체험 크레딧이 제한적이어서 충분히 테스트하기 어려움" },
+      ],
+      sources: [
+        { name: "네이버 블로그", title: "AI 요금제, 생각보다 부담이 있었던 이유", excerpt: "결과물 완성도가 좋고 색감·질감 표현이 뛰어남. 실사용 도구로 보는 분들이 많음." },
+        { name: "네이버 블로그", title: "미드저니 퀄리티, 정말 뛰어난가요?", excerpt: "디테일 표현, 구도, 색감 조화, 스타일 통일성이 무료 툴보다 확실히 매끄럽고 고급스러움." },
+        { name: "네이버 블로그", title: "Midjourney 내돈내산 후기 (유료 구독)", excerpt: "스탠다드 vs 프로 플랜 고민. 영어로 사용하는 것이 더 잘 나오는 느낌." },
+        { name: "다음 검색", title: "감성적이고 고퀄리티 AI 이미지", excerpt: "결과물이 감성적이고 고퀄리티. 구독비 월 3만 원은 부담." },
+        { name: "네이버 블로그", title: "Midjourney V8 알파 출시 소식", excerpt: "무엇을 그릴지는 프롬프트, 스타일은 AI가 취향 학습. 알파인데도 변경 폭이 상당함." },
+      ],
+    },
   },
   {
     id: "dalle3",
@@ -657,6 +719,26 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/gh-copilot-1.png","https://ai.ktoolu.com/screenshots/gh-copilot-2.png"],
     expertRating:{accuracy:4.2,easeOfUse:4.6,features:4.3,performance:4.4,value:4.5,innovation:4.1},
     whoIsFor:["모든 개발자","기업 개발팀","학생"],
+    communityReviewSummary: {
+      overall: "한국 개발자들은 GitHub Copilot을 'AI 페어 프로그래머'로 평가합니다. 네이버 블로그, 다음 검색 등에서 수집한 리뷰에 따르면, 반복 코드 자동 완성과 생산성 향상이 가장 큰 장점입니다. VS Code와의 통합이 뛰어나며, Ctrl+I 인라인 채팅으로 편리하게 사용할 수 있습니다. 학생과 오픈소스 기여자는 무료로 사용 가능합니다. 다만 Cursor, Windsurf 등 AI IDE의 등장으로 경쟁이 치열해지고 있습니다.",
+      pros: [
+        { keyword: "생산성 향상", content: "반복 코드 자동 완성, 코드 제안, AI와 페어 프로그래밍으로 개발 속도 혁신" },
+        { keyword: "IDE 통합", content: "VS Code, JetBrains 등 주요 IDE와 완벽 통합. Ctrl+I 인라인 채팅 편리" },
+        { keyword: "무료 혜택", content: "학생과 오픈소스 기여자는 Copilot Pro를 무료로 사용 가능" },
+      ],
+      cons: [
+        { keyword: "경쟁 심화", content: "Cursor, Windsurf 등 AI 네이티브 IDE의 등장으로 Copilot의 차별성 약화" },
+        { keyword: "유료 정책", content: "무료 사용량 제한과 유료 전환 정책 변화가 사용자에게 부담" },
+        { keyword: "코드 품질", content: "생성된 코드의 검증 없이 사용하면 보안 취약점이나 버그가 포함될 수 있음" },
+      ],
+      sources: [
+        { name: "다음 검색", title: "GitHub Copilot 처음 써본 후기", excerpt: "반신반의했는데 반복 코드 자동 완성에서 확실히 생산성 향상." },
+        { name: "네이버 뷰", title: "Cursor AI vs GitHub Copilot 비교", excerpt: "Copilot은 기성 IDE에서 플러그인 방식, Cursor는 AI 네이티브 IDE. 선택지는 많아짐." },
+        { name: "네이버 블로그", title: "GitHub Copilot - AI 페어 프로그래머", excerpt: "수억 라인 public 코드로 훈련. 학생과 오픈소스 담당자 무료." },
+        { name: "다음 검색", title: "현업 개발자의 GitHub Copilot 사용 후기", excerpt: "Copilot은 생산성, ChatGPT는 사고의 폭. 둘 다 쓰면 창의적인 기획자 가능." },
+        { name: "네이버 뷰", title: "GitHub Copilot 부트캠프 참가 후기", excerpt: "90명 개발자 바이브 코딩 행사. AI 코딩 도구 활용법 익히는 게 중요." },
+      ],
+    },
   },
   {
     id: "cursor",
