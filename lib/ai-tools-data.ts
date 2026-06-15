@@ -298,6 +298,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/grammarly-1.png","https://ai.ktoolu.com/screenshots/grammarly-2.png"],
     expertRating:{accuracy:4.7,easeOfUse:4.8,features:4.3,performance:4.6,value:4.4,innovation:3.9},
     whoIsFor:["영어 글쓰는 모든 사람","비즈니스 전문가","ESL 학습자"],
+    communityReviewSummary: {
+      overall: "Grammarly는 영어 글쓰기가 필요한 한국 사용자들에게 필수 도구로 자리잡았습니다. 문법 검사 정확도와 브라우저 확장의 편의성이 가장 큰 장점입니다.",
+      pros: [{keyword:"문법 정확도",content:"한국인이 자주 틀리는 영어 문법·전치사·관사까지 정확히 지적"}, {keyword:"확장 프로그램",content:"Chrome·Edge 등 브라우저 확장으로 모든 웹사이트에서 자동 검사"}],
+      cons: [{keyword:"한국어 미지원",content:"한국어 문법 검사 불가. 영어 전용 도구"}, {keyword:"Premium 필요",content:"고급 기능(표절 검사, 어조 추천)은 유료"}],
+      sources: [
+        {name:"네이버 블로그",title:"Grammarly 실제 사용 후기, 프리미엄 가격",excerpt:"영어 이메일 작성시 문법 오류를 실시간으로 잡아줘서 업무 효율 향상."},
+        {name:"네이버 블로그",title:"Grammarly 무료와 프리미엄 차이점",excerpt:"무료로도 기본 철자·문법 검사 충분. Premium은 어조 추천·표절 검사."},
+      ],
+    },
   },
 
 
@@ -513,6 +522,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/firefly-1.png","https://ai.ktoolu.com/screenshots/firefly-2.png"],
     expertRating:{accuracy:4.0,easeOfUse:4.5,features:4.2,performance:4.1,value:4.3,innovation:4.0},
     whoIsFor:["Adobe 사용자","그래픽 디자이너","마케터"],
+    communityReviewSummary: {
+      overall: "Adobe Firefly는 Adobe 생태계와의 완벽한 통합으로 한국 사용자들에게 높은 평가를 받습니다. Photoshop·Illustrator와의 연동이 가장 큰 강점이며, 상업적 이용이 가능한 라이선스 정책도 긍정적입니다.",
+      pros: [{keyword:"Adobe 통합",content:"Photoshop, Illustrator, Express와 완벽 연동. 기존 워크플로우 유지"}, {keyword:"상업 라이선스",content:"생성 이미지의 상업적 사용 가능, 법적 리스크 없음"}],
+      cons: [{keyword:"비용",content:"무료는 25생성/월 제한. 고급 기능은 Creative Cloud 구독 필요"}, {keyword:"퀄리티",content:"Midjourney 대비 예술적 완성도에서 차이"}],
+      sources: [
+        {name:"네이버 블로그",title:"Adobe Firefly 사용 후기와 꿀팁",excerpt:"Photoshop과 연동되는 생성형 채우기 기능이 가장 유용. 상업적 이용 가능."},
+        {name:"네이버 블로그",title:"Adobe Firefly로 만드는 AI 디자인",excerpt:"텍스트 효과, 리컬러 등 디자이너를 위한 실용적인 기능 제공."},
+      ],
+    },
   },
     {
     id: "leonardo-ai",
@@ -724,6 +742,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/synthesia-1.png","https://ai.ktoolu.com/screenshots/synthesia-2.png"],
     expertRating:{accuracy:4.1,easeOfUse:4.3,features:4.4,performance:4.2,value:3.7,innovation:4.0},
     whoIsFor:["기업 교육팀","마케팅","HR"],
+    communityReviewSummary: {
+      overall: "Synthesia는 AI 아바타 영상 제작 분야에서 한국 기업 사용자들에게 주목받고 있습니다. 230개 이상의 아바타와 140개 언어 지원이 강점입니다.",
+      pros: [{keyword:"AI 아바타",content:"230개 이상의 실제 같은 AI 아바타. 텍스트만 입력하면 영상 완성"}, {keyword:"다국어",content:"140개 이상 언어 지원. 하나의 영상으로 다국어 콘텐츠 제작"}],
+      cons: [{keyword:"가격",content:"Starter $29/월, Creator $89/월. 개인 사용자에게 높은 진입 장벽"}, {keyword:"자연스러움",content:"아바타의 표정과 제스처가 완전히 자연스럽지는 않음"}],
+      sources: [
+        {name:"네이버 블로그",title:"Synthesia AI 아바타 영상 제작 후기",excerpt:"교육용 영상을 AI 아바타로 제작. 스크립트만 있으면 전문 강의 영상 완성."},
+        {name:"네이버 블로그",title:"Synthesia로 만든 영상 실제 사용 후기",excerpt:"처음엔 어색했지만 업무용 영상으로 충분. 시간과 비용 절감 효과."},
+      ],
+    },
   },
 
   {
@@ -745,6 +772,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/capcut-1.png","https://ai.ktoolu.com/screenshots/capcut-2.png"],
     expertRating:{accuracy:3.5,easeOfUse:4.7,features:4.3,performance:4.0,value:4.9,innovation:4.1},
     whoIsFor:["TikTok 크리에이터","유튜버","일반 사용자"],
+    communityReviewSummary: {
+      overall: "CapCut은 무료 AI 비디오 편집 도구로 한국 사용자들에게 폭발적인 인기를 끌고 있습니다. 특히 AI 자동 자막 기능과 풍부한 템플릿이 큰 장점입니다.",
+      pros: [{keyword:"완전 무료",content:"고급 AI 기능까지 모두 무료. 자동 자막, 배경 제거 등"}, {keyword:"쉬운 사용",content:"초보자도 직관적으로 사용 가능. 풍부한 템플릿과 효과"}],
+      cons: [{keyword:"중국 기반",content:"ByteDance(틱톡) 제품. 데이터 프라이버시 우려"}, {keyword:"고급 편집",content:"전문 편집 프로그램 대비 세밀한 제어 제한적"}],
+      sources: [
+        {name:"네이버 블로그",title:"CapCut 사용법과 ai 기능 실제 후기",excerpt:"AI 자동 자막이 정확도 높고 무료. 숏폼 영상 제작에 최적."},
+        {name:"네이버 블로그",title:"캡컷 PC 설치부터 편집까지",excerpt:"무료인데 기능이 많아서 놀랐다. 초보자도 쉽게 사용 가능."},
+      ],
+    },
   },
   {
     id: "seedance",
@@ -1134,6 +1170,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/manus-1.png","https://ai.ktoolu.com/screenshots/manus-2.png"],
     expertRating:{accuracy:4.0,easeOfUse:3.8,features:4.2,performance:3.7,value:4.3,innovation:4.8},
     whoIsFor:["리서처","비즈니스 분석가","일반 사용자"],
+    communityReviewSummary: {
+      overall: "Manus는 2025년 AI 업계에 돌풍을 일으킨 자율 AI 에이전트입니다. 한국 사용자들은 복잡한 작업을 스스로 계획하고 실행하는 능력에 주목하고 있습니다.",
+      pros: [{keyword:"자율 작업",content:"복잡한 리서치·데이터 분석을 스스로 계획하고 실행. 결과물까지 생성"}, {keyword:"멀티 도구",content:"웹 검색, 코드 실행, 파일 처리 등 다양한 도구 자유자재 사용"}],
+      cons: [{keyword:"초기 단계",content:"아직 베타 수준, 작업 시간이 다소 김"}, {keyword:"신뢰성",content:"자율 작업 결과물의 정확성 검증 필요"}],
+      sources: [
+        {name:"네이버 블로그",title:"Manus AI 사용 후기, 리서치 자동화의 새 시대",excerpt:"리서치 보고서 작성에 활용. 자율적으로 웹 검색하고 결과물 정리."},
+        {name:"네이버 블로그",title:"Manus AI 직접 써본 후기",excerpt:"복잡한 명령도 스스로 계획 세워서 실행. 아직 가끔 엉뚱한 결과물."},
+      ],
+    },
   },
   {
     id: "zapier-ai",
