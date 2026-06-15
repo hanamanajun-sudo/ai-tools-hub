@@ -235,6 +235,20 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/perplexity-1.png","https://ai.ktoolu.com/screenshots/perplexity-2.png"],
     expertRating:{accuracy:4.5,easeOfUse:4.4,features:4.2,performance:4.3,value:4.6,innovation:4.1},
     whoIsFor:["연구자·학생","저널리스트","일반 사용자"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 Perplexity를 '구글의 대항마'이자 'AI 검색의 새로운 기준'으로 평가합니다. 네이버 블로그 리뷰에 따르면, 소스를 인용해 정보의 신뢰성을 확인할 수 있는 점이 가장 큰 차별점입니다.",
+      pros: [
+        { keyword: "출처 인용", content: "생성된 정보의 출처를 함께 보여줘 신뢰성 확인 가능. Google과의 가장 큰 차별점" },
+        { keyword: "자연어 검색", content: "자연어 처리(NLP)로 쿼리 의도를 정확히 파악" },
+      ],
+      cons: [
+        { keyword: "한국어 지원", content: "영어 대비 한국어 검색 결과의 정확도 차이" },
+        { keyword: "무료 제한", content: "Pro 검색 횟수 제한이 있음" },
+      ],
+      sources: [
+        { name: "네이버 블로그", title: "Perplexity 퍼플렉시티 GPT 비교 후기 Pro 구글 대항마", excerpt: "Google과 달리 소스를 인용하므로 생성 정보의 신뢰성 확인 가능." },
+      ],
+    },
   },
   {
     id: "notion-ai",
@@ -521,6 +535,21 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/canva-1.png","https://ai.ktoolu.com/screenshots/canva-2.png"],
     expertRating:{accuracy:3.5,easeOfUse:4.9,features:4.5,performance:4.2,value:4.7,innovation:4.3},
     whoIsFor:["디자인 초보자","SNS 마케터","교육자"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 Canva AI를 '디자인 초보자를 위한 혁신'으로 평가합니다. 네이버 블로그 리뷰에 따르면, AI 기능 덕분에 퇴근 시간이 빨라질 정도로 생산성 향상에 도움이 됩니다.",
+      pros: [
+        { keyword: "AI 디자인", content: "Magic Studio 등 AI 기능으로 디자인 초보자도 전문가 수준의 결과물 생성" },
+        { keyword: "템플릿 다양성", content: "25만 개 이상의 템플릿으로 빠른 디자인 제작 가능" },
+      ],
+      cons: [
+        { keyword: "고급 편집 한계", content: "Photoshop 등 전문 도구 대비 세밀한 편집은 제한적" },
+        { keyword: "유료 기능", content: "고급 AI 기능은 Pro 구독 필요" },
+      ],
+      sources: [
+        { name: "네이버 블로그", title: "캔바 AI 어떻게 활용할까? 퇴근 시간 빨라지는 핵심 기능 실사용 후기", excerpt: "결과물 만족스러움. AI 기능 덕분에 퇴근 시간이 빨라짐." },
+        { name: "네이버 블로그", title: "캔바 인 리얼 라이프 (Canva in Real Life) 행사 후기", excerpt: "오직 캔바만으로 팝업 스토어 인쇄물 제작. 전문 브랜딩 작업 가능." },
+      ],
+    },
   },
 
 
@@ -759,6 +788,21 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/cursor-1.png","https://ai.ktoolu.com/screenshots/cursor-2.png"],
     expertRating:{accuracy:4.3,easeOfUse:4.4,features:4.5,performance:4.5,value:4.2,innovation:4.6},
     whoIsFor:["개발자","프리랜서","스타트업"],
+    communityReviewSummary: {
+      overall: "한국 개발자들은 Cursor를 'AI 네이티브 IDE의 혁신'으로 평가합니다. 네이버 블로그 리뷰에 따르면, 단순한 코드 완성을 넘어 프로젝트 구조 전체를 이해하고 편집하는 능력이 가장 큰 강점입니다. ChatGPT, Claude 등 생성형 AI를 활용해 코드를 작성하는 것이 자연스러워진 개발자들 사이에서 주목받고 있습니다.",
+      pros: [
+        { keyword: "AI 네이티브", content: "VS Code 기반이지만 AI가 IDE 전체에 깊게 통합. 프로젝트 구조를 이해하고 편집" },
+        { keyword: "생산성 혁신", content: "코드를 치는 게 아니라 지시하는 방식으로 변경. 복잡한 프로젝트 파악 시간 단축" },
+      ],
+      cons: [
+        { keyword: "비용", content: "무료 버전 제한적, Pro $20/월은 개인에게 부담" },
+        { keyword: "의존성", content: "AI에 너무 의존하면 기본 코딩 능력 유지에 문제" },
+      ],
+      sources: [
+        { name: "네이버 블로그", title: "이제 코딩은 치는 게 아니라 지시하는 것? Cursor AI 에디터 사용 후기", excerpt: "단순 오타 수정이 아닌, 코드 한 줄 짜는 게 고통스러운 개발자에게 추천." },
+        { name: "네이버 블로그", title: "AI가 직접 코드를 수정해준다? Cursor AI 핵심 기능 총정리", excerpt: "ChatGPT·Claude 활용이 자연스러워진 지금, Cursor가 개발자 사이에서 주목." },
+      ],
+    },
   },
   {
     id: "v0",
@@ -877,6 +921,21 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/suno-1.png","https://ai.ktoolu.com/screenshots/suno-2.png"],
     expertRating:{accuracy:3.2,easeOfUse:4.3,features:4.4,performance:4.2,value:4.3,innovation:4.7},
     whoIsFor:["음악 크리에이터","콘텐츠 제작자","취미 작곡가"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 Suno AI를 'AI 음악 생성의 최강자'로 평가합니다. 네이버 블로그 리뷰에 따르면, 기본 기능만으로도 충분히 높은 퀄리티의 노래를 생성할 수 있으며, Udio와 비교해도 손색없는 수준입니다.",
+      pros: [
+        { keyword: "쉬운 사용", content: "비전문가도 프롬프트만으로 완성도 높은 노래 생성 가능" },
+        { keyword: "퀄리티", content: "무료 버전으로도 충분히 괜찮은 퀄리티. 유료면 더 다양한 기능" },
+      ],
+      cons: [
+        { keyword: "경쟁 심화", content: "Udio 등 경쟁 모델과의 차별성이 점점 줄어듦" },
+        { keyword: "한국어 가사", content: "한국어 가사 생성의 자연스러움에서 다소 아쉬움" },
+      ],
+      sources: [
+        { name: "네이버 블로그", title: "노래 뚝딱 만들어주는 수노(SUNO) AI 한 달 사용 후기", excerpt: "나 같은 사람도 뚝딱 노래 한 곡을 만들어낼 수 있는 AI. 유료지만 기본 기능만으로 퀄리티 괜찮음." },
+        { name: "네이버 블로그", title: "UDIO vs SUNO AI 작곡 프로그램 사용 후기", excerpt: "UDIO가 SUNO에 비해 아쉽지만 둘 다 수준이 높음. 참 무서운 기술." },
+      ],
+    },
   },
   {
     id: "udio",
@@ -918,6 +977,20 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/elevenlabs-1.png","https://ai.ktoolu.com/screenshots/elevenlabs-2.png"],
     expertRating:{accuracy:4.5,easeOfUse:4.3,features:4.2,performance:4.6,value:4.0,innovation:4.4},
     whoIsFor:["콘텐츠 크리에이터","개발자 — 음성 API","오디오북 제작자"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 ElevenLabs를 'TTS와 음성 복제 분야의 사실상 표준'으로 평가합니다. 한국어를 포함한 30여 개 언어를 지원하며, 감정·강세·휴지가 사람과 매우 가깝습니다.",
+      pros: [
+        { keyword: "자연스러운 TTS", content: "감정·강세·휴지 표현이 사람과 매우 가까워 업계 표준으로 자리잡음" },
+        { keyword: "음성 복제", content: "1~3분 샘플로 본인 목소리 복제 가능. 다국어 음성 지원" },
+      ],
+      cons: [
+        { keyword: "가격", content: "고품질 음성 생성은 유료 플랜 필요. 무료는 1만자 제한" },
+        { keyword: "한국어 품질", content: "영어 대비 한국어 음성 자연스러움에서 다소 차이" },
+      ],
+      sources: [
+        { name: "PortalAI", title: "ElevenLabs 리뷰·사용법·가격 정리", excerpt: "TTS와 음성 복제 분야 사실상 표준. 한국어 포함 30여 개 언어 지원. 1~3분 샘플로 목소리 복제." },
+      ],
+    },
   },
   {
     id: "descript",
