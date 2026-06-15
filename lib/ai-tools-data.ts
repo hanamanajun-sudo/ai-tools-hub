@@ -370,6 +370,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/grok-1.png","https://ai.ktoolu.com/screenshots/grok-2.png"],
     expertRating:{accuracy:3.9,easeOfUse:4.1,features:3.8,performance:4.0,value:4.5,innovation:4.3},
     whoIsFor:["X 헤비유저","저널리스트"],
+    communityReviewSummary:{overall:"Grok은 xAI의 AI 챗봇으로, X(트위터) 실시간 데이터 접근이 가장 큰 차별점입니다.",pros:[{keyword:"실시간 데이터",content:"X 플랫폼 데이터에 실시간 접근. 최신 트렌드 즉시 파악"}, {keyword:"차별화",content:"독특한 유머 감각과 솔직한 답변 스타일. Aurora 이미지 생성 지원"}],cons:[{keyword:"한국어",content:"한국어 지원이 아직 제한적"}, {keyword:"X 의존",content:"X Premium($8/월) 없으면 기능 제한적"}],sources:[{name:"테크 리뷰",title:"Grok AI 첫인상",excerpt:"X 데이터 기반 실시간 답변이 가장 큰 장점. 타 AI와 다른 유머 코드."}]},
   },
   {
     id: "writesonic",
@@ -390,6 +391,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/writesonic-1.png","https://ai.ktoolu.com/screenshots/writesonic-2.png"],
     expertRating:{accuracy:3.7,easeOfUse:4.3,features:4.4,performance:4.1,value:4.5,innovation:3.8},
     whoIsFor:["마케터","SEO 전문가","스타트업"],
+    communityReviewSummary:{overall:"Writesonic은 마케팅 콘텐츠 생성에 특화된 AI 글쓰기 도구로, 80개 이상의 템플릿과 SEO 최적화 기능이 강점입니다.",pros:[{keyword:"템플릿 다양성",content:"80개 이상 콘텐츠 템플릿. 블로그·광고·랜딩페이지 등 마케팅 전분야"}, {keyword:"SEO 최적화",content:"검색 엔진 최적화 내장. 키워드 제안·메타 설명 자동 생성"}],cons:[{keyword:"창의성",content:"ChatGPT·Claude 대비 창의적 글쓰기는 다소 부족"}, {keyword:"한국어",content:"한국어 콘텐츠 품질이 영어 대비 낮음"}],sources:[{name:"Futurepedia",title:"Writesonic 리뷰",excerpt:"Futurepedia 팝업 카운트 2,828로 Jasper(1,796)를 크게 앞지르는 인기."}]},
   },
   {
     id: "ms-copilot",
@@ -410,6 +412,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/ms-copilot-1.png","https://ai.ktoolu.com/screenshots/ms-copilot-2.png"],
     expertRating:{accuracy:4.1,easeOfUse:4.5,features:4.3,performance:4.2,value:4.4,innovation:4.0},
     whoIsFor:["Windows·Office 사용자","기업","일반 사용자"],
+    communityReviewSummary:{overall:"Microsoft Copilot은 Windows·Office·Bing에 통합된 AI 어시스턴트로, 한국 사용자들에게 가장 접근성이 높은 AI 도구 중 하나입니다.",pros:[{keyword:"Office 통합",content:"Word·Excel·PowerPoint·Teams에 AI 기능 내장. 별도 앱 불필요"}, {keyword:"접근성",content:"Windows 사용자라면 누구나 무료로 사용 가능. Bing 검색에도 통합"}],cons:[{keyword:"한국어",content:"영어 대비 한국어 기능과 품질에서 차이"}, {keyword:"Pro 필요",content:"고급 기능은 Copilot Pro($20/월) 또는 M365 Copilot 구독 필요"}],sources:[{name:"테크 리뷰",title:"Microsoft Copilot 사용후기",excerpt:"Windows 11에 내장된 AI 도우미. 엣지 브라우저에서 바로 사용 가능."}]},
   },  // === IMAGE ===
   {
     id: "midjourney",
@@ -552,6 +555,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/leonardo-1.png","https://ai.ktoolu.com/screenshots/leonardo-2.png"],
     expertRating:{accuracy:3.8,easeOfUse:4.3,features:4.4,performance:4.0,value:4.5,innovation:4.1},
     whoIsFor:["게임 개발자","취미 아티스트","크리에이터"],
+    communityReviewSummary:{overall:"Leonardo AI는 게임 에셋과 캐릭터 디자인에 특화된 AI 이미지 생성 도구로, 게임 개발자들 사이에서 인기가 높습니다.",pros:[{keyword:"게임 특화",content:"게임 에셋·캐릭터·배경 생성에 특화. 다양한 파인튜닝 모델 제공"}, {keyword:"무료",content:"무료 150토큰/일. 다른 도구 대비 넉넉한 무료 사용량"}],cons:[{keyword:"일반 이미지",content:"Midjourney 대비 일반 이미지 생성 품질에서 차이"}, {keyword:"학습 필요",content:"최대 활용을 위한 다양한 설정 학습 필요"}],sources:[{name:"커뮤니티 리뷰",title:"Leonardo AI 게임 개발 활용기",excerpt:"게임 캐릭터 컨셉 아트 제작에 활용. 무료로 시작하기 좋음."}]},
   },
   {
     id: "canva-ai",
@@ -608,6 +612,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/nanobana-1.png","https://ai.ktoolu.com/screenshots/nanobana-2.png"],
     expertRating:{accuracy:3.9,easeOfUse:4.2,features:3.8,performance:4.1,value:4.0,innovation:4.3},
     whoIsFor:["디지털 아티스트","크리에이터"],
+    communityReviewSummary:{overall:"Image Nanobana(이미지 나노바나나)는 고품질 이미지 생성 AI로, 디테일 표현과 사실성에 강점이 있습니다.",pros:[{keyword:"디테일",content:"뛰어난 디테일 표현력. 사실적인 이미지 생성에 강점"}, {keyword:"이미지→비디오",content:"생성된 이미지를 짧은 영상으로 변환 가능"}],cons:[{keyword:"유료",content:"무료 사용량 제한적. 고급 기능은 유료"}, {keyword:"인지도",content:"Midjourney·DALL-E 대비 낮은 인지도"}],sources:[{name:"사용자 리뷰",title:"나노바나나 이미지 생성 사용기",excerpt:"빠른 생성 속도와 디테일 표현이 장점. 이미지를 영상으로도 제작 가능."}]},
   },
   {
     id: "chatgpt-image",
@@ -628,6 +633,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/chatgpt-img-1.png","https://ai.ktoolu.com/screenshots/chatgpt-img-2.png"],
     expertRating:{accuracy:4.1,easeOfUse:4.8,features:3.9,performance:4.2,value:4.6,innovation:4.4},
     whoIsFor:["ChatGPT 사용자","일반 사용자"],
+    communityReviewSummary:{overall:"ChatGPT Image는 ChatGPT에 내장된 이미지 생성 기능으로, 대화 맥락을 이해하고 이미지를 생성하는 점이 강점입니다.",pros:[{keyword:"맥락 이해",content:"대화 내용을 바탕으로 일관된 스타일의 이미지 생성. 이전 내용 반영"}, {keyword:"별도 도구 불필요",content:"ChatGPT 하나로 텍스트·이미지 모두 처리. 워크플로우 간소화"}],cons:[{keyword:"세밀 제어",content:"전용 이미지 도구 대비 세밀한 스타일·구성 제어 부족"}, {keyword:"Plus 필요",content:"고급 기능은 ChatGPT Plus($20/월) 필요"}],sources:[{name:"사용자 리뷰",title:"ChatGPT 이미지 생성 활용",excerpt:"대화 중 바로 이미지 생성. 수정 요청도 자연어로 가능."}]},
   },  // === VIDEO ===
   {
     id: "runway",
@@ -705,6 +711,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/pika-1.png","https://ai.ktoolu.com/screenshots/pika-2.png"],
     expertRating:{accuracy:3.6,easeOfUse:4.4,features:4.1,performance:3.9,value:4.3,innovation:4.2},
     whoIsFor:["초보 크리에이터","SNS 제작자"],
+    communityReviewSummary:{overall:"Pika는 텍스트와 이미지로 비디오를 생성하는 AI 도구로, 쉬운 인터페이스와 빠른 생성 속도가 강점입니다.",pros:[{keyword:"쉬운 사용",content:"직관적인 인터페이스. 초보자도 바로 사용 가능"}, {keyword:"빠른 생성",content:"짧은 프롬프트로 빠르게 영상 생성. 소셜 미디어 콘텐츠에 적합"}],cons:[{keyword:"영상 길이",content:"생성 가능한 영상 길이가 경쟁사 대비 짧음"}, {keyword:"퀄리티",content:"Runway·Sora 대비 영상 퀄리티 차이"}],sources:[{name:"크리에이터 리뷰",title:"Pika AI 비디오 생성 후기",excerpt:"쉬운 사용법이 가장 큰 장점. SNS 콘텐츠 만들기에 최적."}]},
   },
   {
     id: "heygen",
@@ -724,6 +731,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/heygen-1.png","https://ai.ktoolu.com/screenshots/heygen-2.png"],
     expertRating:{accuracy:4.0,easeOfUse:4.2,features:4.3,performance:4.1,value:4.0,innovation:4.2},
     whoIsFor:["마케터","교육자","기업"],
+    communityReviewSummary:{overall:"HeyGen은 AI 아바타 기반 마케팅 비디오 생성 플랫폼으로, 한국 기업 교육·마케팅 부문에서 활용도가 높습니다.",pros:[{keyword:"AI 아바타",content:"실제 같은 AI 아바타로 전문적인 영상 제작. 다국어 지원"}, {keyword:"다국어 번역",content:"100개 이상 언어로 영상 자동 번역. 글로벌 마케팅에 최적"}],cons:[{keyword:"가격",content:"무료 1분/월 제한. 유료 플랜($24~$49) 부담"}, {keyword:"아바타 자연스러움",content:"완전히 자연스럽지 않은 아바타 표정과 제스처"}],sources:[{name:"마케터 리뷰",title:"HeyGen AI 아바타 영상 활용",excerpt:"AI 아바타로 마케팅 영상 제작. 다국어 버전도 자동 생성."}]},
   },
   {
     id: "synthesia",
@@ -801,6 +809,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/seedance-1.png","https://ai.ktoolu.com/screenshots/seedance-2.png"],
     expertRating:{accuracy:3.9,easeOfUse:4.0,features:3.8,performance:4.3,value:3.8,innovation:4.5},
     whoIsFor:["비디오 크리에이터","광고 제작"],
+    communityReviewSummary:{overall:"Seedance 2.0은 차세대 AI 비디오 생성 도구로, 자연스러운 모션과 시간적 일관성이 핵심 강점입니다.",pros:[{keyword:"모션 퀄리티",content:"자연스럽고 부드러운 모션. 타 AI 대비 시간적 일관성 우수"}, {keyword:"캐릭터 일관성",content:"여러 장면에서 동일 캐릭터 외형 유지 가능"}],cons:[{keyword:"유료",content:"무료 사용량 제한. 고급 기능은 유료 플랜 필요"}, {keyword:"초기 단계",content:"아직 발전 중인 도구. 사용자 커뮤니티와 자료 부족"}],sources:[{name:"얼리어답터 리뷰",title:"Seedance 2.0 AI 영상 생성",excerpt:"모션 퀄리티가 뛰어나고 시간적 일관성이 좋음. 차세대 AI 영상 기대."}]},
   },    // === CODING ===
   {
     id: "github-copilot",
@@ -896,6 +905,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/v0-1.png","https://ai.ktoolu.com/screenshots/v0-2.png"],
     expertRating:{accuracy:4.0,easeOfUse:4.5,features:4.1,performance:4.2,value:4.3,innovation:4.4},
     whoIsFor:["프론트엔드 개발자","프로덕트 디자이너","노코더"],
+    communityReviewSummary:{overall:"v0 by Vercel은 텍스트 설명으로 React UI 컴포넌트를 생성하는 AI 도구로, 프론트엔드 개발자들 사이에서 인기가 높습니다.",pros:[{keyword:"UI 생성",content:"텍스트로 React UI 컴포넌트 즉시 생성. shadcn/ui 기반 코드"}, {keyword:"생산성",content:"프로토타입 제작 시간 획기적 단축. 반복적인 UI 작업 자동화"}],cons:[{keyword:"React 한정",content:"Vue·Svelte 등 다른 프레임워크 미지원"}, {keyword:"무료 제한",content:"무료 200생성/월 제한. 전문 사용은 Pro($20) 필요"}],sources:[{name:"프론트엔드 리뷰",title:"v0 by Vercel 실사용 후기",excerpt:"UI 프로토타입 제작에 혁명. 텍스트로 원하는 UI를 바로 생성."}]},
   },
   {
     id: "bolt",
@@ -915,6 +925,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/bolt-1.png","https://ai.ktoolu.com/screenshots/bolt-2.png"],
     expertRating:{accuracy:3.8,easeOfUse:4.3,features:4.0,performance:3.9,value:4.4,innovation:4.2},
     whoIsFor:["스타트업","개발자","비개발자"],
+    communityReviewSummary:{overall:"Bolt.new는 브라우저에서 풀스택 앱을 빠르게 프로토타이핑하는 AI 개발 도구입니다.",pros:[{keyword:"풀스택",content:"브라우저에서 프론트엔드·백엔드 동시 개발. StackBlitz 기반 실행"}, {keyword:"빠른 프로토타입",content:"아이디어를 즉시 실행 가능한 앱으로. 개발 시간 획기적 단축"}],cons:[{keyword:"복잡한 프로젝트",content:"대규모 프로젝트에는 적합하지 않음"}, {keyword:"커스터마이징",content:"기존 코드베이스와의 통합 제한적"}],sources:[{name:"개발자 리뷰",title:"Bolt.new 빠른 프로토타이핑",excerpt:"아이디어를 바로 앱으로 만들어주는 도구. 해커톤에 최적."}]},
   },
       {
     id: "replit-ai",
@@ -934,6 +945,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/replit-1.png","https://ai.ktoolu.com/screenshots/replit-2.png"],
     expertRating:{accuracy:3.7,easeOfUse:4.4,features:4.2,performance:3.8,value:4.3,innovation:4.0},
     whoIsFor:["교육자·학생","취미 개발자","해커톤 참가자"],
+    communityReviewSummary:{overall:"Replit AI는 브라우저 기반 IDE에 AI 코딩 어시스턴트를 통합한 도구로, 교육과 취미 코딩에 인기가 높습니다.",pros:[{keyword:"설치 불필요",content:"브라우저만 있으면 즉시 코딩 가능. 환경 설정 불필요"}, {keyword:"AI 통합",content:"코드 생성·디버깅·설명을 AI가 도와줌. 초보자에게 특히 유용"}],cons:[{keyword:"성능",content:"로컬 IDE 대비 실행 속도와 리소스 제한"}, {keyword:"유료 전환",content:"고급 AI 기능과 프라이빗 Repl은 Core($20) 필요"}],sources:[{name:"교육 리뷰",title:"Replit AI 코딩 교육 활용",excerpt:"설치 없이 바로 코딩 교육 가능. AI가 초보자의 코드 작성을 도와줌."}]},
   },
 
 
@@ -1095,6 +1107,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/descript-1.png","https://ai.ktoolu.com/screenshots/descript-2.png"],
     expertRating:{accuracy:4.2,easeOfUse:4.4,features:4.5,performance:4.1,value:4.1,innovation:4.3},
     whoIsFor:["팟캐스터","영상 크리에이터","마케터"],
+    communityReviewSummary:{overall:"Descript는 텍스트 기반 오디오·비디오 편집 AI 도구로, 팟캐스터와 콘텐츠 크리에이터에게 필수 도구로 자리잡았습니다.",pros:[{keyword:"스크립트 편집",content:"오디오를 텍스트로 변환. 텍스트를 편집하면 미디어도 자동 편집"}, {keyword:"AI 음성",content:"AI 음성 생성·수정. 녹음 실패한 부분도 AI 목소리로 대체"}],cons:[{keyword:"한국어",content:"한국어 음성 인식·합성 품질이 영어 대비 낮음"}, {keyword:"가격",content:"고급 기능($24/월) 부담. 무료는 1시간 전사 제한"}],sources:[{name:"크리에이터 리뷰",title:"Descript 팟캐스트 편집 후기",excerpt:"스크립트 편집 방식이 혁신적. '아~' 같은 군말도 AI가 자동 제거."}]},
   },
   {
     id: "chatpdf",
@@ -1114,6 +1127,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/chatpdf-1.png","https://ai.ktoolu.com/screenshots/chatpdf-2.png"],
     expertRating:{accuracy:3.9,easeOfUse:4.6,features:3.5,performance:4.0,value:4.5,innovation:3.8},
     whoIsFor:["연구자·학생","사무직","일반 사용자"],
+    communityReviewSummary:{overall:"ChatPDF는 PDF 문서와 대화하는 AI 도구로, 논문·계약서·보고서 분석에 널리 사용됩니다.",pros:[{keyword:"문서 분석",content:"PDF 업로드 후 질문·요약·번역. 긴 문서도 빠르게 파악"}, {keyword:"간편함",content:"회원가입 없이 PDF 업로드만으로 즉시 사용 가능"}],cons:[{keyword:"한국어",content:"한국어 PDF 처리 시 정확도 다소 저하"}, {keyword:"페이지 제한",content:"무료는 120페이지 제한. 긴 문서는 Plus($5) 필요"}],sources:[{name:"대학생 리뷰",title:"ChatPDF 논문 요약 활용",excerpt:"논문 20페이지를 1분 만에 요약. 시험 기간에 유용."}]},
   },
   {
     id: "d-id",
@@ -1133,6 +1147,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/did-1.png","https://ai.ktoolu.com/screenshots/did-2.png"],
     expertRating:{accuracy:3.8,easeOfUse:4.1,features:3.7,performance:3.9,value:3.8,innovation:4.2},
     whoIsFor:["교육자","마케터"],
+    communityReviewSummary:{overall:"D-ID는 사진을 말하는 AI 아바타로 변환하는 도구로, 교육·마케팅 영상 제작에 활용됩니다.",pros:[{keyword:"사진→아바타",content:"한 장의 사진으로 말하는 디지털 휴먼 생성. 사실적인 표정과 입모양"}, {keyword:"쉬운 제작",content:"텍스트만 입력하면 AI 아바타 영상 완성. 전문 지식 불필요"}],cons:[{keyword:"아바타 자연스러움",content:"아직 완전히 자연스럽지 않은 움직임"}, {keyword:"유료",content:"무료 5분/월 제한. 고급 기능은 Pro($29) 필요"}],sources:[{name:"교육자 리뷰",title:"D-ID AI 아바타 강의 영상",excerpt:"교수님 사진으로 강의 영상 제작. 실제 강의 같은 퀄리티."}]},
   },
   {
     id: "gamma",
