@@ -5,11 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { aiTools, categories, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { SiteHeader } from "@/components/site-header";
 import { ReviewsSection } from "@/components/reviews-section";
 import { RelatedNews } from "@/components/related-news";
 import {
-  ArrowLeft, ExternalLink, Sparkles, Star, CheckCircle2, XCircle,
+  ExternalLink, Sparkles, Star, CheckCircle2, XCircle,
   Lightbulb, CreditCard, Users, BarChart3, Newspaper, Check,
   ChevronRight, Medal, FileText, MessageSquare, GitCompare, ThumbsUp, ThumbsDown,
 } from "lucide-react";
@@ -62,14 +62,7 @@ export default async function ToolDetailPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />ai.ktoolu
-          </Link>
-          <ThemeToggle />
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto max-w-5xl px-4 py-10">
         {/* ── Hero ── */}
@@ -118,7 +111,7 @@ export default async function ToolDetailPage({ params }: Props) {
                 <a
                   key={tab.id}
                   href={`#tab-${tab.id}`}
-                  className="flex items-center gap-1.5 shrink-0 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-primary/50 transition-colors"
+                  className="flex items-center gap-1.5 shrink-0 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/60 border-b-2 border-transparent hover:border-primary/60 transition-colors rounded-t-lg"
                 >
                   <IconComponent className="h-4 w-4" />
                   {tab.label}
