@@ -11,7 +11,7 @@ import { RelatedNews } from "@/components/related-news";
 import {
   ArrowLeft, ExternalLink, Sparkles, Star, CheckCircle2, XCircle,
   Lightbulb, CreditCard, Users, BarChart3, Newspaper, Check,
-  ChevronRight, Medal
+  ChevronRight, Medal, FileText, MessageSquare, GitCompare, ThumbsUp, ThumbsDown,
 } from "lucide-react";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -40,10 +40,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const TAB_ITEMS = [
-  { id: "overview", label: "개요", emoji: "📋" },
-  { id: "reviews", label: "리뷰 & 평가", emoji: "⭐" },
-  { id: "pricing", label: "가격 비교", emoji: "💰" },
-  { id: "alternatives", label: "대안 도구", emoji: "🔄" },
+  { id: "overview", label: "개요", icon: "FileText" },
+  { id: "reviews", label: "리뷰 & 평가", icon: "MessageSquare" },
+  { id: "pricing", label: "가격 비교", icon: "CreditCard" },
+  { id: "alternatives", label: "대안 도구", icon: "GitCompare" },
 ] as const;
 
 export default async function ToolDetailPage({ params }: Props) {
@@ -102,17 +102,29 @@ export default async function ToolDetailPage({ params }: Props) {
         {tool.screenshots && tool.screenshots.length > 0 && <ScreenshotGallery screenshots={tool.screenshots} toolName={tool.name} />}
 
         {/* ── Tab Navigation ── */}
-        <div className="sticky top-14 z-40 -mx-4 px-4 bg-background/95 backdrop-blur-sm border-b border-border/40 mb-8">
+        <div className="sticky top-14 z-40 -mx-4 px-4 bg-background/95 backdrop-blur-sm border-b-2 border-border/40 mb-8">
           <nav className="flex gap-0 overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-            {TAB_ITEMS.map((tab) => (
-              <a
-                key={tab.id}
-                href={`#tab-${tab.id}`}
-                className="flex items-center gap-1.5 shrink-0 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-primary/30 transition-colors"
-              >
-                {tab.emoji} {tab.label}
-              </a>
-            ))}
+            {TAB_ITEMS.map((tab) => {
+              const IconComponent = ({ className }: { className?: string }) => {
+                switch (tab.icon) {
+                  case "FileText": return <FileText className={className} />;
+                  case "MessageSquare": return <MessageSquare className={className} />;
+                  case "CreditCard": return <CreditCard className={className} />;
+                  case "GitCompare": return <GitCompare className={className} />;
+                  default: return null;
+                }
+              };
+              return (
+                <a
+                  key={tab.id}
+                  href={`#tab-${tab.id}`}
+                  className="flex items-center gap-1.5 shrink-0 px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-primary/50 transition-colors"
+                >
+                  <IconComponent className="h-4 w-4" />
+                  {tab.label}
+                </a>
+              );
+            })}
           </nav>
         </div>
 
@@ -234,6 +246,60 @@ export default async function ToolDetailPage({ params }: Props) {
                       <span className="text-xs text-muted-foreground"> / 5 종합 평가</span>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* ── 커뮤니티 리뷰 요약 ── */}
+              {tool.communityReviewSummary && (
+                <div className="rounded-xl border border-border/50 bg-card p-6 mb-5">
+                  <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-1.5">
+                    <MessageSquare className="h-4 w-4 text-primary" />한국 커뮤니티 리뷰
+                  </h3>
+                  <p className="text-sm text-foreground/80 leading-relaxed mb-4 bg-muted/30 rounded-lg p-4 border border-border/30">
+                    {tool.communityReviewSummary.overall}
+                  </p>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-4">
+                    <div>
+                      <p className="text-xs font-semibold text-emerald-500 mb-2 flex items-center gap-1">
+                        <ThumbsUp className="h-3 w-3" />장점
+                      </p>
+                      <ul className="space-y-2">
+                        {tool.communityReviewSummary.pros.map((p) => (
+                          <li key={p.keyword} className="rounded-lg bg-emerald-500/5 border border-emerald-500/15 p-3">
+                            <p className="text-xs font-semibold text-emerald-400 mb-0.5">{p.keyword}</p>
+                            <p className="text-xs text-muted-foreground">{p.content}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-red-400 mb-2 flex items-center gap-1">
+                        <ThumbsDown className="h-3 w-3" />단점
+                      </p>
+                      <ul className="space-y-2">
+                        {tool.communityReviewSummary.cons.map((c) => (
+                          <li key={c.keyword} className="rounded-lg bg-red-500/5 border border-red-500/15 p-3">
+                            <p className="text-xs font-semibold text-red-400 mb-0.5">{c.keyword}</p>
+                            <p className="text-xs text-muted-foreground">{c.content}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <details className="group">
+                    <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors list-none flex items-center gap-1">
+                      <ChevronRight className="h-3 w-3 transition-transform group-open:rotate-90" />
+                      수집 출처 ({tool.communityReviewSummary.sources.length}개)
+                    </summary>
+                    <div className="mt-3 space-y-2">
+                      {tool.communityReviewSummary.sources.map((src, i) => (
+                        <div key={i} className="rounded-lg bg-muted/30 border border-border/30 p-3">
+                          <p className="text-xs font-medium text-foreground">{src.name} — {src.title}</p>
+                          <p className="text-[11px] text-muted-foreground mt-1">{src.excerpt}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
                 </div>
               )}
 

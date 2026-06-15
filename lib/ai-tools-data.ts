@@ -43,6 +43,12 @@ export interface AITool {
   screenshots?: string[];
   expertRating?: ExpertRating;
   whoIsFor?: string[];
+  communityReviewSummary?: {
+    overall: string;
+    pros: { keyword: string; content: string }[];
+    cons: { keyword: string; content: string }[];
+    sources: { name: string; title: string; excerpt: string }[];
+  };
 }
 
 export const categories: { value: Category; label: string; emoji: string }[] = [
@@ -86,6 +92,27 @@ export const aiTools: AITool[] = [
     ],
     expertRating: { accuracy: 4.3, easeOfUse: 4.5, features: 4.8, performance: 4.5, value: 4.7, innovation: 4.6 },
     whoIsFor: ["AI 초보자 — 무료로 시작해보고 싶은 분", "개발자 — 코드 작성 및 디버깅이 필요한 분", "콘텐츠 크리에이터 — 글쓰기·번역이 필요한 분", "일반 사무직 — 보고서·이메일 자동화를 원하는 분"],
+    communityReviewSummary: {
+      overall: "한국 사용자들은 ChatGPT를 'AI 생산성의 첫걸음'으로 평가합니다. 클리앙·DC Inside 등에서 수집한 실제 사용 후기에 따르면, 전문직(변호사·개발자) 사용자들은 ChatGPT를 업무 필수 도구로 채택했으나 단일 모델 의존보다 여러 LLM(Claude, Gemini)을 병행 사용하는 추세입니다. 무료 버전만으로도 충분히 활용 가능하지만, 고급 작업을 위해서는 Plus($20/월) 이상 구독이 권장됩니다.",
+      pros: [
+        { keyword: "생산성 향상", content: "방대한 문서 검토/요약, 코드 작성, 법률 자문 초안 등 업무 효율을 극적으로 향상시킨다는 평가" },
+        { keyword: "다양한 활용도", content: "코딩, 법률, 세무, 창작, 번역, 데이터 분석 등 거의 모든 분야에서 활용 가능" },
+        { keyword: "접근성", content: "무료 버전만으로도 기초 작업 수행 가능, 카카오톡 쿠폰 등 한국형 결제 수단 지원" },
+        { keyword: "지속적 발전", content: "GPT-4 → GPT-4o로의 업데이트로 성능이 지속적으로 향상 중" },
+      ],
+      cons: [
+        { keyword: "환각", content: "법률/세무 등 전문 영역에서 잘못된 정보를 생성하는 경우가 있어 반드시 원문 검증이 필요" },
+        { keyword: "비용 부담", content: "Pro($200/월) 등 고급 플랜은 개인 사용자에게 부담스러운 수준" },
+        { keyword: "경쟁 심화", content: "Claude, Gemini, Perplexity 등 경쟁 모델 대비 전문 영역에서 차별성 감소 추세" },
+        { keyword: "구독 전환 불편", content: "Plus→Pro 전환 시 활성 구독 문제 등 사용자 경험 개선 필요" },
+      ],
+      sources: [
+        { name: "클리앙", title: "변호사로서 GPT, GEMINI, PERPLEXITY, CLAUDE 사용결과", excerpt: "대형로펌 세무 12년차 파트너 변호사. GPT PRO가 처음 AI 생산성을 느끼게 해줬으나, 법률업무에서는 Gemini와 Perplexity가 더 만족스러움." },
+        { name: "클리앙", title: "최근 AI 코딩으로 SW개발자 영향에 대한 느낌", excerpt: "ChatGPT가 코딩 보조 도구로서 생산성을 크게 향상시킨다는 의견." },
+        { name: "DC Inside", title: "팬싸 후기의 비하인드", excerpt: "무료버전은 AI 생성 내용이 부족해서 유료로 업그레이드, 유료 버전이 무료보다 생성 품질이 월등히 좋음." },
+        { name: "네이버 블로그", title: "ChatGPT 제대로 활용하는 법! 장단점부터 프롬프트 작성법까지", excerpt: "SURF 구조(Subject, Request, Format, Scope)로 프롬프트 작성법 설명. 초보자가 사용법을 모르면 원하는 결과를 얻기 어려움." },
+      ],
+    },
   },
   {
     id: "claude",
@@ -116,6 +143,27 @@ export const aiTools: AITool[] = [
     ],
     expertRating: { accuracy: 4.6, easeOfUse: 4.3, features: 4.4, performance: 4.7, value: 4.5, innovation: 4.4 },
     whoIsFor: ["연구자·학생 — 긴 논문·문서 분석이 필요한 분", "개발자 — 코드 리뷰 및 복잡한 분석이 필요한 분", "작가·에디터 — 고품질 글쓰기가 중요한 분", "기업 문서 담당자 — 긴 계약서·보고서 처리자"],
+    communityReviewSummary: {
+      overall: "한국 사용자들 사이에서 Claude는 '코딩과 장문 글쓰기에서는 최고지만, 가격과 사용량 제한이 가장 큰 걸림돌'로 평가됩니다. 클리앙 사용기 게시판에서 수집한 실제 후기에 따르면, 개발자와 전문직 사용자들은 Claude의 코드 품질과 문맥 이해력을 높이 평가하면서도 Gemini나 GPT와 병행 사용하는 전략을 주로 채택합니다. 특히 법률/세무 등 전문 분야에서 GPT Pro보다 Claude Max의 딥리서치 성능이 더 우수하다는 평가도 있습니다.",
+      pros: [
+        { keyword: "코딩 품질", content: "코드 품질 최상급, 1,000행 이상 코드 생성 가능, 복잡한 디버깅에 강함. 플랜 모드로 체계적 작업 가능" },
+        { keyword: "문맥 유지", content: "자연스러운 문체, 장문 글쓰기/문서 작업에서 문맥 흐름이 매우 우수함" },
+        { keyword: "딥리서치", content: "GPT Pro보다 법률·전문 업무에서 딥리서치 결과가 더 만족스럽다는 평가" },
+        { keyword: "안정성", content: "환각(hallucination) 빈도가 GPT/Gemini 대비 매우 낮음. 수백 회 중 1회 꼴" },
+      ],
+      cons: [
+        { keyword: "가격 폭탄", content: "자동 캐싱 미지원으로 요금제에 큰 함정. 추가 사용량 방치 시 하루 $100 소진 가능. 1억 토큰당 $48.8로 가장 비쌈" },
+        { keyword: "세션 제한", content: "세션 길이가 매우 짧아 10분마다 진행상황 정리 필요. $20 플랜은 30분 만에 제한 소진" },
+        { keyword: "추상어 과민반응", content: "코딩시 불필요/불명확한 단어 사용 시 오작동. Claude.md에 제한 설정 필수" },
+        { keyword: "멀티모달 약함", content: "이미지 생성, 실시간 검색 등은 GPT/Gemini 대비 제한적" },
+      ],
+      sources: [
+        { name: "클리앙", title: "변호사로서 GPT, GEMINI, PERPLEXITY, CLAUDE 사용결과", excerpt: "CLAUDE MAX(5x, $110) 유지 중. GPT PRO보다 CLAUDE의 딥리서치가 더 빠르고 결과 만족도 높음. \"GPT는 이제 그만 구독해도 되겠다\"" },
+        { name: "클리앙", title: "제미나이 2.5 pro, chatGPT, 클로드, Manus 3개월 굴려본 후기", excerpt: "코드 품질 우수. 세션 길이가 짧지만 환각은 수백회 중 1회로 매우 드묾. $100 플랜 유지 중." },
+        { name: "클리앙", title: "바이브 코딩 하실 분들을 위한 작은 조언", excerpt: "4개월간 하루 평균 100커밋. Claude Sonnet 4.5 평가: 자동캐시 히트율 94~97%. $20 플랜은 30분도 안 돼 제한 소진." },
+        { name: "네이버 블로그", title: "챗GPT와 클로드(Claude)에 대한 솔직한 사용 후기", excerpt: "문맥 유지 능력과 자연스러운 문체가 강점. 문서·이메일·기획·브레인스토밍에 적합." },
+      ],
+    },
   },
   {
     id: "gemini",
