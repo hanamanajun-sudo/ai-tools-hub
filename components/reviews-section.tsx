@@ -155,7 +155,8 @@ export function ReviewsSection({ toolSlug }: ReviewsSectionProps) {
         )}
       </div>
 
-      {/* Submit Form */}
+      {/* Submit Form — 현재는 커뮤니티 리뷰 요약으로 대체되어 숨김 */}
+      {false && (
       <form onSubmit={handleSubmit} className="mb-6 rounded-lg border border-border/50 bg-muted/20 p-4 space-y-4">
         <div>
           <p className="text-xs font-medium text-muted-foreground mb-2">별점 선택</p>
@@ -199,6 +200,7 @@ export function ReviewsSection({ toolSlug }: ReviewsSectionProps) {
           )}
         </div>
       </form>
+      )}
 
       {/* Reviews List */}
       {loading ? (
