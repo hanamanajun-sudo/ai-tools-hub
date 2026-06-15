@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { ExternalLink, Clock, AlertCircle, RefreshCw, X, Link2, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { ExternalLink, Clock, AlertCircle, RefreshCw, X, Link2, Check, Star, ChevronLeft, ChevronRight, ScrollText, GraduationCap, Zap, BookOpen } from "lucide-react";
 
 // 🔥 편집자 픽 — tags 배열에 '편집자픽' 포함 여부로 판단 (관리자 페이지에서 실시간 토글)
 function isEditorPick(item: AiNews): boolean {
@@ -385,7 +385,7 @@ export function NewsList() {
 
                   {item.summary && (
                     <div className="mb-3 rounded-xl bg-muted/50 border border-border/40 px-4 py-3">
-                      <p className="text-xs font-semibold text-muted-foreground mb-2">📋 기사 3줄 요약</p>
+                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><ScrollText className="h-3.5 w-3.5" /> 기사 3줄 요약</p>
                       <ol className="space-y-1.5">
                         {parseSummaryLines(item.summary).map((line, i) => (
                           <li key={i} className="flex items-start gap-2 text-sm text-foreground/80 leading-relaxed">
@@ -401,7 +401,7 @@ export function NewsList() {
 
                   {item.explanation && (
                     <div className="mb-3 rounded-xl bg-blue-500/5 border border-blue-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-blue-400 mb-2">👩‍🏫 초등학생도 이해하는 ktoolu 설명</p>
+                      <p className="text-xs font-semibold text-blue-400 mb-2 flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" /> 초등학생도 이해하는 ktoolu 설명</p>
                       <div className="space-y-1.5">
                         {splitSentences(item.explanation).map((s, i) => (
                           <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
@@ -412,7 +412,7 @@ export function NewsList() {
 
                   {item.importance && (
                     <div className="mb-3 rounded-xl bg-amber-500/5 border border-amber-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-amber-400 mb-2">⚡ 인사이트 & 시사점</p>
+                      <p className="text-xs font-semibold text-amber-400 mb-2 flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" /> 인사이트 &amp; 시사점</p>
                       <div className="space-y-1.5">
                         {splitSentences(item.importance).map((s, i) => (
                           <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
@@ -423,7 +423,7 @@ export function NewsList() {
 
                   {item.terms && item.terms.length > 0 && (
                     <div className="mb-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-emerald-400 mb-2">📖 용어해설</p>
+                      <p className="text-xs font-semibold text-emerald-400 mb-2 flex items-center gap-1.5"><BookOpen className="h-3.5 w-3.5" /> 용어해설</p>
                       <div className="space-y-2">
                         {item.terms.map(slug => {
                           const g = glossary[slug];
