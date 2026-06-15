@@ -188,6 +188,11 @@ export const aiTools: AITool[] = [
     cons: ["Google 생태계 외 사용 시 장점 감소", "창의적 글쓰기는 타 모델 대비 약함"],
     pricing: { free: "Gemini 1.5 Flash 무제한", paid: "Advanced $19.99/월 — Gemini Ultra, 2TB 드라이브 포함" },
     useCases: ["실시간 뉴스·정보 검색", "Gmail 답장 초안 작성", "Google Docs 문서 요약", "YouTube 영상 내용 분석", "여행·쇼핑 리서치"],
+    pricingPlans: [{name:"Free",price:"무료",features:["Gemini 2.0 Flash","Google 계정","1M 토큰"],recommended:true},{name:"Advanced",price:"$19.99/월",features:["Gemini Ultra","2TB Google One","우선 응답"]}],
+    comparisonNotes:"일반:Free. Workspace:Business.",
+    screenshots:["https://ai.ktoolu.com/screenshots/gemini-1.png","https://ai.ktoolu.com/screenshots/gemini-2.png"],
+    expertRating:{accuracy:4.2,easeOfUse:4.6,features:4.5,performance:4.3,value:4.8,innovation:4.4},
+    whoIsFor:["Google 생태계 사용자","연구자 — 100만 토큰","일반 사용자"],
   },
   {
     id: "perplexity",
@@ -204,6 +209,11 @@ export const aiTools: AITool[] = [
     cons: ["창작·글쓰기 작업엔 부적합", "깊은 분석보다 요약에 치중"],
     pricing: { free: "기본 검색 무제한", paid: "Pro $20/월 — 무제한 Copilot, 파일 업로드, 고급 모델" },
     useCases: ["최신 뉴스 및 트렌드 리서치", "제품 비교 및 구매 조사", "학술 자료 수집", "사실 확인(팩트 체크)", "시장 조사"],
+    pricingPlans: [{name:"Free",price:"무료",features:["Pro 검색 제한","파일 업로드","하루 5회"],recommended:true},{name:"Pro",price:"$20/월",features:["무제한 Pro","고급 파일","API"]}],
+    comparisonNotes:"리서치 많으면 Pro.",
+    screenshots:["https://ai.ktoolu.com/screenshots/perplexity-1.png","https://ai.ktoolu.com/screenshots/perplexity-2.png"],
+    expertRating:{accuracy:4.5,easeOfUse:4.4,features:4.2,performance:4.3,value:4.6,innovation:4.1},
+    whoIsFor:["연구자·학생","저널리스트","일반 사용자"],
   },
   {
     id: "notion-ai",
@@ -219,6 +229,11 @@ export const aiTools: AITool[] = [
     cons: ["Notion 구독자만 사용 가능", "독립 AI 도구보다 기능이 제한적"],
     pricing: { paid: "Notion Plus $10/월에 AI 애드온 $8/월 추가, 또는 AI 포함 플랜 $16/월" },
     useCases: ["회의록 자동 요약", "프로젝트 문서 초안 작성", "팀 위키 Q&A", "다국어 문서 번역", "보고서 구조화"],
+    pricingPlans: [{name:"Free",price:"무료",features:["Notion 기본","AI 20회","게스트 10명"],recommended:true},{name:"Plus",price:"$10/월",features:["무제한 AI","파일 100MB","게스트 100명"]},{name:"Business",price:"$18/인/월",features:["Plus 전체","SAML SSO","팀 공간"]}],
+    comparisonNotes:"개인:Plus. 팀:Business.",
+    screenshots:["https://ai.ktoolu.com/screenshots/notion-1.png","https://ai.ktoolu.com/screenshots/notion-2.png"],
+    expertRating:{accuracy:3.8,easeOfUse:4.2,features:4.6,performance:4.0,value:4.3,innovation:4.5},
+    whoIsFor:["지식 작업자","스타트업","크리에이터"],
   },
       {
     id: "grammarly",
@@ -234,6 +249,11 @@ export const aiTools: AITool[] = [
     cons: ["영어 전용 (한국어 지원 없음)", "고급 기능은 유료"],
     pricing: { free: "기본 문법·맞춤법 교정", paid: "Premium $12/월 — 고급 제안, 표절 검사, 어조 분석" },
     useCases: ["영문 이메일 작성", "영어 에세이 및 보고서 교정", "LinkedIn 프로필 개선", "비즈니스 문서 품질 향상", "영어 학습"],
+    pricingPlans: [{name:"Free",price:"무료",features:["문법·철자 검사","톤 감지","브라우저 확장"],recommended:true},{name:"Premium",price:"$12/월",features:["고급 문법","명확성","표절 검사"]},{name:"Business",price:"$15/인/월",features:["Premium 전체","브랜드 톤","스타일 가이드"]}],
+    comparisonNotes:"영어 글쓰기 많으면 Premium.",
+    screenshots:["https://ai.ktoolu.com/screenshots/grammarly-1.png","https://ai.ktoolu.com/screenshots/grammarly-2.png"],
+    expertRating:{accuracy:4.7,easeOfUse:4.8,features:4.3,performance:4.6,value:4.4,innovation:3.9},
+    whoIsFor:["영어 글쓰는 모든 사람","비즈니스 전문가","ESL 학습자"],
   },
 
 
@@ -251,6 +271,11 @@ export const aiTools: AITool[] = [
     pros: ["추론 능력 GPT-4o 수준", "완전 무료 사용 가능", "API 가격 경쟁사 대비 1/10"],
     cons: ["중국 기반으로 데이터 프라이버시 우려", "일부 편향성 이슈"],
     useCases: ["복잡한 수학·논리 문제 풀이", "코드 생성 및 디버깅", "데이터 분석 및 추론", "학습 및 교육", "비용 효율적인 API 활용"],
+    pricingPlans: [{name:"Free",price:"무료",features:["R1 무제한","파일 업로드","웹 검색","앱·웹"],recommended:true},{name:"API",price:"종량제",features:["R1 API","GPT-4o 1/10 가격","추론 투명"]}],
+    comparisonNotes:"일반:Free. 개발자:API.",
+    screenshots:["https://ai.ktoolu.com/screenshots/deepseek-1.png","https://ai.ktoolu.com/screenshots/deepseek-2.png"],
+    expertRating:{accuracy:4.6,easeOfUse:4.0,features:4.1,performance:4.5,value:5.0,innovation:4.8},
+    whoIsFor:["비용 민감 사용자","개발자 — 저렴한 API","AI 리서처"],
   },
   {
     id: "grok",
@@ -266,6 +291,11 @@ export const aiTools: AITool[] = [
     pros: ["타 AI 대비 최신 정보 접근성 우수", "차별화된 답변 스타일", "X 생태계 통합"],
     cons: ["한국어 지원 제한적", "정보의 신뢰성 검증 필요"],
     useCases: ["최신 트렌드 분석", "SNS 콘텐츠 생성", "아이디어 브레인스토밍", "실시간 뉴스 요약"],
+    pricingPlans: [{name:"X Free",price:"무료",features:["Grok 기본","X 데이터","제한적"],recommended:true},{name:"X Premium",price:"$8/월",features:["Grok 우선","Aurora 이미지","X 분석"]}],
+    comparisonNotes:"X 자주:Premium.",
+    screenshots:["https://ai.ktoolu.com/screenshots/grok-1.png","https://ai.ktoolu.com/screenshots/grok-2.png"],
+    expertRating:{accuracy:3.9,easeOfUse:4.1,features:3.8,performance:4.0,value:4.5,innovation:4.3},
+    whoIsFor:["X 헤비유저","저널리스트"],
   },
   {
     id: "writesonic",
@@ -281,6 +311,11 @@ export const aiTools: AITool[] = [
     pros: ["마케팅 콘텐츠에 최적화", "템플릿 다양성", "SEO 기능 내장"],
     cons: ["창의적 글쓰기에는 한계", "무료 플랜 제한적"],
     useCases: ["블로그 포스트 작성", "광고 카피 생성", "랜딩 페이지 작성", "이메일 마케팅", "SNS 콘텐츠"],
+    pricingPlans: [{name:"Free",price:"무료",features:["1만 단어/월","기본 템플릿","ChatSonic"],recommended:true},{name:"Long Form",price:"$19/월",features:["무제한 단어","80+ 템플릿","SEO"]},{name:"Custom",price:"$49/월",features:["Long Form 전체","브랜드 보이스","API"]}],
+    comparisonNotes:"가벼운:Free. 전문:Long Form.",
+    screenshots:["https://ai.ktoolu.com/screenshots/writesonic-1.png","https://ai.ktoolu.com/screenshots/writesonic-2.png"],
+    expertRating:{accuracy:3.7,easeOfUse:4.3,features:4.4,performance:4.1,value:4.5,innovation:3.8},
+    whoIsFor:["마케터","SEO 전문가","스타트업"],
   },
   {
     id: "ms-copilot",
@@ -296,6 +331,11 @@ export const aiTools: AITool[] = [
     pros: ["Office 생태계 완벽 통합", "기업 보안 수준", "무료로 기본 기능 사용 가능"],
     cons: ["한국어 기능 제한적", "Copilot Pro 별도 구독 필요"],
     useCases: ["문서 작성 자동화", "데이터 분석·시각화", "프레젠테이션 제작", "회의록 요약", "이메일 작성"],
+    pricingPlans: [{name:"Free",price:"무료",features:["Bing 통합","기본 이미지","대화형 AI"],recommended:true},{name:"Copilot Pro",price:"$20/월",features:["Office 365 통합","우선 GPU","더 긴 대화"]},{name:"M365 Copilot",price:"$30/인/월",features:["Pro 전체","Teams 요약","엑셀 분석"]}],
+    comparisonNotes:"개인:Free. Office:Pro. 기업:M365.",
+    screenshots:["https://ai.ktoolu.com/screenshots/ms-copilot-1.png","https://ai.ktoolu.com/screenshots/ms-copilot-2.png"],
+    expertRating:{accuracy:4.1,easeOfUse:4.5,features:4.3,performance:4.2,value:4.4,innovation:4.0},
+    whoIsFor:["Windows·Office 사용자","기업","일반 사용자"],
   },  // === IMAGE ===
   {
     id: "midjourney",
@@ -312,6 +352,11 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜 없음", "Discord 기반이라 초보자에게 진입 장벽"],
     pricing: { paid: "Basic $10/월(200장), Standard $30/월(무제한 릴렉스), Pro $60/월" },
     useCases: ["광고·마케팅 비주얼 제작", "게임 콘셉트 아트", "소셜 미디어 이미지", "북 커버 디자인", "패션·제품 시각화"],
+    pricingPlans: [{name:"Basic",price:"$10/월",features:["3.3h GPU","개인 Discord","상업"],recommended:true},{name:"Standard",price:"$30/월",features:["15h GPU","Stealth","빠른 생성"]},{name:"Pro",price:"$60/월",features:["30h GPU","Stealth 무제한","12개 동시"]}],
+    comparisonNotes:"취미:Basic. 전문:Standard.",
+    screenshots:["https://ai.ktoolu.com/screenshots/midjourney-1.png","https://ai.ktoolu.com/screenshots/midjourney-2.png"],
+    expertRating:{accuracy:3.5,easeOfUse:3.8,features:4.6,performance:4.8,value:4.2,innovation:4.7},
+    whoIsFor:["디자이너·아티스트","광고·마케팅","게임·영화"],
   },
   {
     id: "dalle3",
@@ -328,6 +373,11 @@ export const aiTools: AITool[] = [
     cons: ["단독 구독 플랜 없음(ChatGPT Plus 필요)", "Midjourney 대비 예술성 낮음", "강한 안전 필터"],
     pricing: { paid: "ChatGPT Plus $20/월에 포함, API는 이미지당 $0.04~$0.12" },
     useCases: ["프레젠테이션용 커스텀 이미지", "블로그 썸네일", "제품 콘셉트 시각화", "교육 자료 삽화", "앱·웹 UI 목업"],
+    pricingPlans: [{name:"ChatGPT Free",price:"무료",features:["DALL-E 3 기본","제한적 생성","ChatGPT 통합"],recommended:true},{name:"ChatGPT Plus",price:"$20/월",features:["DALL-E 3 무제한","고해상도","스타일 일관성"]}],
+    comparisonNotes:"가끔:Free. 자주:Plus.",
+    screenshots:["https://ai.ktoolu.com/screenshots/dalle-1.png","https://ai.ktoolu.com/screenshots/dalle-2.png"],
+    expertRating:{accuracy:4.3,easeOfUse:4.7,features:4.1,performance:4.4,value:4.5,innovation:4.2},
+    whoIsFor:["ChatGPT 사용자","크리에이터","일반 사용자"],
   },
   {
     id: "stable-diffusion",
@@ -343,6 +393,11 @@ export const aiTools: AITool[] = [
     cons: ["설치 및 설정이 복잡함", "고성능 GPU 필요(VRAM 8GB 이상 권장)", "초보자 진입 장벽 높음"],
     pricing: { free: "오픈소스 무료(로컬 실행), DreamStudio 클라우드는 크레딧 구매" },
     useCases: ["대량 이미지 생성 파이프라인", "특정 스타일 캐릭터 생성", "인물 사진 스타일 변환", "프라이버시가 중요한 이미지 작업", "AI 아트 연구"],
+    pricingPlans: [{name:"Local",price:"무료",features:["오픈소스","로컬 실행","GPU 필요"],recommended:true},{name:"Cloud API",price:"종량제",features:["API 과금","클라우드","LoRA·ControlNet"]}],
+    comparisonNotes:"GPU 보유:Local.",
+    screenshots:["https://ai.ktoolu.com/screenshots/sd-1.png","https://ai.ktoolu.com/screenshots/sd-2.png"],
+    expertRating:{accuracy:3.6,easeOfUse:3.2,features:4.9,performance:4.3,value:5.0,innovation:4.8},
+    whoIsFor:["개발자·연구자","AI 아티스트","프라이버시 중시"],
   },
   {
     id: "adobe-firefly",
@@ -359,6 +414,11 @@ export const aiTools: AITool[] = [
     cons: ["Adobe 생태계 외 사용 불편", "Midjourney 대비 예술적 자유도 낮음"],
     pricing: { free: "월 25 크레딧 무료", paid: "Adobe Creative Cloud 구독에 포함, 추가 크레딧 구매 가능" },
     useCases: ["Photoshop 사진 편집 보조", "상업 광고 이미지 제작", "브랜드 비주얼 아이덴티티", "SNS 콘텐츠 디자인", "제품 사진 배경 교체"],
+    pricingPlans: [{name:"Free",price:"무료",features:["25 생성/월","기본 기능","Express 통합"],recommended:true},{name:"Premium",price:"$4.99/월",features:["100 생성/월","고급 편집","상업 라이선스"]},{name:"CC All Apps",price:"$54.99/월",features:["무제한 생성","Photoshop 통합","Illustrator 통합"]}],
+    comparisonNotes:"가끔:Free. Adobe:CC.",
+    screenshots:["https://ai.ktoolu.com/screenshots/firefly-1.png","https://ai.ktoolu.com/screenshots/firefly-2.png"],
+    expertRating:{accuracy:4.0,easeOfUse:4.5,features:4.2,performance:4.1,value:4.3,innovation:4.0},
+    whoIsFor:["Adobe 사용자","그래픽 디자이너","마케터"],
   },
     {
     id: "leonardo-ai",
@@ -374,6 +434,11 @@ export const aiTools: AITool[] = [
     cons: ["일반 사실적 사진 생성은 다소 약함", "인터페이스 다소 복잡"],
     pricing: { free: "하루 150 토큰 무료", paid: "Apprentice $10/월, Artisan $24/월, Maestro $48/월" },
     useCases: ["게임 캐릭터 및 배경 디자인", "웹툰·만화 스타일 이미지", "NFT 아트 제작", "애니메이션 콘셉트 아트", "인디게임 에셋 제작"],
+    pricingPlans: [{name:"Free",price:"무료",features:["150 토큰/일","기본 모델","커뮤니티"],recommended:true},{name:"Apprentice",price:"$10/월",features:["무제한 생성","고급 모델","API"]},{name:"Artisan",price:"$30/월",features:["Apprentice 전체","트레이닝","우선 처리"]}],
+    comparisonNotes:"시작:Free. 활발:Apprentice.",
+    screenshots:["https://ai.ktoolu.com/screenshots/leonardo-1.png","https://ai.ktoolu.com/screenshots/leonardo-2.png"],
+    expertRating:{accuracy:3.8,easeOfUse:4.3,features:4.4,performance:4.0,value:4.5,innovation:4.1},
+    whoIsFor:["게임 개발자","취미 아티스트","크리에이터"],
   },
   {
     id: "canva-ai",
@@ -389,6 +454,11 @@ export const aiTools: AITool[] = [
     cons: ["전문 이미지 생성 도구보다 품질 낮음", "AI 기능 대부분 Pro 구독 필요"],
     pricing: { free: "기본 AI 기능 제한적 무료", paid: "Pro $15/월 — 모든 AI 기능, 프리미엄 템플릿 10만 개+" },
     useCases: ["SNS 게시물 디자인", "프레젠테이션 제작", "마케팅 배너 제작", "유튜브 썸네일", "명함·포스터 디자인"],
+    pricingPlans: [{name:"Free",price:"무료",features:["25만+ 템플릿","AI 제한","5GB"],recommended:true},{name:"Pro",price:"$12.99/월",features:["AI 무제한","Magic Studio","100GB"]},{name:"Teams",price:"$14.99/인/월",features:["Pro 전체","템플릿 공유","중앙 관리"]}],
+    comparisonNotes:"개인:Free. 전문:Pro.",
+    screenshots:["https://ai.ktoolu.com/screenshots/canva-1.png","https://ai.ktoolu.com/screenshots/canva-2.png"],
+    expertRating:{accuracy:3.5,easeOfUse:4.9,features:4.5,performance:4.2,value:4.7,innovation:4.3},
+    whoIsFor:["디자인 초보자","SNS 마케터","교육자"],
   },
 
 
@@ -406,6 +476,10 @@ export const aiTools: AITool[] = [
     pros: ["뛰어난 디테일 표현력", "사용자 친화적 인터페이스"],
     cons: ["유료 서비스", "일부 스타일 제한적"],
     useCases: ["고품질 이미지 제작", "크리에이티브 작업", "SNS 콘텐츠", "짧은 영상 제작"],
+    pricingPlans: [{name:"Basic",price:"$9.99/월",features:["100장 생성","기본 해상도","이미지→비디오"],recommended:true},{name:"Pro",price:"$24.99/월",features:["무제한 생성","4K","상업 라이선스"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/nanobana-1.png","https://ai.ktoolu.com/screenshots/nanobana-2.png"],
+    expertRating:{accuracy:3.9,easeOfUse:4.2,features:3.8,performance:4.1,value:4.0,innovation:4.3},
+    whoIsFor:["디지털 아티스트","크리에이터"],
   },
   {
     id: "chatgpt-image",
@@ -421,6 +495,11 @@ export const aiTools: AITool[] = [
     pros: ["대화 맥락 기반 이미지 생성", "별도 도구 불필요", "실시간 편집 가능"],
     cons: ["전용 이미지 도구 대비 세밀한 제어 부족", "고급 기능은 Plus 필요"],
     useCases: ["프레젠테이션 이미지", "SNS 콘텐츠", "아이디어 시각화", "일러스트레이션"],
+    pricingPlans: [{name:"Free",price:"무료",features:["ChatGPT 이미지","GPT-4o mini","제한적"],recommended:true},{name:"Plus",price:"$20/월",features:["GPT-4o 이미지","무제한","DALL-E 통합"]}],
+    comparisonNotes:"가끔:Free. 자주:Plus.",
+    screenshots:["https://ai.ktoolu.com/screenshots/chatgpt-img-1.png","https://ai.ktoolu.com/screenshots/chatgpt-img-2.png"],
+    expertRating:{accuracy:4.1,easeOfUse:4.8,features:3.9,performance:4.2,value:4.6,innovation:4.4},
+    whoIsFor:["ChatGPT 사용자","일반 사용자"],
   },  // === VIDEO ===
   {
     id: "runway",
@@ -437,6 +516,10 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜 크레딧 매우 제한적", "비디오 길이 최대 10초(Gen-3)"],
     pricing: { free: "125 크레딧 1회 제공", paid: "Standard $15/월(625크레딧), Pro $35/월(2250크레딧)" },
     useCases: ["단편 영화·광고 영상 제작", "뮤직비디오 비주얼", "소셜 미디어 숏폼 콘텐츠", "제품 데모 영상", "영화 특수효과 프리비즈"],
+    pricingPlans: [{name:"Free",price:"무료",features:["125 크레딧/월","Gen-2","720p"],recommended:true},{name:"Standard",price:"$15/월",features:["625 크레딧","Gen-3","1080p"]},{name:"Pro",price:"$35/월",features:["2,250 크레딧","Gen-3 무제한","4K"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/runway-1.png","https://ai.ktoolu.com/screenshots/runway-2.png"],
+    expertRating:{accuracy:3.8,easeOfUse:4.0,features:4.5,performance:4.3,value:3.9,innovation:4.6},
+    whoIsFor:["영상 크리에이터","광고 제작사","아티스트"],
   },
   {
     id: "sora",
@@ -453,6 +536,10 @@ export const aiTools: AITool[] = [
     cons: ["유료 구독 필요", "생성 속도가 느릴 수 있음", "일부 복잡한 동작 구현 한계"],
     pricing: { paid: "ChatGPT Plus $20/월 포함, Pro $200/월 — 무제한 생성" },
     useCases: ["광고·마케팅 영상 프로토타입", "영화 콘셉트 영상", "교육·강의 자료 영상화", "SNS 바이럴 콘텐츠", "스토리보드 시각화"],
+    pricingPlans: [{name:"ChatGPT Plus",price:"$20/월",features:["Sora 기본","최대 20초","1080p"],recommended:true},{name:"ChatGPT Pro",price:"$200/월",features:["Sora 무제한","최대 60초","4K"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/sora-1.png","https://ai.ktoolu.com/screenshots/sora-2.png"],
+    expertRating:{accuracy:4.2,easeOfUse:4.1,features:4.0,performance:4.7,value:3.8,innovation:4.9},
+    whoIsFor:["영화·광고 제작자","크리에이터","OpenAI 사용자"],
   },
   {
     id: "pika",
@@ -468,6 +555,10 @@ export const aiTools: AITool[] = [
     cons: ["영상 품질은 Runway·Sora보다 낮음", "최대 영상 길이 제한"],
     pricing: { free: "월 150크레딧 무료", paid: "Basic $8/월, Standard $28/월, Unlimited $58/월" },
     useCases: ["SNS 릴스·쇼츠 제작", "제품 애니메이션 광고", "사진 살아있게 만들기", "간단한 바이럴 영상", "스토리텔링 영상"],
+    pricingPlans: [{name:"Free",price:"무료",features:["250 크레딧/월","기본","워터마크"],recommended:true},{name:"Standard",price:"$10/월",features:["700 크레딧","720p","워터마크 제거"]},{name:"Pro",price:"$30/월",features:["2,000 크레딧","1080p","우선 처리"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/pika-1.png","https://ai.ktoolu.com/screenshots/pika-2.png"],
+    expertRating:{accuracy:3.6,easeOfUse:4.4,features:4.1,performance:3.9,value:4.3,innovation:4.2},
+    whoIsFor:["초보 크리에이터","SNS 제작자"],
   },
   {
     id: "heygen",
@@ -483,6 +574,10 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜은 워터마크 포함", "AI 아바타가 부자연스러울 수 있음"],
     pricing: { free: "1크레딧(1분 영상) 무료 체험", paid: "Creator $29/월, Business $89/월" },
     useCases: ["제품 소개 영상", "온보딩 트레이닝 자료", "다국어 마케팅 영상", "유튜브 콘텐츠 현지화", "e-Learning 강의"],
+    pricingPlans: [{name:"Free",price:"무료",features:["1분/월","기본 아바타","워터마크"],recommended:true},{name:"Starter",price:"$24/월",features:["15분/월","HD 아바타","워터마크 제거"]},{name:"Business",price:"$49/월",features:["30분/월","4K 아바타","다국어 번역"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/heygen-1.png","https://ai.ktoolu.com/screenshots/heygen-2.png"],
+    expertRating:{accuracy:4.0,easeOfUse:4.2,features:4.3,performance:4.1,value:4.0,innovation:4.2},
+    whoIsFor:["마케터","교육자","기업"],
   },
   {
     id: "synthesia",
@@ -498,6 +593,10 @@ export const aiTools: AITool[] = [
     cons: ["가격이 높음", "개인 사용자보다 기업 대상"],
     pricing: { paid: "Starter $22/월(10분), Creator $67/월(30분), Enterprise 별도 문의" },
     useCases: ["직원 온보딩·교육 영상", "규정 준수 트레이닝", "제품 튜토리얼", "글로벌 기업 커뮤니케이션", "e-Learning 콘텐츠"],
+    pricingPlans: [{name:"Starter",price:"$29/월",features:["10분/월","1개 아바타","120+ 언어"],recommended:true},{name:"Creator",price:"$89/월",features:["30분/월","5개 아바타","맞춤 아바타"]},{name:"Enterprise",price:"문의",features:["무제한","무제한 아바타","SSO"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/synthesia-1.png","https://ai.ktoolu.com/screenshots/synthesia-2.png"],
+    expertRating:{accuracy:4.1,easeOfUse:4.3,features:4.4,performance:4.2,value:3.7,innovation:4.0},
+    whoIsFor:["기업 교육팀","마케팅","HR"],
   },
 
   {
@@ -514,6 +613,11 @@ export const aiTools: AITool[] = [
     pros: ["완전 무료", "직관적 인터페이스", "AI 기능 풍부", "모바일-웹 모두 지원"],
     cons: ["고급 편집 기능 제한적", "중국 기반 프라이버시 우려"],
     useCases: ["SNS 숏폼 영상", "유튜브 콘텐츠", "자동 자막 생성", "마케팅 영상", "교육 콘텐츠"],
+    pricingPlans: [{name:"Free",price:"무료",features:["모든 편집","AI 자막","템플릿 무제한","720p"],recommended:true},{name:"Pro",price:"$7.99/월",features:["AI 우선","4K","스톡 라이브러리"]}],
+    comparisonNotes:"무료로 충분.",
+    screenshots:["https://ai.ktoolu.com/screenshots/capcut-1.png","https://ai.ktoolu.com/screenshots/capcut-2.png"],
+    expertRating:{accuracy:3.5,easeOfUse:4.7,features:4.3,performance:4.0,value:4.9,innovation:4.1},
+    whoIsFor:["TikTok 크리에이터","유튜버","일반 사용자"],
   },
   {
     id: "seedance",
@@ -529,6 +633,10 @@ export const aiTools: AITool[] = [
     pros: ["부드러운 모션 퀄리티", "캐릭터 일관성 우수", "사용자 피드백 반영 빠름"],
     cons: ["유료 서비스", "생성 시간 다소 김"],
     useCases: ["광고 영상", "SNS 콘텐츠", "예술적 영상", "마케팅 비디오"],
+    pricingPlans: [{name:"Starter",price:"$15/월",features:["50 크레딧/월","720p","기본 모션"],recommended:true},{name:"Pro",price:"$39/월",features:["200 크레딧/월","1080p","고급 모션"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/seedance-1.png","https://ai.ktoolu.com/screenshots/seedance-2.png"],
+    expertRating:{accuracy:3.9,easeOfUse:4.0,features:3.8,performance:4.3,value:3.8,innovation:4.5},
+    whoIsFor:["비디오 크리에이터","광고 제작"],
   },    // === CODING ===
   {
     id: "github-copilot",
@@ -545,6 +653,10 @@ export const aiTools: AITool[] = [
     cons: ["유료(학생·오픈소스는 무료)", "인터넷 연결 필수", "간혹 부정확한 코드 제안"],
     pricing: { free: "학생·인증 오픈소스 기여자 무료", paid: "Individual $10/월, Business $19/월/인" },
     useCases: ["반복적인 코드 패턴 자동화", "새로운 언어·프레임워크 빠른 학습", "단위 테스트 자동 생성", "코드 리뷰 및 리팩토링", "API 연동 코드 작성"],
+    pricingPlans: [{name:"Free",price:"무료",features:["2,000 완성/월","50 채팅/월","VS Code"],recommended:true},{name:"Individual",price:"$10/월",features:["무제한 완성","무제한 채팅","Copilot Voice"]},{name:"Business",price:"$19/인/월",features:["Individual 전체","정책 관리","감사 로그"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/gh-copilot-1.png","https://ai.ktoolu.com/screenshots/gh-copilot-2.png"],
+    expertRating:{accuracy:4.2,easeOfUse:4.6,features:4.3,performance:4.4,value:4.5,innovation:4.1},
+    whoIsFor:["모든 개발자","기업 개발팀","학생"],
   },
   {
     id: "cursor",
@@ -561,6 +673,10 @@ export const aiTools: AITool[] = [
     cons: ["코드를 외부 서버로 전송(프라이버시)", "무료 플랜은 사용량 제한"],
     pricing: { free: "2주 Pro 체험 후 기본 무료(제한적)", paid: "Pro $20/월 — 500 fast 요청, 무제한 slow 요청" },
     useCases: ["레거시 코드 리팩토링", "새 기능 빠른 개발", "버그 디버깅 자동화", "코드 문서화", "프로젝트 전체 구조 파악"],
+    pricingPlans: [{name:"Free",price:"무료",features:["2,000 완성/월","50 프리미엄","VS Code 호환"],recommended:true},{name:"Pro",price:"$20/월",features:["무제한 완성","500 프리미엄","Claude·GPT"]},{name:"Business",price:"$40/인/월",features:["Pro 전체","중앙 관리","팀 정책"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/cursor-1.png","https://ai.ktoolu.com/screenshots/cursor-2.png"],
+    expertRating:{accuracy:4.3,easeOfUse:4.4,features:4.5,performance:4.5,value:4.2,innovation:4.6},
+    whoIsFor:["개발자","프리랜서","스타트업"],
   },
   {
     id: "v0",
@@ -577,6 +693,10 @@ export const aiTools: AITool[] = [
     cons: ["React·Next.js 특화(다른 프레임워크 한계)", "복잡한 비즈니스 로직은 직접 작성 필요"],
     pricing: { free: "월 200크레딧 무료", paid: "Premium $20/월 — 5000크레딧, 우선 처리" },
     useCases: ["랜딩 페이지 빠른 프로토타입", "대시보드 UI 생성", "폼·테이블 컴포넌트 제작", "디자인 목업 코드화", "UI 컴포넌트 라이브러리 구축"],
+    pricingPlans: [{name:"Free",price:"무료",features:["200 생성/월","기본 UI","shadcn/ui"],recommended:true},{name:"Pro",price:"$20/월",features:["무제한 생성","커스텀 디자인","API"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/v0-1.png","https://ai.ktoolu.com/screenshots/v0-2.png"],
+    expertRating:{accuracy:4.0,easeOfUse:4.5,features:4.1,performance:4.2,value:4.3,innovation:4.4},
+    whoIsFor:["프론트엔드 개발자","프로덕트 디자이너","노코더"],
   },
   {
     id: "bolt",
@@ -592,6 +712,10 @@ export const aiTools: AITool[] = [
     cons: ["복잡한 대규모 앱 개발에는 한계", "무료 플랜 토큰 제한"],
     pricing: { free: "일정 토큰 무료", paid: "Basic $20/월, Pro $50/월" },
     useCases: ["스타트업 MVP 빠른 프로토타입", "해커톤 프로젝트", "클라이언트 데모 앱", "학습용 풀스택 예제", "아이디어 검증용 앱"],
+    pricingPlans: [{name:"Free",price:"무료",features:["기본 생성","공개 프로젝트","커뮤니티"],recommended:true},{name:"Pro",price:"$20/월",features:["무제한 생성","비공개 프로젝트","우선 지원"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/bolt-1.png","https://ai.ktoolu.com/screenshots/bolt-2.png"],
+    expertRating:{accuracy:3.8,easeOfUse:4.3,features:4.0,performance:3.9,value:4.4,innovation:4.2},
+    whoIsFor:["스타트업","개발자","비개발자"],
   },
       {
     id: "replit-ai",
@@ -607,6 +731,10 @@ export const aiTools: AITool[] = [
     cons: ["로컬 IDE보다 성능 제한", "AI 기능 대부분 유료", "인터넷 연결 필수"],
     pricing: { free: "기본 IDE 무료(AI 기능 제한)", paid: "Core $20/월 — 전체 AI 기능, 더 많은 컴퓨팅 자원" },
     useCases: ["코딩 교육 및 학습", "빠른 코드 실험·프로토타입", "팀 코딩 인터뷰 연습", "서버 없는 봇·스크립트 실행", "학생 과제 개발"],
+    pricingPlans: [{name:"Free",price:"무료",features:["기본 AI","공개 Repl","CPU 제한"],recommended:true},{name:"Core",price:"$20/월",features:["AI 무제한","비공개 Repl","더 많은 리소스"]},{name:"Teams",price:"$40/인/월",features:["Core 전체","팀 공간","중앙 관리"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/replit-1.png","https://ai.ktoolu.com/screenshots/replit-2.png"],
+    expertRating:{accuracy:3.7,easeOfUse:4.4,features:4.2,performance:3.8,value:4.3,innovation:4.0},
+    whoIsFor:["교육자·학생","취미 개발자","해커톤 참가자"],
   },
 
 
@@ -624,6 +752,10 @@ export const aiTools: AITool[] = [
     pros: ["Cursor 대비 저렴한 가격", "VS Code 확장과 호환", "AI Flow로 생산성 향상"],
     cons: ["Cursor 대비 에이전트 기능 부족", "아직 안정화 진행 중"],
     useCases: ["일상 코딩 작업", "코드 리팩토링", "팀 프로젝트", "풀스택 개발"],
+    pricingPlans: [{name:"Free",price:"무료",features:["기본 AI Flow","1,500 완성/월","VS Code 호환"],recommended:true},{name:"Pro",price:"$15/월",features:["AI Flow 무제한","무제한 완성","고급 모델"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/windsurf-1.png","https://ai.ktoolu.com/screenshots/windsurf-2.png"],
+    expertRating:{accuracy:4.0,easeOfUse:4.2,features:4.1,performance:4.1,value:4.5,innovation:4.3},
+    whoIsFor:["개발자 — Cursor 대안","VS Code 사용자"],
   },
   {
     id: "devin",
@@ -639,6 +771,10 @@ export const aiTools: AITool[] = [
     pros: ["완전 자율적 작업 수행", "실제 프로젝트 투입 가능", "기존 도구 대비 압도적 성능"],
     cons: ["기업용으로만 제공", "아직 초기 단계", "고가"],
     useCases: ["버그 수정", "기능 개발", "코드 리팩토링", "배포 자동화"],
+    pricingPlans: [{name:"Enterprise",price:"문의",features:["자율 AI 엔지니어","슬랙·GitHub 통합","보안 규정","전담 지원"],recommended:true}],
+    screenshots:["https://ai.ktoolu.com/screenshots/devin-1.png","https://ai.ktoolu.com/screenshots/devin-2.png"],
+    expertRating:{accuracy:4.4,easeOfUse:3.5,features:4.3,performance:4.6,value:3.3,innovation:4.9},
+    whoIsFor:["소프트웨어 기업","CTO·VP Eng"],
   },  // === MUSIC ===
   {
     id: "suno",
@@ -655,6 +791,10 @@ export const aiTools: AITool[] = [
     cons: ["저작권 및 상업적 사용에 주의 필요(유료 플랜만)", "세밀한 편집 기능 부족"],
     pricing: { free: "하루 50크레딧(약 10곡) 무료", paid: "Pro $8/월 — 하루 2500크레딧, 상업적 사용 허가" },
     useCases: ["개인 취향 맞춤 음악 생성", "유튜브 배경음악", "생일·기념일 맞춤 노래", "광고 징글 제작", "음악 아이디어 스케치"],
+    pricingPlans: [{name:"Free",price:"무료",features:["10곡/일","기본 음질","기본 장르"],recommended:true},{name:"Pro",price:"$10/월",features:["500곡/월","고음질","상업 라이선스"]},{name:"Premier",price:"$30/월",features:["2,000곡/월","최고 음질","익스텐드"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/suno-1.png","https://ai.ktoolu.com/screenshots/suno-2.png"],
+    expertRating:{accuracy:3.2,easeOfUse:4.3,features:4.4,performance:4.2,value:4.3,innovation:4.7},
+    whoIsFor:["음악 크리에이터","콘텐츠 제작자","취미 작곡가"],
   },
   {
     id: "udio",
@@ -671,6 +811,10 @@ export const aiTools: AITool[] = [
     cons: ["Suno보다 인터페이스 복잡", "상업적 사용 정책 확인 필요"],
     pricing: { free: "월 100크레딧 무료", paid: "Standard $10/월, Pro $30/월 — 더 많은 크레딧, 상업적 사용" },
     useCases: ["유튜브·팟캐스트 배경음악", "게임 사운드트랙", "앨범 아이디어 스케치", "음악 프로듀서 작업 보조", "광고 음악 제작"],
+    pricingPlans: [{name:"Free",price:"무료",features:["50곡/월","기본 음질","워터마크"],recommended:true},{name:"Standard",price:"$10/월",features:["1,200곡/월","고음질","워터마크 제거"]},{name:"Pro",price:"$30/월",features:["4,000곡/월","익스텐드","상업 라이선스"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/udio-1.png","https://ai.ktoolu.com/screenshots/udio-2.png"],
+    expertRating:{accuracy:3.4,easeOfUse:4.2,features:4.1,performance:4.0,value:4.2,innovation:4.3},
+    whoIsFor:["음악 프로듀서","인디 뮤지션","게임 개발자"],
   },
         // === OTHER ===
   {
@@ -688,6 +832,10 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜 월 10,000자 제한", "음성 클로닝 악용 윤리 우려"],
     pricing: { free: "월 10,000자 무료", paid: "Starter $5/월(30,000자), Creator $22/월(100,000자)" },
     useCases: ["유튜브 내레이션 자동 생성", "오디오북 제작", "팟캐스트 AI 진행자", "게임 NPC 음성", "다국어 콘텐츠 더빙"],
+    pricingPlans: [{name:"Free",price:"무료",features:["1만자/월","기본 음성","1개 커스텀"],recommended:true},{name:"Starter",price:"$5/월",features:["3만자/월","고음질","음성 클로닝"]},{name:"Pro",price:"$22/월",features:["10만자/월","프로 음성","API"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/elevenlabs-1.png","https://ai.ktoolu.com/screenshots/elevenlabs-2.png"],
+    expertRating:{accuracy:4.5,easeOfUse:4.3,features:4.2,performance:4.6,value:4.0,innovation:4.4},
+    whoIsFor:["콘텐츠 크리에이터","개발자 — 음성 API","오디오북 제작자"],
   },
   {
     id: "descript",
@@ -703,6 +851,10 @@ export const aiTools: AITool[] = [
     cons: ["전문 비디오 편집 기능은 한계", "무료 플랜은 워터마크·제한"],
     pricing: { free: "1시간 전사 무료, 워터마크", paid: "Hobbyist $24/월, Creator $40/월, Business $80/월" },
     useCases: ["팟캐스트 편집 및 제작", "유튜브 인터뷰 편집", "웨비나 녹화 편집", "자막 자동 생성", "오디오 클립 제작"],
+    pricingPlans: [{name:"Free",price:"무료",features:["1시간 전사/월","기본 편집","워터마크"],recommended:true},{name:"Pro",price:"$24/월",features:["10시간 전사/월","스크립트 편집","AI 음성"]},{name:"Enterprise",price:"$40/인/월",features:["무제한 전사","SSO","커스텀 워크플로우"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/descript-1.png","https://ai.ktoolu.com/screenshots/descript-2.png"],
+    expertRating:{accuracy:4.2,easeOfUse:4.4,features:4.5,performance:4.1,value:4.1,innovation:4.3},
+    whoIsFor:["팟캐스터","영상 크리에이터","마케터"],
   },
   {
     id: "chatpdf",
@@ -718,6 +870,10 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜은 파일 크기 제한", "복잡한 표·이미지 분석 한계"],
     pricing: { free: "하루 2개 PDF, 최대 120페이지", paid: "Plus $5/월 — 하루 50개 PDF, 2000페이지" },
     useCases: ["학술 논문 빠른 리뷰", "계약서 주요 조항 파악", "재무 보고서 분석", "법률 문서 이해", "교재 학습 보조"],
+    pricingPlans: [{name:"Free",price:"무료",features:["2개 PDF/일","120페이지","기본 질문"],recommended:true},{name:"Plus",price:"$5/월",features:["무제한 PDF","1,000페이지","고급 분석"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/chatpdf-1.png","https://ai.ktoolu.com/screenshots/chatpdf-2.png"],
+    expertRating:{accuracy:3.9,easeOfUse:4.6,features:3.5,performance:4.0,value:4.5,innovation:3.8},
+    whoIsFor:["연구자·학생","사무직","일반 사용자"],
   },
   {
     id: "d-id",
@@ -733,6 +889,10 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜 워터마크·크레딧 제한", "장시간 영상은 어색해 보일 수 있음"],
     pricing: { free: "20크레딧 무료 체험", paid: "Lite $5.9/월, Pro $49/월, Advanced $149/월" },
     useCases: ["교육 강의 영상 제작", "기업 안내 영상", "SNS 마케팅 영상", "다국어 제품 설명", "역사 인물 교육 콘텐츠"],
+    pricingPlans: [{name:"Free",price:"무료",features:["5분/월","기본 아바타","워터마크"],recommended:true},{name:"Pro",price:"$29/월",features:["15분/월","고급 아바타","워터마크 제거"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/did-1.png","https://ai.ktoolu.com/screenshots/did-2.png"],
+    expertRating:{accuracy:3.8,easeOfUse:4.1,features:3.7,performance:3.9,value:3.8,innovation:4.2},
+    whoIsFor:["교육자","마케터"],
   },
   {
     id: "gamma",
@@ -749,6 +909,10 @@ export const aiTools: AITool[] = [
     cons: ["고도로 커스터마이징된 디자인에는 한계", "PowerPoint 고급 기능 대체 불가"],
     pricing: { free: "400크레딧(약 10개 덱) 무료", paid: "Plus $10/월 — 무제한 AI 생성, 커스텀 폰트" },
     useCases: ["사업 계획서 프레젠테이션", "수업·강의 자료 제작", "제품 피치덱", "보고서 시각화", "포트폴리오 웹페이지"],
+    pricingPlans: [{name:"Free",price:"무료",features:["400 AI 슬라이드/월","기본 템플릿","내보내기 제한"],recommended:true},{name:"Pro",price:"$10/월",features:["무제한 슬라이드","고급 템플릿","PDF·PPT"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/gamma-1.png","https://ai.ktoolu.com/screenshots/gamma-2.png"],
+    expertRating:{accuracy:3.6,easeOfUse:4.5,features:4.0,performance:4.1,value:4.4,innovation:4.2},
+    whoIsFor:["프레젠터","마케터","교육자"],
   },
 
   {
@@ -765,6 +929,10 @@ export const aiTools: AITool[] = [
     pros: ["자율적 복잡 작업 수행", "사용자 친화적 UI", "다양한 도구 통합"],
     cons: ["아직 베타 단계", "작업 시간이 다소 김"],
     useCases: ["리서치 보고서 작성", "데이터 분석", "웹 스크래핑", "자동화된 문서 작업"],
+    pricingPlans: [{name:"Free",price:"무료",features:["기본 에이전트","웹 검색","코드 실행"],recommended:true},{name:"Pro",price:"$29/월",features:["고급 에이전트","파일 처리","우선 처리"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/manus-1.png","https://ai.ktoolu.com/screenshots/manus-2.png"],
+    expertRating:{accuracy:4.0,easeOfUse:3.8,features:4.2,performance:3.7,value:4.3,innovation:4.8},
+    whoIsFor:["리서처","비즈니스 분석가","일반 사용자"],
   },
   {
     id: "zapier-ai",
@@ -780,4 +948,8 @@ export const aiTools: AITool[] = [
     pros: ["압도적인 앱 연동 수", "코드 없이 자동화", "AI가 자동으로 워크플로우 생성"],
     cons: ["무료 플랜 제한적", "복잡한 워크플로우는 유료"],
     useCases: ["마케팅 자동화", "영업 리드 관리", "데이터 동기화", "고객 지원 자동화", "AI 기반 의사결정"],
+    pricingPlans: [{name:"Free",price:"무료",features:["100 태스크/월","5개 Zap","기본 AI"],recommended:true},{name:"Starter",price:"$19.99/월",features:["750 태스크/월","20개 Zap","AI 자동화"]},{name:"Professional",price:"$49/월",features:["2,000 태스크/월","무제한 Zap","고급 AI"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/zapier-1.png","https://ai.ktoolu.com/screenshots/zapier-2.png"],
+    expertRating:{accuracy:3.8,easeOfUse:4.2,features:4.6,performance:4.0,value:4.2,innovation:4.1},
+    whoIsFor:["마케터","운영팀","스타트업"],
   },    ];
