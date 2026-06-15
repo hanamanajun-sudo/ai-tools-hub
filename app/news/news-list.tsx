@@ -109,14 +109,17 @@ function todayKey(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
+const ITEMS_PER_PAGE = 10;
+
 export function NewsList() {
   const [news, setNews] = useState<AiNews[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
-  const [activeDate, setActiveDate] = useState<string | null>(null); // YYYY-MM-DD
+  const [activeDate, setActiveDate] = useState<string | null>(null);
   const [glossary, setGlossary] = useState<Record<string, GlossaryTerm>>({});
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
 
   const dateScrollRef = useRef<HTMLDivElement>(null);
 
@@ -226,9 +229,24 @@ export function NewsList() {
     });
   }, [news, activeTag, activeDate]);
 
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(filteredNews.length / ITEMS_PER_PAGE)), [filteredNews]);
+
+  // 필터 변경 시 페이지 초기화
+  useEffect(() => { setPage(0); }, [activeTag, activeDate]);
+
+  // 데이터 변경 시 페이지 범위 보정
+  useEffect(() => {
+    if (page >= totalPages) setPage(Math.max(0, totalPages - 1));
+  }, [totalPages, page]);
+
+  // 현재 페이지 아이템
+  const pagedNews = useMemo(() => {
+    return filteredNews.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+  }, [filteredNews, page]);
+
   const groupedNews = useMemo(() => {
     const groups: Record<string, AiNews[]> = {};
-    filteredNews.forEach(item => {
+    pagedNews.forEach(item => {
       const group = getDateGroup(item.collected_at);
       if (!groups[group]) groups[group] = [];
       groups[group].push(item);
@@ -473,6 +491,55 @@ export function NewsList() {
             </div>
           </section>
         ))}
+
+        {/* ── 페이지네이션 ── */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-1.5 pt-4">
+            <button
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="flex items-center justify-center w-8 h-8 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            {Array.from({ length: Math.min(totalPages, 7) }).map((_, i) => {
+              // 7개 이상일 때는 현재 페이지 중심으로
+              let pageNum: number;
+              if (totalPages <= 7) {
+                pageNum = i;
+              } else if (page <= 3) {
+                pageNum = i;
+              } else if (page >= totalPages - 4) {
+                pageNum = totalPages - 7 + i;
+              } else {
+                pageNum = page - 3 + i;
+              }
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => setPage(pageNum)}
+                  className={`w-8 h-8 rounded-lg text-xs font-medium transition-colors ${
+                    page === pageNum
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+                >
+                  {pageNum + 1}
+                </button>
+              );
+            })}
+            <button
+              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+              disabled={page >= totalPages - 1}
+              className="flex items-center justify-center w-8 h-8 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <span className="text-xs text-muted-foreground ml-2">
+              {page * ITEMS_PER_PAGE + 1}-{Math.min((page + 1) * ITEMS_PER_PAGE, filteredNews.length)} / {filteredNews.length}
+            </span>
+          </div>
+        )}
 
         {filteredNews.length === 0 && (activeTag || activeDate) && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
