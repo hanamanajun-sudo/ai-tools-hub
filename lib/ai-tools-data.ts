@@ -7,6 +7,13 @@ export type Category =
   | "music"
   | "other";
 
+export interface PricingPlan {
+  name: string;
+  price: string;
+  features: string[];
+  recommended?: boolean;
+}
+
 export interface ExpertRating {
   accuracy: number;
   easeOfUse: number;
@@ -30,6 +37,8 @@ export interface AITool {
   pros?: string[];
   cons?: string[];
   pricing?: { free?: string; paid?: string };
+  pricingPlans?: PricingPlan[];
+  comparisonNotes?: string;
   useCases?: string[];
   screenshots?: string[];
   expertRating?: ExpertRating;
@@ -63,6 +72,13 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜은 사용량 제한 있음", "학습 데이터 컷오프로 최신 정보 부재(웹 검색 없이)"],
     pricing: { free: "GPT-4o mini 무제한, GPT-4o 제한적 사용", paid: "Plus $20/월 — GPT-4o 우선 접근, 이미지 생성, 고급 분석" },
     useCases: ["보고서·이메일 초안 작성", "코드 작성 및 디버깅", "외국어 번역 및 학습", "데이터 분석 및 시각화", "아이디어 브레인스토밍"],
+    pricingPlans: [
+      { name: "Free", price: "무료", features: ["GPT-4o mini 무제한", "GPT-4o 제한적 사용", "파일 업로드 가능", "웹 검색 불가"], recommended: true },
+      { name: "Plus", price: "$20/월", features: ["GPT-4o 우선 접근", "DALL·E 이미지 생성", "고급 데이터 분석", "메시지 5배 더 많이"] },
+      { name: "Pro", price: "$200/월", features: ["GPT-4o 무제한", "고속 응답", "고급 데이터 분석 무제한", "Codex 통합"] },
+      { name: "Team", price: "$25/인/월", features: ["Plus 기능 전체", "공유 작업공간", "팀 관리 콘솔"] },
+    ],
+    comparisonNotes: "일반 사용자: Free로 충분. GPT-4o 우선 접근이 필요하면 Plus. 고급 데이터 분석과 코드 작업이 많으면 Pro. 기업 팀은 Team.",
     screenshots: [
       "https://ai.ktoolu.com/screenshots/chatgpt-1.png",
       "https://ai.ktoolu.com/screenshots/chatgpt-2.png",
@@ -86,6 +102,13 @@ export const aiTools: AITool[] = [
     cons: ["이미지 생성 기능 없음", "무료 플랜 사용량 제한"],
     pricing: { free: "Claude 3.5 Haiku 사용 가능, 일일 제한 있음", paid: "Pro $20/월 — Claude 3.5 Sonnet 우선 접근, 5배 더 많은 사용량" },
     useCases: ["긴 계약서·논문 분석", "복잡한 코드 리뷰", "고품질 글쓰기 및 편집", "리서치 보조", "다국어 번역"],
+    pricingPlans: [
+      { name: "Free", price: "무료", features: ["Claude 3.5 Haiku 사용", "일일 메시지 제한", "PDF 업로드 가능", "웹 검색 제한적"], recommended: true },
+      { name: "Pro", price: "$20/월", features: ["Claude 3.5 Sonnet 우선", "5배 더 많은 사용량", "긴 문서 처리 최대", "우선 응답 속도"] },
+      { name: "Team", price: "$30/인/월", features: ["Pro 기능 전체", "공유 작업공간", "중앙 관리 콘솔", "사용량 분석"] },
+      { name: "Enterprise", price: "문의", features: ["맞춤형 모델", "SSO·보안 규정 준수", "전용 지원", "SLA 보장"] },
+    ],
+    comparisonNotes: "긴 문서·논문 분석이 주 목적: Free로 시작. 하루 5시간 이상 사용: Pro. 연구실·팀 단위: Team. 대규모 기업 보안: Enterprise.",
     screenshots: [
       "https://ai.ktoolu.com/screenshots/claude-1.png",
       "https://ai.ktoolu.com/screenshots/claude-2.png",
