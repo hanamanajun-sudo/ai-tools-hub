@@ -4,8 +4,10 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { ExternalLink, Clock, AlertCircle, RefreshCw, X, Link2, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
-// 🔥 편집자 픽 — 수동 관리: 이 배열에 article.id를 넣으면 상단에 뱃지 표시
-const EDITOR_PICKS: number[] = [53, 72];
+// 🔥 편집자 픽 — tags 배열에 '편집자픽' 포함 여부로 판단 (관리자 페이지에서 실시간 토글)
+function isEditorPick(item: AiNews): boolean {
+  return item.tags?.includes("편집자픽") ?? false;
+}
 
 type AiNews = {
   id: number;
@@ -233,8 +235,8 @@ export function NewsList() {
     const result: Record<string, AiNews[]> = {};
     for (const [group, items] of Object.entries(groupedNews)) {
       result[group] = [...items].sort((a, b) => {
-        const aPick = EDITOR_PICKS.includes(a.id) ? 0 : 1;
-        const bPick = EDITOR_PICKS.includes(b.id) ? 0 : 1;
+        const aPick = isEditorPick(a) ? 0 : 1;
+        const bPick = isEditorPick(b) ? 0 : 1;
         return aPick - bPick;
       });
     }
@@ -346,7 +348,7 @@ export function NewsList() {
                   key={item.id}
                   id={`article-${item.id}`}
                   className={`rounded-xl border ${
-                    EDITOR_PICKS.includes(item.id)
+                    isEditorPick(item)
                       ? "border-amber-500/30 bg-amber-500/[0.02]"
                       : "border-border/50 bg-card"
                   } p-5 transition-all hover:border-border hover:shadow-sm scroll-mt-6`}
@@ -354,7 +356,7 @@ export function NewsList() {
                   {/* ── 상단: 편집자픽 + 날짜 ── */}
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <div className="flex items-center gap-1.5">
-                      {EDITOR_PICKS.includes(item.id) && <EditorPickBadge />}
+                      {isEditorPick(item) && <EditorPickBadge />}
                     </div>
                     <span className="inline-flex items-center rounded-md bg-secondary/40 px-2 py-0.5 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
                       {new Date(item.collected_at).toLocaleDateString("ko-KR", {
