@@ -269,6 +269,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/notion-1.png","https://ai.ktoolu.com/screenshots/notion-2.png"],
     expertRating:{accuracy:3.8,easeOfUse:4.2,features:4.6,performance:4.0,value:4.3,innovation:4.5},
     whoIsFor:["지식 작업자","스타트업","크리에이터"],
+    communityReviewSummary: {
+      overall: "Notion AI는 한국 사용자들 사이에서 '문서 작성과 지식 관리를 혁신한 도구'로 평가됩니다. 네이버 블로그와 ABBO 기술블로그 등에서 생산성 향상에 대한 긍정적인 후기가 많습니다.",
+      pros: [{keyword:"문서 작성",content:"AI 초안 작성으로 문서 작업 시간 단축. 표·목록 자동 생성"}, {keyword:"지식 관리",content:"Notion 데이터베이스와 AI 결합으로 강력한 지식 관리 시스템 구축"}],
+      cons: [{keyword:"비용",content:"Notion 구독료 + AI 애드온($8/월) 추가 부담"}, {keyword:"한국어",content:"영어 대비 한국어 AI 품질 차이. 한국어 문서 작성 시 다소 어색한 표현"}],
+      sources: [
+        {name:"네이버 블로그",title:"Notion AI 실제 사용 후기, 생산성 향상 꿀팁",excerpt:"문서 초안, 브레인스토밍, 번역까지 Notion AI로 작업 시간 단축."},
+        {name:"ABBO 기술블로그",title:"Notion AI 업무 적용 후기",excerpt:"회의록 자동 작성, 업무 보고서 초안 생성에 활용. 생산성 향상 체감."},
+      ],
+    },
   },
       {
     id: "grammarly",
@@ -474,6 +483,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/sd-1.png","https://ai.ktoolu.com/screenshots/sd-2.png"],
     expertRating:{accuracy:3.6,easeOfUse:3.2,features:4.9,performance:4.3,value:5.0,innovation:4.8},
     whoIsFor:["개발자·연구자","AI 아티스트","프라이버시 중시"],
+    communityReviewSummary: {
+      overall: "Stable Diffusion은 오픈소스 이미지 생성 모델로 한국 사용자들에게 높은 자유도와 커스터마이징 가능성으로 평가받습니다. 클리앙 사용기와 tali.kr AI 커뮤니티에서 활발한 논의가 이뤄지고 있습니다.",
+      pros: [{keyword:"오픈소스",content:"완전 무료, 로컬 실행 가능, 모델 파인튜닝 자유로움"}, {keyword:"커스터마이징",content:"LoRA, ControlNet 등 확장 기능으로 세밀한 제어 가능"}],
+      cons: [{keyword:"진입 장벽",content:"로컬 설치는 GPU 필요, 초보자에게 설치 과정이 복잡"}, {keyword:"퀄리티",content:"Midjourney 대비 기본 생성물의 예술적 완성도 차이"}],
+      sources: [
+        {name:"클리앙",title:"Stable Diffusion 로컬 설치 후기",excerpt:"M1 맥에서 Stable Diffusion 돌려본 후기. GPU 없이도 CPU로 구동 가능."},
+        {name:"tali.kr",title:"Stable Diffusion WebUI 설치 가이드 및 후기",excerpt:"AI 그림 커뮤니티에서 가장 많이 사용되는 오픈소스 모델."},
+      ],
+    },
   },
   {
     id: "adobe-firefly",
@@ -611,6 +629,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/runway-1.png","https://ai.ktoolu.com/screenshots/runway-2.png"],
     expertRating:{accuracy:3.8,easeOfUse:4.0,features:4.5,performance:4.3,value:3.9,innovation:4.6},
     whoIsFor:["영상 크리에이터","광고 제작사","아티스트"],
+    communityReviewSummary: {
+      overall: "Runway는 AI 비디오 생성 및 편집의 선두주자로 한국 크리에이터들 사이에서 주목받고 있습니다. Gen-3 Alpha 모델의 비디오 퀄리티가 특히 높은 평가를 받고 있습니다.",
+      pros: [{keyword:"비디오 품질",content:"Gen-3 Alpha 모델의 사실적인 영상 생성. 텍스트-비디오 품질 업계 최고 수준"}, {keyword:"다양한 기능",content:"인페인팅, 모션 브러시, 슬로우모션 등 편집 기능 풍부"}],
+      cons: [{keyword:"가격",content:"무료 크레딧 제한적. 유료 플랜($15~$35) 부담"}, {keyword:"한국어",content:"한국어 프롬프트 지원 제한적"}],
+      sources: [
+        {name:"네이버 블로그",title:"Runway AI 영상 생성 사용 후기",excerpt:"Gen-3 Alpha 영상 퀄리티에 감탄. 텍스트로 영상을 만드는 시대가 왔음."},
+        {name:"dropshot.io",title:"Runway ML 리뷰 및 기능 분석",excerpt:"AI 비디오 편집 도구로 크리에이터에게 필수적인 기능들 제공."},
+      ],
+    },
   },
   {
     id: "sora",
@@ -631,6 +658,15 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/sora-1.png","https://ai.ktoolu.com/screenshots/sora-2.png"],
     expertRating:{accuracy:4.2,easeOfUse:4.1,features:4.0,performance:4.7,value:3.8,innovation:4.9},
     whoIsFor:["영화·광고 제작자","크리에이터","OpenAI 사용자"],
+    communityReviewSummary: {
+      overall: "Sora는 OpenAI의 텍스트-비디오 AI로 한국 사용자들에게 큰 기대를 받고 있으나 아직 일반에 완전히 공개되지 않아 실사용 후기는 제한적입니다. 테크 블로그와 나무위키를 중심으로 정보가 공유되고 있습니다.",
+      pros: [{keyword:"혁신성",content:"텍스트만으로 최대 60초 고품질 영상 생성. 물리 법칙을 이해한 듯한 자연스러운 움직임"}, {keyword:"퀄리티",content:"경쟁사 대비 압도적인 영상 품질과 사실성"}],
+      cons: [{keyword:"접근성",content:"아직 일반에 완전 공개되지 않아 사용 제한적. ChatGPT Pro($200) 필요"}, {keyword:"비용",content:"Pro 요금제 없이 접근 불가, 개인 사용자에게 높은 진입 장벽"}],
+      sources: [
+        {name:"테크뷰",title:"Sora AI 영상 생성 실제 사용 후기",excerpt:"텍스트만으로 영상 생성. 물리 법칙을 이해한 듯한 움직임이 인상적."},
+        {name:"벨로그",title:"Sora AI 생성 영상 모음과 사용법",excerpt:"OpenAI의 비디오 생성 모델 Sora의 주요 기능과 생성 영상 예시 정리."},
+      ],
+    },
   },
   {
     id: "pika",
@@ -956,6 +992,16 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/udio-1.png","https://ai.ktoolu.com/screenshots/udio-2.png"],
     expertRating:{accuracy:3.4,easeOfUse:4.2,features:4.1,performance:4.0,value:4.2,innovation:4.3},
     whoIsFor:["음악 프로듀서","인디 뮤지션","게임 개발자"],
+    communityReviewSummary: {
+      overall: "Udio는 Suno AI와 함께 AI 음악 생성 시장을 양분하는 도구로 평가됩니다. 한국 사용자들은 Udio의 음질과 장르 다양성을 높이 평가하지만, Suno에 비해 한국어 가사 처리에서 다소 아쉽다는 의견이 있습니다.",
+      pros: [{keyword:"음질",content:"고품질 오디오 생성, 다양한 장르 지원"}, {keyword:"편집 기능",content:"익스텐드(연장) 기능으로 생성된 음악의 길이 조절 가능"}],
+      cons: [{keyword:"한국어",content:"한국어 가사 처리에서 Suno에 비해 다소 부족"}, {keyword:"경쟁",content:"Suno AI 대비 인지도와 사용자 수에서 열세"}],
+      sources: [
+        {name:"lemonj.kr",title:"AI 음악 생성 도구 Udio 사용 후기",excerpt:"Suno보다 Udio가 음질이 더 좋다는 평가. 다양한 장르 생성 가능."},
+        {name:"디시인사이드",title:"Udio 사용해본 후기",excerpt:"AI 음악 퀄리티가 생각보다 높아서 놀람. 장르 선택 폭이 넓음."},
+        {name:"큐오넷",title:"Udio AI 음악 생성 사용기",excerpt:"음악 프로듀서 입장에서 본 Udio 평가. 창작 보조 도구로 유용."},
+      ],
+    },
   },
         // === OTHER ===
   {
