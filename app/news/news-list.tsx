@@ -5,7 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import { ExternalLink, Clock, AlertCircle, RefreshCw, X, Link2, Check, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 // 🔥 편집자 픽 — 수동 관리: 이 배열에 article.id를 넣으면 상단에 뱃지 표시
-const EDITOR_PICKS: number[] = [53];
+const EDITOR_PICKS: number[] = [53, 72];
 
 type AiNews = {
   id: number;
@@ -394,7 +394,7 @@ export function NewsList() {
 
                   {item.explanation && (
                     <div className="mb-3 rounded-xl bg-blue-500/5 border border-blue-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-blue-400 mb-2">💡 ktoolu 설명</p>
+                      <p className="text-xs font-semibold text-blue-400 mb-2">💡 초등학생도 이해하는 ktoolu 설명</p>
                       <div className="space-y-1.5">
                         {splitSentences(item.explanation).map((s, i) => (
                           <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
