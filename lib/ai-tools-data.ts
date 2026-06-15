@@ -472,6 +472,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/dalle-1.png","https://ai.ktoolu.com/screenshots/dalle-2.png"],
     expertRating:{accuracy:4.3,easeOfUse:4.7,features:4.1,performance:4.4,value:4.5,innovation:4.2},
     whoIsFor:["ChatGPT 사용자","크리에이터","일반 사용자"],
+    communityReviewSummary:{overall:"DALL·E 3는 ChatGPT에 내장된 이미지 생성 모델로 한국 사용자들에게 접근성이 가장 높은 AI 이미지 도구입니다. 블로그·콘텐츠 제작용으로 Midjourney보다 실용적이라는 평가가 많습니다.",pros:[{keyword:"ChatGPT 통합",content:"채팅 내에서 바로 이미지 생성·편집. 별도 도구 불필요"},{keyword:"텍스트 이해도",content:"자연어 프롬프트에 정밀하게 반응. 초보자도 쉽게 사용 가능"}],cons:[{keyword:"퀄리티",content:"Midjourney 대비 예술적 완성도에서 차이"},{keyword:"무료 제한",content:"ChatGPT 무료 사용자는 하루 3~5장 제한"}],sources:[{name:"네이버 블로그",title:"Midjourney v7 vs DALL-E 3 vs Stable Diffusion 비교",excerpt:"예술 작품용: Midjourney, 블로그 콘텐츠용: DALL-E 3, 고급 사용자: Stable Diffusion."},{name:"네이버 블로그",title:"무료 AI 이미지 생성, 나노바나나 vs DALL-E 비교",excerpt:"DALL-E 하루 3~5장 무료 한도. 텍스트 이해도와 정확도는 DALL-E가 우수."}]},
   },
   {
     id: "stable-diffusion",
@@ -954,6 +955,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/windsurf-1.png","https://ai.ktoolu.com/screenshots/windsurf-2.png"],
     expertRating:{accuracy:4.0,easeOfUse:4.2,features:4.1,performance:4.1,value:4.5,innovation:4.3},
     whoIsFor:["개발자 — Cursor 대안","VS Code 사용자"],
+    communityReviewSummary:{overall:"Windsurf는 Cursor의 강력한 경쟁자로 한국 개발자들 사이에서 주목받고 있습니다. 6개월 실사용 후기에 따르면 무료 티어가 압도적이며 Cascade 에이전트 모드가 강력합니다.",pros:[{keyword:"가격 경쟁력",content:"Cursor Pro($20) 대비 Windsurf Pro($15)로 저렴. 무료 티어도 넉넉"},{keyword:"Cascade",content:"AI 에이전트 모드 Cascade가 강력. 코드 생성·디버깅·리팩토링 모두 가능"}],cons:[{keyword:"Cursor 대비 인지도",content:"Cursor에 비해 사용자 커뮤니티와 자료가 적음"},{keyword:"안정화",content:"아직 업데이트가 빠르게 진행 중. 가끔 버그 발생"}],sources:[{name:"네이버 블로그",title:"Windsurf 에디터 6개월 후기 — Cursor의 진짜 경쟁자",excerpt:"Codeium이 만든 AI 통합 IDE. Cursor와 같은 컨셉에 무료 티어가 압도적."},{name:"네이버 블로그",title:"Cursor vs Windsurf 비교 — 6개월 후기",excerpt:"에이전트 코딩: 둘 다 최고 수준. Windsurf가 가격 경쟁력에서 앞섬."}]},
   },
   {
     id: "devin",
@@ -973,6 +975,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/devin-1.png","https://ai.ktoolu.com/screenshots/devin-2.png"],
     expertRating:{accuracy:4.4,easeOfUse:3.5,features:4.3,performance:4.6,value:3.3,innovation:4.9},
     whoIsFor:["소프트웨어 기업","CTO·VP Eng"],
+    communityReviewSummary:{overall:"Devin은 '세계 최초 AI 소프트웨어 엔지니어'로 한국 개발자들에게 큰 관심을 받고 있습니다. 아직 대기자 명단 방식으로 제한적 사용이 가능하나, SWE-bench 최고 성적으로 잠재력을 인정받고 있습니다.",pros:[{keyword:"자율 코딩",content:"버그 수정·기능 개발을 스스로 계획하고 실행. 실제 프로젝트 투입 가능"},{keyword:"SWE-bench 1위",content:"AI 소프트웨어 엔지니어 벤치마크에서 압도적 1위"}],cons:[{keyword:"접근성",content:"대기자 명단 방식. 아직 일반인 사용 불가"},{keyword:"기업용",content:"주로 기업 대상. 개인 사용자에게 높은 진입 장벽"}],sources:[{name:"네이버 블로그",title:"2026 AI에이전트 도구 TOP5 한 달후기",excerpt:"AutoGPT, Devin, Hermes, Manus 등 비교. Devin은 SWE-bench 최고."},{name:"네이버 블로그",title:"데빈(Devin) 프로그래밍하는 AI",excerpt:"세계 최초 AI SW 엔지니어. 현재 대기자 명단을 통해 제한적 사용 가능."}]},
   },  // === MUSIC ===
   {
     id: "suno",
@@ -1150,6 +1153,7 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/gamma-1.png","https://ai.ktoolu.com/screenshots/gamma-2.png"],
     expertRating:{accuracy:3.6,easeOfUse:4.5,features:4.0,performance:4.1,value:4.4,innovation:4.2},
     whoIsFor:["프레젠터","마케터","교육자"],
+    communityReviewSummary:{overall:"Gamma는 한국 사용자들 사이에서 'PPT 1분 자동 완성' 도구로 큰 인기를 끌고 있습니다. 텍스트 한 줄만 입력하면 디자인까지 완성되는 편의성이 가장 큰 장점입니다.",pros:[{keyword:"속도",content:"주제만 입력하면 목차·디자인까지 1분 안에 완성. PPT 제작 시간 90% 단축"},{keyword:"웹 기반",content:"설치 불필요. 브라우저에서 바로 사용. 내보내기도 PDF·PPT 지원"}],cons:[{keyword:"유료 전환",content:"무료는 400슬라이드/월 제한. 고급 템플릿은 Pro 필요"},{keyword:"한국어 템플릿",content:"영어 템플릿 대비 한국어 템플릿 다양성 부족"}],sources:[{name:"네이버 블로그",title:"감마AI 사용법 완벽 정리 및 활용후기",excerpt:"텍스트 한 줄로 PPT·문서·웹페이지 자동 생성. 디자인 작업 불필요."},{name:"네이버 블로그",title:"감마 AI 약 한 달간의 사용후기",excerpt:"PPT 자동화로 업무 효율 향상. ChatGPT·Claude와 비교 분석."}]},
   },
 
   {
@@ -1198,4 +1202,5 @@ export const aiTools: AITool[] = [
     screenshots:["https://ai.ktoolu.com/screenshots/zapier-1.png","https://ai.ktoolu.com/screenshots/zapier-2.png"],
     expertRating:{accuracy:3.8,easeOfUse:4.2,features:4.6,performance:4.0,value:4.2,innovation:4.1},
     whoIsFor:["마케터","운영팀","스타트업"],
+    communityReviewSummary:{overall:"Zapier는 한국 1인 창업가와 스타트업 사이에서 필수 자동화 도구로 자리잡았습니다. 코딩 없이 앱 간 데이터 흐름을 연결할 수 있는 점이 가장 큰 장점입니다.",pros:[{keyword:"무코드 자동화",content:"6000개 이상 앱 연동. 코딩 없이 업무 자동화 구축"},{keyword:"AI 통합",content:"자연어로 원하는 자동화 설명하면 AI가 Zap 생성"}],cons:[{keyword:"무료 제한",content:"100 태스크/월 제한. 실제 업무 자동화는 유료 필요"},{keyword:"복잡성",content:"복잡한 조건부 자동화는 Make나 n8n이 더 자유도 높음"}],sources:[{name:"네이버 블로그",title:"1인 창업가 필독 - 단순 챗봇 버리고 AI 멀티 에이전트",excerpt:"코딩 없이 시작. 구글 시트→이메일 자동 발송부터 시작 추천."},{name:"네이버 블로그",title:"AI 자동화 도구 비교 (Zapier, Make, n8n)",excerpt:"앱끼리 연결하는 다리 역할. 초보자가 가장 쉽게 시작할 수 있는 도구."}]},
   },    ];
