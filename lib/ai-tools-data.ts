@@ -7,6 +7,15 @@ export type Category =
   | "music"
   | "other";
 
+export interface ExpertRating {
+  accuracy: number;
+  easeOfUse: number;
+  features: number;
+  performance: number;
+  value: number;
+  innovation: number;
+}
+
 export interface AITool {
   id: string;
   name: string;
@@ -22,6 +31,9 @@ export interface AITool {
   cons?: string[];
   pricing?: { free?: string; paid?: string };
   useCases?: string[];
+  screenshots?: string[];
+  expertRating?: ExpertRating;
+  whoIsFor?: string[];
 }
 
 export const categories: { value: Category; label: string; emoji: string }[] = [
@@ -51,6 +63,13 @@ export const aiTools: AITool[] = [
     cons: ["무료 플랜은 사용량 제한 있음", "학습 데이터 컷오프로 최신 정보 부재(웹 검색 없이)"],
     pricing: { free: "GPT-4o mini 무제한, GPT-4o 제한적 사용", paid: "Plus $20/월 — GPT-4o 우선 접근, 이미지 생성, 고급 분석" },
     useCases: ["보고서·이메일 초안 작성", "코드 작성 및 디버깅", "외국어 번역 및 학습", "데이터 분석 및 시각화", "아이디어 브레인스토밍"],
+    screenshots: [
+      "https://ai.ktoolu.com/screenshots/chatgpt-1.png",
+      "https://ai.ktoolu.com/screenshots/chatgpt-2.png",
+      "https://ai.ktoolu.com/screenshots/chatgpt-3.png"
+    ],
+    expertRating: { accuracy: 4.3, easeOfUse: 4.5, features: 4.8, performance: 4.5, value: 4.7, innovation: 4.6 },
+    whoIsFor: ["AI 초보자 — 무료로 시작해보고 싶은 분", "개발자 — 코드 작성 및 디버깅이 필요한 분", "콘텐츠 크리에이터 — 글쓰기·번역이 필요한 분", "일반 사무직 — 보고서·이메일 자동화를 원하는 분"],
   },
   {
     id: "claude",
@@ -67,6 +86,13 @@ export const aiTools: AITool[] = [
     cons: ["이미지 생성 기능 없음", "무료 플랜 사용량 제한"],
     pricing: { free: "Claude 3.5 Haiku 사용 가능, 일일 제한 있음", paid: "Pro $20/월 — Claude 3.5 Sonnet 우선 접근, 5배 더 많은 사용량" },
     useCases: ["긴 계약서·논문 분석", "복잡한 코드 리뷰", "고품질 글쓰기 및 편집", "리서치 보조", "다국어 번역"],
+    screenshots: [
+      "https://ai.ktoolu.com/screenshots/claude-1.png",
+      "https://ai.ktoolu.com/screenshots/claude-2.png",
+      "https://ai.ktoolu.com/screenshots/claude-3.png"
+    ],
+    expertRating: { accuracy: 4.6, easeOfUse: 4.3, features: 4.4, performance: 4.7, value: 4.5, innovation: 4.4 },
+    whoIsFor: ["연구자·학생 — 긴 논문·문서 분석이 필요한 분", "개발자 — 코드 리뷰 및 복잡한 분석이 필요한 분", "작가·에디터 — 고품질 글쓰기가 중요한 분", "기업 문서 담당자 — 긴 계약서·보고서 처리자"],
   },
   {
     id: "gemini",
