@@ -5,6 +5,7 @@ export type Category =
   | "video"
   | "coding"
   | "music"
+  | "agent"
   | "other";
 
 export interface PricingPlan {
@@ -58,6 +59,7 @@ export const categories: { value: Category; label: string; emoji: string }[] = [
   { value: "video", label: "비디오", emoji: "🎬" },
   { value: "coding", label: "코딩", emoji: "💻" },
   { value: "music", label: "음악", emoji: "🎵" },
+  { value: "agent", label: "자동화 / 에이전트", emoji: "🤖" },
   { value: "other", label: "기타", emoji: "✨" },
 ];
 
@@ -1218,4 +1220,71 @@ export const aiTools: AITool[] = [
     expertRating:{accuracy:3.8,easeOfUse:4.2,features:4.6,performance:4.0,value:4.2,innovation:4.1},
     whoIsFor:["마케터","운영팀","스타트업"],
     communityReviewSummary:{overall:"Zapier는 한국 1인 창업가와 스타트업 사이에서 필수 자동화 도구로 자리잡았습니다. 코딩 없이 앱 간 데이터 흐름을 연결할 수 있는 점이 가장 큰 장점입니다.",pros:[{keyword:"무코드 자동화",content:"6000개 이상 앱 연동. 코딩 없이 업무 자동화 구축"},{keyword:"AI 통합",content:"자연어로 원하는 자동화 설명하면 AI가 Zap 생성"}],cons:[{keyword:"무료 제한",content:"100 태스크/월 제한. 실제 업무 자동화는 유료 필요"},{keyword:"복잡성",content:"복잡한 조건부 자동화는 Make나 n8n이 더 자유도 높음"}],sources:[{name:"네이버 블로그",title:"1인 창업가 필독 - 단순 챗봇 버리고 AI 멀티 에이전트",excerpt:"코딩 없이 시작. 구글 시트→이메일 자동 발송부터 시작 추천."},{name:"네이버 블로그",title:"AI 자동화 도구 비교 (Zapier, Make, n8n)",excerpt:"앱끼리 연결하는 다리 역할. 초보자가 가장 쉽게 시작할 수 있는 도구."}]},
-  },    ];
+  },
+  // === AGENT / 자동화 ===
+  {
+    id: "kling",
+    name: "Kling AI",
+    description: "중국 Kuaishou의 고품질 AI 비디오 생성 모델. 텍스트와 이미지로 사실적인 영상을 생성합니다.",
+    url: "https://kling.kuaishou.com",
+    category: "video",
+    tags: ["AI 비디오", "텍스트→비디오", "중국", "Kuaishou"],
+    free: true,
+    popular: true,
+    features: ["텍스트→비디오 생성", "이미지→비디오", "고품질 모션", "다양한 스타일"],
+    pricingPlans: [{name:"Free",price:"무료",features:["기본 생성","워터마크","제한적"],recommended:true},{name:"Pro",price:"$15/월",features:["무제한","고해상도","워터마크 제거"]}],
+    screenshots:["https://ai.ktoolu.com/screenshots/kling-1.png"],
+    expertRating:{accuracy:3.8,easeOfUse:3.9,features:4.0,performance:4.2,value:4.3,innovation:4.4},
+    whoIsFor:["비디오 크리에이터","콘텐츠 제작자"],
+  },
+  {
+    id: "veo",
+    name: "Google Veo",
+    description: "Google DeepMind의 AI 비디오 생성 모델. Gemini에 통합되어 고품질 영상을 생성합니다.",
+    url: "https://deepmind.google/technologies/veo/",
+    category: "video",
+    tags: ["Google", "AI 비디오", "DeepMind", "고품질"],
+    free: false,
+    features: ["텍스트→비디오 생성", "고품질 영상", "Gemini 통합", "다양한 스타일"],
+    pricingPlans: [{name:"Veo",price:"Gemini Advanced 포함",features:["텍스트→비디오","이미지→비디오","고해상도"],recommended:true}],
+    screenshots:["https://ai.ktoolu.com/screenshots/veo-1.png"],
+    expertRating:{accuracy:4.0,easeOfUse:3.8,features:3.9,performance:4.3,value:3.7,innovation:4.5},
+    whoIsFor:["크리에이터","마케터"],
+  },
+  {
+    id: "auto-gpt",
+    name: "AutoGPT",
+    description: "자율적으로 목표를 계획하고 실행하는 AI 에이전트. 복잡한 작업을 스스로 분해하고 처리합니다.",
+    url: "https://agpt.co",
+    category: "agent",
+    tags: ["AI 에이전트", "자율 작업", "오픈소스", "자동화"],
+    free: true,
+    popular: true,
+    features: ["자율 목표 실행", "코드 생성", "웹 검색", "파일 조작"],
+    useCases: ["자동 리서치", "데이터 수집", "보고서 자동 생성"],
+    pricingPlans: [{name:"Free",price:"무료",features:["기본 에이전트","웹 검색","오픈소스"],recommended:true},{name:"Cloud",price:"$20/월",features:["클라우드 실행","우선 처리","고급 도구"]}],
+  },
+  {
+    id: "n8n",
+    name: "n8n",
+    description: "오픈소스 워크플로우 자동화 도구. AI 통합으로 복잡한 업무 흐름을 자동화합니다.",
+    url: "https://n8n.io",
+    category: "agent",
+    tags: ["워크플로우", "자동화", "오픈소스", "노코드"],
+    free: true,
+    features: ["400+ 통합", "AI 노드", "조건부 로직", "오픈소스"],
+    pricingPlans: [{name:"Self-hosted",price:"무료",features:["오픈소스","자체 호스팅","무제한"],recommended:true},{name:"Cloud",price:"$20/월",features:["클라우드","5k 실행/월","AI 기능"]}],
+  },
+  {
+    id: "browser-use",
+    name: "Browser Use",
+    description: "AI가 브라우저를 직접 조작해 웹 작업을 자동화하는 오픈소스 에이전트 도구입니다.",
+    url: "https://browser-use.com",
+    category: "agent",
+    tags: ["브라우저 자동화", "AI 에이전트", "오픈소스", "웹 스크래핑"],
+    free: true,
+    popular: true,
+    features: ["브라우저 직접 조작", "로그인·클릭·입력 자동화", "웹 데이터 수집"],
+    pricingPlans: [{name:"Open Source",price:"무료",features:["GitHub","자체 호스팅","API"],recommended:true}],
+  },
+];

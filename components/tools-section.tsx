@@ -17,7 +17,7 @@ import { aiTools, categories, type Category, type AITool } from "@/lib/ai-tools-
 import { categoryColors } from "@/lib/tool-styles";
 import {
   Search, ExternalLink, Star, LayoutGrid, ListOrdered, Calendar,
-  FileText, Image, Film, Code, Music, Sparkles
+  FileText, Image, Film, Code, Music, Sparkles, Bot
 } from "lucide-react";
 import Link from "next/link";
 
@@ -30,6 +30,7 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   video:  <Film className="h-4 w-4" />,
   coding: <Code className="h-4 w-4" />,
   music:  <Music className="h-4 w-4" />,
+  agent:  <Bot className="h-4 w-4" />,
   other:  <Sparkles className="h-4 w-4" />,
 };
 
@@ -37,12 +38,50 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
    크로스 카테고리
    =================================================================== */
 const CROSS_CATEGORY: Record<string, Exclude<Category, "all">[]> = {
-  chatgpt:          ["image", "coding"],
-  claude:           ["coding"],
+  chatgpt:          ["image", "coding", "agent"],
+  claude:           ["coding", "agent"],
   gemini:           ["image", "coding"],
   deepseek:         ["coding"],
   "ms-copilot":     ["coding"],
+  manus:            ["agent"],
+  devin:            ["agent"],
+  "zapier-ai":      ["agent"],
+  "auto-gpt":       ["agent"],
+  "browser-use":    ["agent"],
 };
+
+/* ===================================================================
+   수동 순위 오버라이드
+   - 키: 카테고리 → { toolId: 원하는_순위 }
+   - 오버라이드에 없는 툴은 auto-rank (오버라이드 마지막 순위 + 1부터)
+   =================================================================== */
+const RANKING_OVERRIDES: Record<string, Record<string, number>> = {
+  coding: {
+    claude: 1, chatgpt: 2, cursor: 3, gemini: 4,
+  },
+  text: {
+    claude: 1, chatgpt: 2, gemini: 3, deepseek: 4, grok: 5, perplexity: 6,
+  },
+  image: {
+    chatgpt: 1, midjourney: 2, gemini: 3,
+  },
+  video: {
+    seedance: 1, kling: 2, runway: 3, gemini: 4, sora: 5,
+  },
+};
+
+/* ===================================================================
+   툴 통합 (특정 카테고리에서 숨기고 상위 툴에 통합)
+   =================================================================== */
+const MERGED_TOOLS: Record<string, { into: string; note: string }> = {
+  "chatgpt-image":  { into: "chatgpt", note: "ChatGPT Image 통합" },
+  "image-nanobana": { into: "gemini",  note: "Gemini 이미지 통합" },
+};
+
+/* ===================================================================
+   Sora 서비스 종료 메모
+   =================================================================== */
+const SORA_SHUTDOWN = "⚠️ 2026년 3월 25일, OpenAI에서 Sora 앱 서비스 종료를 공지했습니다.";
 
 /* ---------- 순위 점수 ---------- */
 function calcRankScore(tool: AITool): number {
@@ -160,22 +199,26 @@ export function ToolsSection() {
   const today = new Date();
   const updateDate = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
 
-  /* ---------- 랭킹 ---------- */
+  /* ---------- 랭킹 (수동 오버라이드 + 통합 툴 적용) ---------- */
   const rankedCategories = useMemo(() => {
+    // 1) 카테고리 매핑 (크로스 포함)
     const toolCategoryMap = new Map<string, Exclude<Category, "all">[]>();
     for (const tool of aiTools) {
       const extras = CROSS_CATEGORY[tool.id] ?? [];
       toolCategoryMap.set(tool.id, [tool.category, ...new Set(extras)]);
     }
+    // 2) 통합 툴 제외하고 카테고리별 수집
     const catTools = new Map<Exclude<Category, "all">, AITool[]>();
     for (const tool of aiTools) {
+      // 통합된 툴은 숨김 (주 툴에 포함됨)
+      if (MERGED_TOOLS[tool.id]) continue;
       const cats = toolCategoryMap.get(tool.id) ?? [tool.category];
       for (const cat of cats) {
         if (!catTools.has(cat)) catTools.set(cat, []);
         catTools.get(cat)!.push(tool);
       }
     }
-    const result: { category: Exclude<Category, "all">; tools: (AITool & { score: number; rankInCat: number })[] }[] = [];
+    const result: { category: Exclude<Category, "all">; tools: (AITool & { score: number; rankInCat: number; mergeNote?: string; soraNote?: string })[] }[] = [];
     for (const cat of categories) {
       if (cat.value === "all") continue;
       const tools = catTools.get(cat.value) ?? [];
@@ -188,13 +231,41 @@ export function ToolsSection() {
         );
       }
       if (filtered.length === 0) continue;
-      const scored = filtered
+      // 오버라이드 & auto-rank
+      const override = RANKING_OVERRIDES[cat.value] ?? {};
+      const overriddenIds = new Set(Object.keys(override));
+      const overrideMax = overriddenIds.size > 0 ? Math.max(...Object.values(override)) : 0;
+      // 오버라이드 적용
+      const ranked: (AITool & { score: number; rankInCat: number; mergeNote?: string; soraNote?: string })[] = [];
+      for (const [id, pos] of Object.entries(override)) {
+        const tool = filtered.find((t) => t.id === id);
+        if (tool) {
+          const mergeNote = Object.values(MERGED_TOOLS).find((m) => m.into === id)?.note;
+          const soraNote = id === "sora" ? SORA_SHUTDOWN : undefined;
+          ranked.push({ ...tool, score: calcRankScore(tool), rankInCat: pos, mergeNote, soraNote });
+        }
+      }
+      // auto-rank (오버라이드 없는 툴, 점수순)
+      const autoTools = filtered
+        .filter((t) => !overriddenIds.has(t.id))
         .map((t) => ({ ...t, score: calcRankScore(t), rankInCat: 0 }))
-        .sort((a, b) => b.score - a.score)
-        .map((t, i) => ({ ...t, rankInCat: i + 1 }));
-      result.push({ category: cat.value, tools: scored });
+        .sort((a, b) => b.score - a.score);
+      let autoPos = overrideMax;
+      for (const t of autoTools) {
+        autoPos++;
+        t.rankInCat = autoPos;
+      }
+      ranked.push(...autoTools);
+      ranked.sort((a, b) => a.rankInCat - b.rankInCat);
+      result.push({ category: cat.value, tools: ranked });
     }
-    result.sort((a, b) => b.tools.reduce((s, t) => s + t.score, 0) - a.tools.reduce((s, t) => s + t.score, 0));
+    // 카테고리 정렬: 수동 오버라이드 있는 카테고리가 먼저
+    result.sort((a, b) => {
+      const aHasOverride = RANKING_OVERRIDES[a.category] ? 0 : 1;
+      const bHasOverride = RANKING_OVERRIDES[b.category] ? 0 : 1;
+      if (aHasOverride !== bHasOverride) return aHasOverride - bHasOverride;
+      return b.tools.reduce((s, t) => s + t.score, 0) - a.tools.reduce((s, t) => s + t.score, 0);
+    });
     return result;
   }, [searchQuery]);
 
@@ -332,6 +403,9 @@ export function ToolsSection() {
                               <span className="font-semibold text-foreground">
                                 {tool.name}
                               </span>
+                              {tool.mergeNote && (
+                                <span className="block text-[10px] text-muted-foreground/60 mt-0.5">{tool.mergeNote}</span>
+                              )}
                             </td>
                             {/* 설명 (절반 이하로) */}
                             <td className="hidden sm:table-cell py-3 text-muted-foreground pr-4">
@@ -341,6 +415,9 @@ export function ToolsSection() {
                                   <span className="text-muted-foreground/50 ml-0.5"> 자세한 내용은 개별 페이지로</span>
                                 )}
                               </span>
+                              {tool.soraNote && (
+                                <span className="block text-[10px] text-amber-500/80 mt-1 leading-tight">{tool.soraNote}</span>
+                              )}
                             </td>
                             {/* 하이라이트 */}
                             <td className="py-3">
