@@ -45,7 +45,7 @@ const CROSS_CATEGORY: Record<string, Exclude<Category, "all">[]> = {
   "ms-copilot":     ["coding"],
   manus:            [],
   devin:            [],
-  "zapier-ai":      ["agent"],
+  "zapier-ai":      [],
   "auto-gpt":       [],
   "browser-use":    [],
 };
