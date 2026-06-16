@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,12 +15,26 @@ import {
 } from "@/components/ui/card";
 import { aiTools, categories, type Category, type AITool } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
-import { Search, ExternalLink, Star, LayoutGrid, ListOrdered, Calendar } from "lucide-react";
+import {
+  Search, ExternalLink, Star, LayoutGrid, ListOrdered, Calendar,
+  FileText, Image, Film, Code, Music, Sparkles
+} from "lucide-react";
 import Link from "next/link";
 
 /* ===================================================================
-   크로스 카테고리: 특정 도구를 추가 카테고리에도 등장시킴
-   예) ChatGPT는 이미지·코딩, Claude는 코딩, Gemini는 이미지·코딩
+   Lucide 아이콘 맵 (이모지 대체)
+   =================================================================== */
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  text:   <FileText className="h-4 w-4" />,
+  image:  <Image className="h-4 w-4" />,
+  video:  <Film className="h-4 w-4" />,
+  coding: <Code className="h-4 w-4" />,
+  music:  <Music className="h-4 w-4" />,
+  other:  <Sparkles className="h-4 w-4" />,
+};
+
+/* ===================================================================
+   크로스 카테고리
    =================================================================== */
 const CROSS_CATEGORY: Record<string, Exclude<Category, "all">[]> = {
   chatgpt:          ["image", "coding"],
@@ -40,8 +55,7 @@ function calcRankScore(tool: AITool): number {
       tool.expertRating.value +
       tool.expertRating.innovation) /
     6;
-  const bonus = tool.popular ? 0.35 : 0;
-  return avg + bonus;
+  return avg + (tool.popular ? 0.35 : 0);
 }
 
 function getRankEmoji(rank: number): string {
@@ -67,18 +81,18 @@ function getHighlight(tool: AITool): string {
   return `${top.label} ${top.val.toFixed(1)}`;
 }
 
-function categoryStats(tools: AITool[]) {
-  const freeCount = tools.filter((t) => t.free).length;
-  const avgRating =
-    tools.reduce((s, t) => {
-      if (!t.expertRating) return s;
-      return s + (t.expertRating.accuracy + t.expertRating.easeOfUse + t.expertRating.features + t.expertRating.performance + t.expertRating.value + t.expertRating.innovation) / 6;
-    }, 0) / tools.length;
-  return { freeCount, avgRating: avgRating || 0 };
+/** 설명 짧게 자르기 */
+function shortDesc(tool: AITool): string {
+  const d = tool.description;
+  if (d.length <= 60) return d;
+  // 첫 마침표 or 60자 앞에서 자르기
+  const dot = d.indexOf(".", 40);
+  if (dot > 0 && dot < 70) return d.slice(0, dot + 1);
+  return d.slice(0, 58) + "…";
 }
 
 /* ===================================================================
-   카드 그리드용 ToolCard (기존 UI 복원)
+   ToolCard (카드 그리드용)
    =================================================================== */
 function ToolCard({ tool }: { tool: AITool }) {
   const colorClass = categoryColors[tool.category];
@@ -98,8 +112,8 @@ function ToolCard({ tool }: { tool: AITool }) {
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${colorClass}`}>
-                  {categoryLabel?.emoji} {categoryLabel?.label}
+                <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium ${colorClass}`}>
+                  {CATEGORY_ICONS[tool.category]} {categoryLabel?.label}
                 </span>
                 {tool.free ? (
                   <span className="inline-flex items-center rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-400">무료</span>
@@ -122,7 +136,7 @@ function ToolCard({ tool }: { tool: AITool }) {
         <CardFooter className="pt-0">
           <Button
             variant="outline"
-            className="w-full gap-2 border-border/50 hover:border-border hover:bg-accent transition-all group/btn"
+            className="w-full gap-2 border-border/50 hover:border-border transition-all group/btn"
             onClick={(e) => { e.preventDefault(); window.open(tool.url, "_blank", "noopener,noreferrer"); }}
           >
             <span>사이트 방문</span>
@@ -135,29 +149,24 @@ function ToolCard({ tool }: { tool: AITool }) {
 }
 
 /* ===================================================================
-   ToolsSection 메인
+   ToolsSection
    =================================================================== */
 export function ToolsSection() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<Category>("all");
   const [viewMode, setViewMode] = useState<"ranking" | "grid">("ranking");
 
-  // 업데이트 날짜 (오늘 기준)
   const today = new Date();
   const updateDate = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
 
-  /* ---------- 카테고리별 랭킹 (크로스 포함) ---------- */
+  /* ---------- 랭킹 ---------- */
   const rankedCategories = useMemo(() => {
-    // 1) 각 도구의 원본 카테고리 + 크로스 카테고리 매핑
     const toolCategoryMap = new Map<string, Exclude<Category, "all">[]>();
     for (const tool of aiTools) {
       const extras = CROSS_CATEGORY[tool.id] ?? [];
-      const cats = [tool.category, ...extras];
-      // 중복 제거
-      toolCategoryMap.set(tool.id, [...new Set(cats)]);
+      toolCategoryMap.set(tool.id, [tool.category, ...new Set(extras)]);
     }
-
-    // 2) 카테고리별 도구 수집
     const catTools = new Map<Exclude<Category, "all">, AITool[]>();
     for (const tool of aiTools) {
       const cats = toolCategoryMap.get(tool.id) ?? [tool.category];
@@ -166,55 +175,37 @@ export function ToolsSection() {
         catTools.get(cat)!.push(tool);
       }
     }
-
-    // 3) 검색어 필터 + 점수 산정 + 정렬
-    const result: {
-      category: Exclude<Category, "all">;
-      tools: (AITool & { score: number; rankInCat: number })[];
-    }[] = [];
-
+    const result: { category: Exclude<Category, "all">; tools: (AITool & { score: number; rankInCat: number })[] }[] = [];
     for (const cat of categories) {
       if (cat.value === "all") continue;
       const tools = catTools.get(cat.value) ?? [];
       if (tools.length === 0) continue;
-
       let filtered = tools;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         filtered = tools.filter(
-          (t) =>
-            t.name.toLowerCase().includes(q) ||
-            t.description.toLowerCase().includes(q) ||
-            t.tags.some((tag) => tag.toLowerCase().includes(q))
+          (t) => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q) || t.tags.some((tag) => tag.toLowerCase().includes(q))
         );
       }
       if (filtered.length === 0) continue;
-
       const scored = filtered
         .map((t) => ({ ...t, score: calcRankScore(t), rankInCat: 0 }))
         .sort((a, b) => b.score - a.score)
         .map((t, i) => ({ ...t, rankInCat: i + 1 }));
-
       result.push({ category: cat.value, tools: scored });
     }
-
-    // 카테고리 total score 순 정렬
     result.sort((a, b) => b.tools.reduce((s, t) => s + t.score, 0) - a.tools.reduce((s, t) => s + t.score, 0));
     return result;
   }, [searchQuery]);
 
-  /* ---------- 카드 그리드용 필터 ---------- */
+  /* ---------- 카드 그리드 필터 ---------- */
   const filteredCards = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
     return aiTools.filter((tool) => {
       const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
       if (!matchesCategory) return false;
       if (!query) return true;
-      return (
-        tool.name.toLowerCase().includes(query) ||
-        tool.description.toLowerCase().includes(query) ||
-        tool.tags.some((tag) => tag.toLowerCase().includes(query))
-      );
+      return tool.name.toLowerCase().includes(query) || tool.description.toLowerCase().includes(query) || tool.tags.some((tag) => tag.toLowerCase().includes(query));
     });
   }, [searchQuery, selectedCategory]);
 
@@ -224,8 +215,8 @@ export function ToolsSection() {
     return counts;
   }, []);
 
-  const categoryMeta: Record<string, { label: string; emoji: string }> = {};
-  for (const c of categories) if (c.value !== "all") categoryMeta[c.value] = { label: c.label, emoji: c.emoji };
+  const categoryMeta: Record<string, { label: string }> = {};
+  for (const c of categories) if (c.value !== "all") categoryMeta[c.value] = { label: c.label };
 
   const totalRankedTools = rankedCategories.reduce((s, c) => s + c.tools.length, 0);
 
@@ -251,7 +242,6 @@ export function ToolsSection() {
         마지막 업데이트: {updateDate}
       </div>
 
-      {/* 결과 정보 */}
       {searchQuery.trim() && (
         <div className="mb-4 flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
@@ -263,7 +253,7 @@ export function ToolsSection() {
         </div>
       )}
 
-      {/* ---------- RANKING VIEW ---------- */}
+      {/* ========== RANKING VIEW ========== */}
       {viewMode === "ranking" && totalRankedTools === 0 && searchQuery.trim() ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
           <div className="text-5xl mb-4">🔍</div>
@@ -272,25 +262,19 @@ export function ToolsSection() {
           <Button variant="outline" size="sm" onClick={() => setSearchQuery("")}>전체 도구 보기</Button>
         </div>
       ) : viewMode === "ranking" ? (
-        <div className="mx-auto max-w-5xl space-y-10">
+        <div className="mx-auto max-w-5xl space-y-8">
           {rankedCategories.map((cat) => {
             const meta = categoryMeta[cat.category];
-            const stats = categoryStats(cat.tools);
             const colorClass = categoryColors[cat.category] || "";
 
             return (
               <section key={cat.category}>
-                {/* 카테고리 헤더 */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-xl font-bold text-foreground">{meta?.emoji} {meta?.label}</h2>
-                    <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${colorClass}`}>
-                      {stats.freeCount}/{cat.tools.length} 무료
-                    </span>
-                    {stats.avgRating > 0 && (
-                      <span className="text-xs text-muted-foreground hidden sm:inline">평균 ⭐ {stats.avgRating.toFixed(1)}</span>
-                    )}
-                  </div>
+                {/* 카테고리 헤더 — 제목만 */}
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg ${colorClass}`}>
+                    {CATEGORY_ICONS[cat.category]}
+                  </span>
+                  <h2 className="text-lg font-bold text-foreground">{meta?.label}</h2>
                 </div>
 
                 {/* 랭킹 테이블 */}
@@ -301,19 +285,23 @@ export function ToolsSection() {
                         <th className="w-14 py-3 pl-4 text-center text-xs font-semibold text-muted-foreground">순위</th>
                         <th className="py-3 pl-2 text-left text-xs font-semibold text-muted-foreground">도구</th>
                         <th className="hidden sm:table-cell py-3 text-left text-xs font-semibold text-muted-foreground">설명</th>
-                        <th className="w-32 py-3 pr-4 text-left text-xs font-semibold text-muted-foreground">하이라이트</th>
-                        <th className="w-12 py-3 pr-4"></th>
+                        <th className="w-32 py-3 text-left text-xs font-semibold text-muted-foreground">하이라이트</th>
+                        <th className="w-24 py-3 pr-4 text-center text-xs font-semibold text-muted-foreground">사이트 바로가기</th>
                       </tr>
                     </thead>
                     <tbody>
                       {cat.tools.map((tool) => {
                         const rankEmoji = getRankEmoji(tool.rankInCat);
                         const highlight = getHighlight(tool);
-                        const rowBg = tool.rankInCat === 1 ? "bg-amber-500/5" : tool.rankInCat === 2 ? "bg-gray-400/5" : tool.rankInCat === 3 ? "bg-orange-500/5" : "";
+                        const rowBg = tool.rankInCat === 1 ? "bg-amber-500/[0.03]" : tool.rankInCat === 2 ? "bg-gray-400/[0.03]" : tool.rankInCat === 3 ? "bg-orange-500/[0.03]" : "";
                         const isCrossCategory = tool.category !== cat.category;
 
                         return (
-                          <tr key={`${tool.id}-${cat.category}`} className={`border-b border-border/20 transition-colors hover:bg-muted/20 last:border-0 ${rowBg}`}>
+                          <tr
+                            key={`${tool.id}-${cat.category}`}
+                            onClick={() => router.push(`/tools/${tool.id}`)}
+                            className={`border-b border-border/20 transition-all last:border-0 ${rowBg} cursor-pointer hover:bg-muted/30 hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]`}
+                          >
                             {/* 순위 */}
                             <td className="py-3 pl-4 text-center">
                               <span className={`text-base font-bold ${tool.rankInCat <= 3 ? "" : "text-muted-foreground"}`}>
@@ -322,9 +310,9 @@ export function ToolsSection() {
                             </td>
                             {/* 도구명 */}
                             <td className="py-3 pl-2">
-                              <Link href={`/tools/${tool.id}`} className="font-semibold text-foreground hover:text-primary transition-colors">
+                              <span className="font-semibold text-foreground group-hover:text-primary">
                                 {tool.name}
-                              </Link>
+                              </span>
                               <div className="flex flex-wrap gap-1 mt-1">
                                 {tool.popular && (
                                   <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-500">
@@ -336,26 +324,33 @@ export function ToolsSection() {
                                   <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">무료</span>
                                 )}
                                 {isCrossCategory && (
-                                  <span className={`inline-flex items-center rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${colorClass}`}>
-                                    {categoryMeta[tool.category]?.emoji} {categories.find(c => c.value === tool.category)?.label}
+                                  <span className={`inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${colorClass}`}>
+                                    {CATEGORY_ICONS[tool.category]}
+                                    {categories.find(c => c.value === tool.category)?.label}
                                   </span>
                                 )}
                               </div>
                             </td>
-                            {/* 설명 */}
-                            <td className="hidden sm:table-cell py-3 text-muted-foreground max-w-[260px] truncate pr-4">
-                              {tool.description}
+                            {/* 설명 (절반 이하로) */}
+                            <td className="hidden sm:table-cell py-3 text-muted-foreground pr-4">
+                              <span className="text-xs leading-snug block">
+                                {shortDesc(tool)}
+                                {tool.description.length > 60 && (
+                                  <span className="text-muted-foreground/50 ml-0.5"> 자세한 내용은 개별 페이지로</span>
+                                )}
+                              </span>
                             </td>
                             {/* 하이라이트 */}
-                            <td className="py-3 pr-4">
+                            <td className="py-3">
                               <span className="text-xs text-muted-foreground">{highlight}</span>
                             </td>
-                            {/* 방문 */}
-                            <td className="py-3 pr-4">
+                            {/* 사이트 바로가기 */}
+                            <td className="py-3 pr-4 text-center">
                               <a
                                 href={tool.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
                                 className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                                 title="사이트 방문"
                               >
@@ -374,23 +369,16 @@ export function ToolsSection() {
         </div>
       ) : null}
 
-      {/* ---------- CARD GRID VIEW ---------- */}
+      {/* ========== CARD GRID VIEW ========== */}
       {viewMode === "grid" && (
         <>
-          {/* 카테고리 필터 */}
           <section className="mb-6">
             <div className="flex flex-wrap justify-center gap-2">
               {categories.map((cat) => {
                 const count = catCounts[cat.value] ?? 0;
                 const isSelected = selectedCategory === cat.value;
                 return (
-                  <Button
-                    key={cat.value}
-                    variant={isSelected ? "default" : "outline"}
-                    size="sm"
-                    className={`gap-2 transition-all ${isSelected ? "shadow-sm" : "border-border/50 text-muted-foreground hover:text-foreground hover:border-border"}`}
-                    onClick={() => setSelectedCategory(cat.value)}
-                  >
+                  <Button key={cat.value} variant={isSelected ? "default" : "outline"} size="sm" className={`gap-2 transition-all ${isSelected ? "shadow-sm" : "border-border/50 text-muted-foreground hover:text-foreground hover:border-border"}`} onClick={() => setSelectedCategory(cat.value)}>
                     <span>{cat.emoji}</span>
                     <span>{cat.label}</span>
                     <span className={`rounded-full px-1.5 py-0.5 text-xs font-mono leading-none ${isSelected ? "bg-background/20 text-current" : "bg-muted text-muted-foreground"}`}>{count}</span>
@@ -399,19 +387,14 @@ export function ToolsSection() {
               })}
             </div>
           </section>
-
-          {/* 결과 수 */}
           <div className="mb-4 flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              {filteredCards.length === 0 ? "검색 결과가 없습니다" : (
-                <><span className="font-semibold text-foreground">{filteredCards.length}</span>개의 도구</>
-              )}
+              {filteredCards.length === 0 ? "검색 결과가 없습니다" : (<><span className="font-semibold text-foreground">{filteredCards.length}</span>개의 도구</>)}
             </p>
             {(searchQuery || selectedCategory !== "all") && (
               <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground h-auto py-1" onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }}>필터 초기화</Button>
             )}
           </div>
-
           {filteredCards.length > 0 ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredCards.map((tool) => <ToolCard key={tool.id} tool={tool} />)}
@@ -427,23 +410,13 @@ export function ToolsSection() {
         </>
       )}
 
-      {/* ---------- 하단 뷰 전환 토글 ---------- */}
+      {/* 하단 뷰 전환 */}
       <div className="mt-12 flex items-center justify-center gap-2">
-        <Button
-          variant={viewMode === "ranking" ? "default" : "outline"}
-          size="sm"
-          className={`gap-2 ${viewMode === "ranking" ? "" : "border-border/50 text-muted-foreground"}`}
-          onClick={() => setViewMode("ranking")}
-        >
+        <Button variant={viewMode === "ranking" ? "default" : "outline"} size="sm" className={`gap-2 ${viewMode === "ranking" ? "" : "border-border/50 text-muted-foreground"}`} onClick={() => setViewMode("ranking")}>
           <ListOrdered className="h-4 w-4" />
           순위 테이블
         </Button>
-        <Button
-          variant={viewMode === "grid" ? "default" : "outline"}
-          size="sm"
-          className={`gap-2 ${viewMode === "grid" ? "" : "border-border/50 text-muted-foreground"}`}
-          onClick={() => setViewMode("grid")}
-        >
+        <Button variant={viewMode === "grid" ? "default" : "outline"} size="sm" className={`gap-2 ${viewMode === "grid" ? "" : "border-border/50 text-muted-foreground"}`} onClick={() => setViewMode("grid")}>
           <LayoutGrid className="h-4 w-4" />
           카드 그리드
         </Button>
