@@ -71,6 +71,7 @@ const RANKING_OVERRIDES: Record<string, Record<string, number>> = {
   agent: {
     "zapier-ai": 3,
     n8n: 4,
+    hermes: 6,
   },
 };
 

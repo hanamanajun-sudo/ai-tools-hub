@@ -1340,7 +1340,7 @@ export const aiTools: AITool[] = [
     name: "OpenClaw",
     description: "오픈소스 Claude 터미널 클라이언트. 로컬에서 Claude API로 코딩·분석을 자동화합니다.",
     url: "https://github.com/openclaw",
-    category: "coding",
+    category: "agent",
     tags: ["Claude", "CLI", "오픈소스", "코딩"],
     free: true,
     features: ["Claude API 터미널 클라이언트", "코드 생성·리팩토링", "파일 시스템 접근"],
