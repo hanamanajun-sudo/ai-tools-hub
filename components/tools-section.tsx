@@ -38,16 +38,16 @@ const CATEGORY_ICONS: Record<string, React.ReactNode> = {
    크로스 카테고리
    =================================================================== */
 const CROSS_CATEGORY: Record<string, Exclude<Category, "all">[]> = {
-  chatgpt:          ["image", "coding", "agent"],
-  claude:           ["coding", "agent"],
+  chatgpt:          ["image", "coding"],
+  claude:           ["coding"],
   gemini:           ["image", "coding"],
   deepseek:         ["coding"],
   "ms-copilot":     ["coding"],
-  manus:            ["agent"],
-  devin:            ["agent"],
+  manus:            [],
+  devin:            [],
   "zapier-ai":      ["agent"],
-  "auto-gpt":       ["agent"],
-  "browser-use":    ["agent"],
+  "auto-gpt":       [],
+  "browser-use":    [],
 };
 
 /* ===================================================================
@@ -67,6 +67,10 @@ const RANKING_OVERRIDES: Record<string, Record<string, number>> = {
   },
   video: {
     seedance: 1, kling: 2, runway: 3, gemini: 4, sora: 5,
+  },
+  agent: {
+    "zapier-ai": 3,
+    n8n: 4,
   },
 };
 
