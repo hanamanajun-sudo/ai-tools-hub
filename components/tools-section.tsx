@@ -242,6 +242,27 @@ export function ToolsSection() {
         마지막 업데이트: {updateDate}
       </div>
 
+      {/* 카테고리 점프 탭 */}
+      <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {categories.filter(c => c.value !== "all").map((cat) => {
+          const colorClass = categoryColors[cat.value] || "";
+          return (
+            <a
+              key={cat.value}
+              href={`#category-${cat.value}`}
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById(`category-${cat.value}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all hover:scale-105 ${colorClass} hover:shadow-sm`}
+            >
+              {CATEGORY_ICONS[cat.value]}
+              {cat.label}
+            </a>
+          );
+        })}
+      </div>
+
       {searchQuery.trim() && (
         <div className="mb-4 flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
@@ -268,7 +289,7 @@ export function ToolsSection() {
             const colorClass = categoryColors[cat.category] || "";
 
             return (
-              <section key={cat.category}>
+              <section key={cat.category} id={`category-${cat.category}`}>
                 {/* 카테고리 헤더 — 제목만 */}
                 <div className="flex items-center gap-2 mb-4">
                   <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg ${colorClass}`}>
@@ -294,8 +315,6 @@ export function ToolsSection() {
                         const rankEmoji = getRankEmoji(tool.rankInCat);
                         const highlight = getHighlight(tool);
                         const rowBg = tool.rankInCat === 1 ? "bg-amber-500/[0.03]" : tool.rankInCat === 2 ? "bg-gray-400/[0.03]" : tool.rankInCat === 3 ? "bg-orange-500/[0.03]" : "";
-                        const isCrossCategory = tool.category !== cat.category;
-
                         return (
                           <tr
                             key={`${tool.id}-${cat.category}`}
@@ -310,26 +329,9 @@ export function ToolsSection() {
                             </td>
                             {/* 도구명 */}
                             <td className="py-3 pl-2">
-                              <span className="font-semibold text-foreground group-hover:text-primary">
+                              <span className="font-semibold text-foreground">
                                 {tool.name}
                               </span>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {tool.popular && (
-                                  <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-500">
-                                    <Star className="h-2.5 w-2.5 fill-current" />
-                                    인기
-                                  </span>
-                                )}
-                                {tool.free && (
-                                  <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400">무료</span>
-                                )}
-                                {isCrossCategory && (
-                                  <span className={`inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-medium ${colorClass}`}>
-                                    {CATEGORY_ICONS[tool.category]}
-                                    {categories.find(c => c.value === tool.category)?.label}
-                                  </span>
-                                )}
-                              </div>
                             </td>
                             {/* 설명 (절반 이하로) */}
                             <td className="hidden sm:table-cell py-3 text-muted-foreground pr-4">
