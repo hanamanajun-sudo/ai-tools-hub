@@ -21,6 +21,27 @@ const RATING_LABELS: Record<keyof ExpertRating, string> = {
   performance: "성능", value: "가격 대비 가치", innovation: "혁신성",
 };
 
+/* ── 한국어 검색어 매핑 (Google Trends 기반) ── */
+const KO_TOOL_NAMES: Record<string, { h1: string; short: string }> = {
+  chatgpt:      { h1: "챗GPT(ChatGPT)", short: "챗GPT" },
+  gemini:       { h1: "제미나이(Gemini)", short: "제미나이" },
+  grok:         { h1: "그록(Grok)", short: "그록" },
+  midjourney:   { h1: "미드저니(Midjourney)", short: "미드저니" },
+  dalle3:       { h1: "달리(DALL-E 3)", short: "달리" },
+  sora:         { h1: "소라(Sora)", short: "소라" },
+  capcut:       { h1: "캡컷(CapCut)", short: "캡컷" },
+  "auto-gpt":   { h1: "오토GPT(AutoGPT)", short: "오토GPT" },
+  "image-nanobana": { h1: "제미니(Image Nanobana)", short: "제미니" },
+};
+
+function getKoName(tool: { id: string; name: string }): { h1: string; short: string } {
+  return KO_TOOL_NAMES[tool.id] ?? { h1: tool.name, short: tool.name };
+}
+
+function getName(tool: { id: string; name: string }): string {
+  return KO_TOOL_NAMES[tool.id]?.short ?? tool.name;
+}
+
 export function generateStaticParams() {
   return aiTools.map((tool) => ({ slug: tool.id }));
 }
@@ -29,12 +50,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const tool = aiTools.find((t) => t.id === slug);
   if (!tool) return {};
+  const ko = getKoName(tool);
   const categoryLabel = categories.find((c) => c.value === tool.category);
   return {
-    title: `${tool.name} - ai.ktoolu`,
+    title: `${ko.h1} - ai.ktoolu`,
     description: tool.description,
-    openGraph: { title: `${tool.name} - ai.ktoolu`, description: tool.description, type: "website", siteName: "ai.ktoolu" },
-    twitter: { card: "summary", title: `${tool.name} - ai.ktoolu`, description: tool.description },
+    openGraph: { title: `${ko.h1} - ai.ktoolu`, description: tool.description, type: "website", siteName: "ai.ktoolu" },
+    twitter: { card: "summary", title: `${ko.h1} - ai.ktoolu`, description: tool.description },
     keywords: [tool.name, ...tool.tags, categoryLabel?.label ?? "", "AI 도구", "AI tools"],
   };
 }
@@ -87,7 +109,7 @@ export default async function ToolDetailPage({ params }: Props) {
               </span>
             )}
           </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">{tool.name}</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">{getKoName(tool).h1}</h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">{tool.longDescription ?? tool.description}</p>
         </section>
 
@@ -129,7 +151,7 @@ export default async function ToolDetailPage({ params }: Props) {
             <section id="tab-overview">
               <h2 className="text-lg font-bold text-foreground mb-5 flex items-center gap-2">
                 <span className="h-5 w-1 rounded-full bg-primary" />
-                {tool.name} 개요
+                {getKoName(tool).short} 개요
               </h2>
 
               {tool.features && tool.features.length > 0 && (
@@ -206,7 +228,7 @@ export default async function ToolDetailPage({ params }: Props) {
             <section id="tab-reviews">
               <h2 className="text-lg font-bold text-foreground mb-5 flex items-center gap-2">
                 <span className="h-5 w-1 rounded-full bg-amber-400" />
-                {tool.name} 리뷰 & 평가
+                {getKoName(tool).short} 리뷰 & 평가
               </h2>
 
               {tool.expertRating && (
@@ -304,7 +326,7 @@ export default async function ToolDetailPage({ params }: Props) {
             <section id="tab-pricing">
               <h2 className="text-lg font-bold text-foreground mb-5 flex items-center gap-2">
                 <span className="h-5 w-1 rounded-full bg-emerald-400" />
-                {tool.name} 요금제 비교
+                {getKoName(tool).short} 요금제 비교
               </h2>
 
               {tool.pricingPlans && tool.pricingPlans.length > 0 && (
@@ -357,7 +379,7 @@ export default async function ToolDetailPage({ params }: Props) {
             <section id="tab-alternatives">
               <h2 className="text-lg font-bold text-foreground mb-5 flex items-center gap-2">
                 <span className="h-5 w-1 rounded-full bg-purple-400" />
-                {tool.name} 대안 도구
+                {getKoName(tool).short} 대안 도구
               </h2>
               {relatedTools.length > 0 ? (
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -391,7 +413,7 @@ export default async function ToolDetailPage({ params }: Props) {
                 <h2 className="text-sm font-semibold text-foreground mb-4">사이트 바로가기</h2>
                 <a href={tool.url} target="_blank" rel="noopener noreferrer" className="block w-full">
                   <Button className="w-full gap-2 group">
-                    <span>{tool.name} 방문하기</span>
+                    <span>{getName(tool)} 방문하기</span>
                     <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Button>
                 </a>
