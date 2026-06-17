@@ -68,7 +68,7 @@ export const aiTools: AITool[] = [
   {
     id: "chatgpt",
     name: "ChatGPT",
-    description: "OpenAI의 가장 강력한 대화형 AI. GPT-4o 기반으로 텍스트, 이미지, 파일 분석 등 다양한 작업을 처리합니다.",
+    description: "ChatGPT(챗GPT) — OpenAI의 가장 강력한 대화형 AI. GPT-4o 기반으로 텍스트, 이미지, 파일 분석 등 다양한 작업을 처리합니다.",
     longDescription: "ChatGPT는 OpenAI가 개발한 세계 최대 사용자 수를 보유한 대화형 AI입니다. GPT-4o 모델을 기반으로 텍스트 생성, 코드 작성, 이미지 분석, 파일 요약, 수학 풀이 등 거의 모든 지식 작업을 수행할 수 있습니다. 무료 플랜에서도 GPT-4o mini 모델을 사용할 수 있으며, Plus 구독 시 더 강력한 GPT-4o 모델과 DALL·E 이미지 생성, 고급 데이터 분석 기능을 이용할 수 있습니다. 플러그인 생태계와 GPT Store를 통해 다양한 전문 기능을 확장할 수 있어 업무 자동화, 학습, 창작 등 다양한 분야에서 활용됩니다.",
     url: "https://chat.openai.com",
     category: "text",
@@ -123,7 +123,7 @@ export const aiTools: AITool[] = [
   {
     id: "claude",
     name: "Claude",
-    description: "Anthropic의 AI 어시스턴트. 긴 문서 처리, 코드 작성, 분석에 뛰어나며 안전성에 중점을 둡니다.",
+    description: "Claude(클로드) — Anthropic의 AI 어시스턴트. 긴 문서 처리, 코드 작성, 분석에 뛰어나며 안전성에 중점을 둡니다.",
     longDescription: "Claude는 AI 안전 연구소 Anthropic이 개발한 대화형 AI로, 최대 200K 토큰(약 15만 단어)의 긴 컨텍스트 처리 능력이 핵심 강점입니다. 긴 문서 요약, 복잡한 코드베이스 분석, 세밀한 글쓰기 작업에서 탁월한 성능을 보여줍니다. '헌법적 AI' 방법론을 통해 안전하고 신뢰할 수 있는 답변을 제공하도록 설계되었습니다. Claude 3.5 Sonnet은 코딩 벤치마크에서 최상위 성능을 기록하며, 특히 뉘앙스가 중요한 글쓰기와 분석 작업에서 뛰어난 결과를 냅니다.",
     url: "https://claude.ai",
     category: "text",
@@ -178,7 +178,7 @@ export const aiTools: AITool[] = [
   {
     id: "gemini",
     name: "Gemini",
-    description: "Google의 멀티모달 AI. Google 서비스와 완벽하게 통합되며 실시간 정보 검색이 가능합니다.",
+    description: "Gemini(제미니) — Google의 멀티모달 AI. Google 서비스와 완벽하게 통합되며 실시간 정보 검색이 가능합니다.",
     longDescription: "Gemini는 Google DeepMind가 개발한 멀티모달 AI로, Google 검색·Gmail·Docs·Drive 등 Google 생태계와 깊이 통합되어 있습니다. Gemini 1.5 Pro는 100만 토큰의 초장문 컨텍스트를 지원하며, Google 검색을 통한 실시간 정보 접근이 가능합니다. YouTube 영상 분석, Google 문서 요약 등 Google 서비스 사용자에게 특히 유용합니다. Gemini Advanced(Ultra 모델)는 복잡한 추론과 멀티모달 작업에서 최고 수준의 성능을 보여줍니다.",
     url: "https://gemini.google.com",
     category: "text",
@@ -220,7 +220,7 @@ export const aiTools: AITool[] = [
   {
     id: "perplexity",
     name: "Perplexity AI",
-    description: "AI 기반 검색 엔진. 실시간 웹 검색과 AI를 결합해 출처가 명확한 답변을 제공합니다.",
+    description: "Perplexity(퍼플렉시티) — AI 기반 검색 엔진. 실시간 웹 검색과 AI를 결합해 출처가 명확한 답변을 제공합니다.",
     longDescription: "Perplexity AI는 기존 검색 엔진의 한계를 극복한 AI 검색 엔진입니다. 질문을 입력하면 실시간으로 수십 개의 웹 페이지를 검색·분석하여 출처가 명확한 요약 답변을 제공합니다. 각 답변에는 참고 출처 링크가 첨부되어 사실 확인이 쉽습니다. GPT-4, Claude, Mistral 등 다양한 AI 모델을 선택해 사용할 수 있으며, Copilot 기능으로 심층 리서치도 가능합니다. 학술 논문, 뉴스, 소셜 미디어 등 다양한 출처를 필터링할 수 있습니다.",
     url: "https://www.perplexity.ai",
     category: "text",
@@ -255,7 +255,7 @@ export const aiTools: AITool[] = [
   {
     id: "notion-ai",
     name: "Notion AI",
-    description: "Notion에 내장된 AI 어시스턴트. 문서 작성, 요약, 번역 등 노트와 프로젝트 관리를 도와줍니다.",
+    description: "Notion AI(노션 AI) — Notion에 내장된 AI 어시스턴트. 문서 작성, 요약, 번역 등 노트와 프로젝트 관리를 도와줍니다.",
     longDescription: "Notion AI는 세계적인 노트·협업 도구 Notion에 내장된 AI 어시스턴트입니다. 문서를 작성하는 중에 AI의 도움을 받아 초안 생성, 요약, 번역, 맞춤법 교정, 톤 변환 등을 바로 처리할 수 있습니다. 기존 Notion 페이지 내용을 참조해 답변하는 'Q&A' 기능으로 팀 위키나 회사 문서에서 빠르게 정보를 찾을 수 있습니다. Notion을 이미 사용 중인 팀이라면 별도 도구 없이 워크플로우를 크게 향상시킬 수 있습니다.",
     url: "https://www.notion.so/product/ai",
     category: "text",
@@ -284,7 +284,7 @@ export const aiTools: AITool[] = [
       {
     id: "grammarly",
     name: "Grammarly",
-    description: "AI 기반 영문 교정 및 글쓰기 어시스턴트. 문법, 스타일, 명확성을 개선합니다.",
+    description: "Grammarly(그래머리) — AI 기반 영문 교정 및 글쓰기 어시스턴트. 문법, 스타일, 명확성을 개선합니다.",
     longDescription: "Grammarly는 3000만 명 이상이 사용하는 세계 최대 영문 글쓰기 보조 도구입니다. 문법 오류 교정을 넘어 문장의 명확성, 어조, 참여도, 전달력까지 분석해 더 나은 글쓰기를 돕습니다. Chrome 확장 프로그램으로 Gmail, Google Docs, Twitter, LinkedIn 등 거의 모든 웹 텍스트 영역에서 실시간으로 작동합니다. Grammarly GO AI 기능으로 이메일 답장, 문서 초안을 자동 생성할 수 있으며, 표절 검사 기능도 제공합니다.",
     url: "https://www.grammarly.com",
     category: "text",
@@ -315,7 +315,7 @@ export const aiTools: AITool[] = [
   {
     id: "deepseek",
     name: "DeepSeek",
-    description: "2025년 급부상한 중국 오픈소스 LLM. 추론 능력에서 GPT-4o에 필적하며 완전 무료로 제공됩니다.",
+    description: "DeepSeek(딥시크) — 2025년 급부상한 중국 오픈소스 LLM. 추론 능력에서 GPT-4o에 필적하며 완전 무료로 제공됩니다.",
     longDescription: "DeepSeek은 중국의 AI 연구소 DeepSeek(深度求索)이 개발한 오픈소스 대규모 언어 모델입니다. DeepSeek-R1 모델은 복잡한 추론 작업에서 OpenAI의 최신 모델에 필적하는 성능을 보여주며 전 세계를 놀라게 했습니다. 특히 API 가격이 GPT-4o의 1/10 수준으로 매우 저렴하며, 자체 추론 과정을 사용자에게 투명하게 공개하는 특징이 있습니다. 2025년 초 출시 이후 단기간에 수억 명의 사용자를 확보하며 AI 업계에 큰 파장을 일으켰습니다. 한국어 지원도 뛰어나며, 웹과 앱에서 무료로 사용할 수 있습니다.",
     url: "https://chat.deepseek.com",
     category: "text",
@@ -356,7 +356,7 @@ export const aiTools: AITool[] = [
   {
     id: "grok",
     name: "Grok",
-    description: "xAI의 AI 챗봇. X(트위터) 데이터를 실시간으로 활용하며 독특한 유머 감각이 특징입니다.",
+    description: "Grok(그록) — xAI의 AI 챗봇. X(트위터) 데이터를 실시간으로 활용하며 독특한 유머 감각이 특징입니다.",
     longDescription: "Grok은 일론 머스크의 xAI가 개발한 AI 어시스턴트로, X(트위터) 플랫폼과의 긴밀한 통합이 가장 큰 강점입니다. X의 실시간 데이터에 접근해 최신 트렌드와 뉴스를 반영한 답변을 제공하며, 기존 AI 모델이 학습 데이터 컷오프로 알지 못하는 최신 정보도 즉시 파악할 수 있습니다. Grok의 가장 독특한 특징은 '반항적인 유머 감각'으로, 다른 AI보다 자유롭고 솔직한 답변 스타일을 가지고 있습니다. 이미지 생성 기능인 Aurora도 내장되어 있어 텍스트와 이미지를 함께 생성할 수 있습니다.",
     url: "https://x.com/i/grok",
     category: "text",
@@ -377,7 +377,7 @@ export const aiTools: AITool[] = [
   {
     id: "writesonic",
     name: "Writesonic",
-    description: "마케팅 콘텐츠 생성에 특화된 AI 글쓰기 도구. 블로그·광고·랜딩페이지를 자동 생성합니다.",
+    description: "Writesonic(라이트소닉) — 마케팅 콘텐츠 생성에 특화된 AI 글쓰기 도구. 블로그·광고·랜딩페이지를 자동 생성합니다.",
     longDescription: "Writesonic은 마케터와 콘텐츠 크리에이터를 위한 AI 글쓰기 플랫폼으로, 블로그 포스트, 광고 카피, 랜딩 페이지, 이메일 등 80가지 이상의 콘텐츠 템플릿을 제공합니다. 자체 개발한 ChatSonic 챗봇 기능으로 대화형 AI도 함께 사용할 수 있습니다. SEO 최적화 기능이 내장되어 있어 검색 엔진 친화적인 콘텐츠를 쉽게 생성할 수 있으며, GPT-4와 자체 모델을 모두 지원합니다. Futurepedia에서 팝업 카운트 2,828로 Jasper(1,796)를 크게 앞지르는 인기를 보여줍니다.",
     url: "https://writesonic.com",
     category: "text",
@@ -398,7 +398,7 @@ export const aiTools: AITool[] = [
   {
     id: "ms-copilot",
     name: "Microsoft Copilot",
-    description: "Microsoft의 AI 어시스턴트. Windows·Office·Bing에 통합되어 일상을 혁신합니다.",
+    description: "Microsoft Copilot(코파일럿) — Microsoft의 AI 어시스턴트. Windows·Office·Bing에 통합되어 일상을 혁신합니다.",
     longDescription: "Microsoft Copilot은 Microsoft 365 앱(Word, Excel, PowerPoint, Teams), Windows, Bing 검색, Edge 브라우저에 깊이 통합된 AI 어시스턴트입니다. Word에서는 문서 초안 작성, Excel에서는 데이터 분석 및 시각화, PowerPoint에서는 슬라이드 생성, Teams에서는 회의 요약 등 오피스 전반에 AI 기능을 제공합니다. GPT-4 모델을 기반으로 하며, 엔터프라이즈 환경에서 데이터 보안과 규정 준수를 보장합니다. 기업 사용자에게 가장 접근성이 높은 AI 도구 중 하나입니다.",
     url: "https://copilot.microsoft.com",
     category: "text",
@@ -419,7 +419,7 @@ export const aiTools: AITool[] = [
   {
     id: "midjourney",
     name: "Midjourney",
-    description: "가장 인기 있는 AI 이미지 생성 도구. Discord 기반으로 놀라운 아트워크와 사실적인 이미지를 만들어냅니다.",
+    description: "Midjourney(미드저니) — 가장 인기 있는 AI 이미지 생성 도구. Discord 기반으로 놀라운 아트워크와 사실적인 이미지를 만들어냅니다.",
     longDescription: "Midjourney는 예술적 감각과 품질 면에서 업계 최고로 평가받는 AI 이미지 생성 도구입니다. Discord 채널에서 명령어를 입력하는 방식으로 작동하며, 웹 인터페이스도 제공합니다. V6 모델은 사진에 가까운 사실성과 뛰어난 구성력을 자랑하며, 일관성 기능으로 동일한 캐릭터를 여러 이미지에서 유지할 수 있습니다. 상업적 이용이 가능하며, 패션, 광고, 게임, 영화 등 다양한 산업에서 전문가들이 활발히 사용합니다. 매달 수억 장의 이미지가 생성될 만큼 방대한 커뮤니티를 보유하고 있습니다.",
     url: "https://www.midjourney.com",
     category: "image",
@@ -460,7 +460,7 @@ export const aiTools: AITool[] = [
   {
     id: "dalle3",
     name: "DALL·E 3",
-    description: "OpenAI의 최신 이미지 생성 AI. 텍스트 설명을 정확하게 반영한 고품질 이미지를 생성합니다.",
+    description: "DALL-E 3(달리) — OpenAI의 최신 이미지 생성 AI. 텍스트 설명을 정확하게 반영한 고품질 이미지를 생성합니다.",
     longDescription: "DALL·E 3는 OpenAI가 개발한 텍스트→이미지 생성 AI로, 텍스트 프롬프트를 정확하게 반영하는 능력이 핵심 강점입니다. ChatGPT Plus 구독자는 ChatGPT 대화 중에 바로 이미지를 생성할 수 있어 편의성이 높습니다. 이전 버전 대비 텍스트가 포함된 이미지 생성 능력이 크게 향상되었으며, 복잡한 장면 묘사도 정확하게 구현합니다. 안전 필터가 강력해 창작의 자유가 제한될 수 있지만, 상업적으로 안전한 이미지 생성에 적합합니다.",
     url: "https://openai.com/dall-e-3",
     category: "image",
@@ -482,7 +482,7 @@ export const aiTools: AITool[] = [
   {
     id: "stable-diffusion",
     name: "Stable Diffusion",
-    description: "오픈소스 이미지 생성 모델. 로컬 실행 가능하며 다양한 커스터마이징이 가능합니다.",
+    description: "Stable Diffusion(스테이블 디퓨전) — 오픈소스 이미지 생성 모델. 로컬 실행 가능하며 다양한 커스터마이징이 가능합니다.",
     longDescription: "Stable Diffusion은 Stability AI가 개발하고 오픈소스로 공개한 이미지 생성 모델입니다. 로컬 PC에서 직접 실행할 수 있어 인터넷 연결 없이 이미지를 무제한으로 생성할 수 있습니다. Civitai 등 커뮤니티에서 수만 개의 파인튜닝 모델을 무료로 다운로드해 특정 스타일에 최적화된 이미지를 생성할 수 있습니다. AUTOMATIC1111, ComfyUI 등 오픈소스 GUI를 통해 ControlNet, img2img 등 고급 기능을 활용할 수 있어 전문 사용자에게 강력한 도구입니다.",
     url: "https://stability.ai",
     category: "image",
@@ -511,7 +511,7 @@ export const aiTools: AITool[] = [
   {
     id: "adobe-firefly",
     name: "Adobe Firefly",
-    description: "Adobe의 AI 이미지 생성 도구. Photoshop, Illustrator와 통합되어 창작 워크플로우를 강화합니다.",
+    description: "Adobe Firefly(어도비 파이어플라이) — Adobe의 AI 이미지 생성 도구. Photoshop, Illustrator와 통합되어 창작 워크플로우를 강화합니다.",
     longDescription: "Adobe Firefly는 Adobe가 개발한 생성형 AI로, Photoshop의 '생성형 채우기', Illustrator의 '벡터화' 등 기존 Adobe 도구에 자연스럽게 통합되어 있습니다. 상업적으로 안전한 이미지 생성을 위해 Adobe Stock 라이선스 콘텐츠와 저작권이 만료된 이미지만 학습 데이터로 사용했습니다. 따라서 생성된 이미지는 상업적 목적으로 안전하게 사용할 수 있습니다. Photoshop 내에서 배경 확장, 객체 제거, 요소 추가 등 편집 작업에 AI를 활용할 수 있어 디자이너와 사진작가에게 특히 유용합니다.",
     url: "https://firefly.adobe.com",
     category: "image",
@@ -541,7 +541,7 @@ export const aiTools: AITool[] = [
     {
     id: "leonardo-ai",
     name: "Leonardo AI",
-    description: "게임 에셋, 캐릭터 디자인에 특화된 AI 이미지 생성 플랫폼. 다양한 파인튜닝 모델을 제공합니다.",
+    description: "Leonardo AI(레오나르도 AI) — 게임 에셋, 캐릭터 디자인에 특화된 AI 이미지 생성 플랫폼. 다양한 파인튜닝 모델을 제공합니다.",
     longDescription: "Leonardo AI는 게임 개발자와 크리에이터를 위한 AI 이미지 생성 플랫폼입니다. 게임 에셋, 캐릭터, 배경, 아이템 등 게임 제작에 필요한 비주얼을 빠르게 생성할 수 있습니다. 자체 파인튜닝 기능으로 특정 스타일의 모델을 학습시켜 일관된 캐릭터와 세계관을 유지할 수 있습니다. 실시간 캔버스 편집, 모션 생성, 3D 텍스처 생성 등 고급 기능도 제공하며, 커뮤니티에서 공유된 다양한 파인튜닝 모델을 무료로 활용할 수 있습니다.",
     url: "https://leonardo.ai",
     category: "image",
@@ -562,7 +562,7 @@ export const aiTools: AITool[] = [
   {
     id: "canva-ai",
     name: "Canva AI",
-    description: "Canva에 통합된 AI 기능. 이미지 생성, 배경 제거, 마법 편집 등 디자인 작업을 자동화합니다.",
+    description: "Canva AI(캔바 AI) — Canva에 통합된 AI 기능. 이미지 생성, 배경 제거, 마법 편집 등 디자인 작업을 자동화합니다.",
     longDescription: "Canva AI는 세계 1억 7000만 명이 사용하는 디자인 플랫폼 Canva에 통합된 AI 기능 모음입니다. '마법 미디어'로 텍스트 프롬프트에서 이미지를 생성하고, '배경 제거'로 클릭 한 번에 배경을 지우며, '마법 편집'으로 이미지 요소를 교체할 수 있습니다. AI 프레젠테이션 생성 기능은 주제만 입력하면 슬라이드 전체를 자동으로 만들어줍니다. 디자인 전문 지식 없이도 전문가 수준의 결과물을 만들 수 있어 초보자에게 특히 유용합니다.",
     url: "https://www.canva.com/ai-image-generator",
     category: "image",
@@ -599,7 +599,7 @@ export const aiTools: AITool[] = [
   {
     id: "image-nanobana",
     name: "Image Nanobana",
-    description: "고품질 이미지 생성 AI. 세밀한 디테일과 사실적인 표현력이 강점입니다.",
+    description: "Image Nanobana(제미니) — 고품질 이미지 생성 AI. 세밀한 디테일과 사실적인 표현력이 강점입니다.",
     longDescription: "Image Nanobana(이미지 나노바나나)는 고품질 이미지 생성에 특화된 AI 도구로, 뛰어난 디테일 표현과 사실적인 이미지 생성 능력이 강점입니다. 짧은 프롬프트만으로도 원하는 느낌의 이미지를 생성할 수 있으며, 생성된 이미지를 짧은 영상으로도 제작 가능합니다. 사용자 친화적인 인터페이스와 빠른 생성 속도로 크리에이터들 사이에서 인기를 얻고 있습니다.",
     url: "https://image-nanobana.example.com",
     category: "image",
@@ -619,7 +619,7 @@ export const aiTools: AITool[] = [
   {
     id: "chatgpt-image",
     name: "ChatGPT Image",
-    description: "ChatGPT에 내장된 이미지 생성 기능. GPT-4o의 멀티모달 능력으로 텍스트와 이미지를 통합 생성합니다.",
+    description: "ChatGPT Image(챗GPT) — ChatGPT에 내장된 이미지 생성 기능. GPT-4o의 멀티모달 능력으로 텍스트와 이미지를 통합 생성합니다.",
     longDescription: "ChatGPT Image는 ChatGPT에 내장된 AI 이미지 생성 기능으로, GPT-4o의 멀티모달 능력을 활용해 텍스트와 이미지를 통합적으로 생성합니다. DALL-E와 달리 ChatGPT와의 대화 맥락을 이해하고 이미지를 생성하므로, 이전 대화 내용을 바탕으로 일관된 스타일의 이미지를 만들 수 있습니다. 채팅 내에서 바로 이미지를 생성하고 편집할 수 있어 워크플로우가 매우 간편합니다.",
     url: "https://chat.openai.com",
     category: "image",
@@ -640,7 +640,7 @@ export const aiTools: AITool[] = [
   {
     id: "runway",
     name: "Runway",
-    description: "전문적인 AI 비디오 생성 및 편집 플랫폼. Gen-2로 텍스트/이미지를 고품질 비디오로 변환합니다.",
+    description: "Runway(런웨이) — 전문적인 AI 비디오 생성 및 편집 플랫폼. Gen-2로 텍스트/이미지를 고품질 비디오로 변환합니다.",
     longDescription: "Runway는 할리우드 영화 제작팀도 사용하는 전문 AI 비디오 플랫폼입니다. Gen-3 Alpha 모델로 텍스트 또는 이미지를 최대 10초의 고품질 비디오로 변환할 수 있으며, 실제 같은 움직임과 세밀한 디테일이 특징입니다. 비디오 편집, 배경 제거, 인페인팅, 오디오 분리 등 전문 편집 도구도 제공합니다. 영화 '에브리씽 에브리웨어 올 앳 원스' 등의 제작에 활용될 만큼 전문가들의 신뢰를 받고 있습니다.",
     url: "https://runwayml.com",
     category: "video",
@@ -669,7 +669,7 @@ export const aiTools: AITool[] = [
   {
     id: "sora",
     name: "Sora",
-    description: "OpenAI의 혁신적인 텍스트→비디오 AI. 최대 60초의 놀라운 사실적 영상을 생성합니다.",
+    description: "Sora(소라) — OpenAI의 혁신적인 텍스트→비디오 AI. 최대 60초의 놀라운 사실적 영상을 생성합니다.",
     longDescription: "Sora는 OpenAI가 2024년 출시한 텍스트→비디오 생성 AI로, 물리 법칙을 이해하고 현실적인 장면을 구현하는 능력이 업계를 놀라게 했습니다. 텍스트 설명만으로 최대 1080p, 60초 길이의 고품질 영상을 생성할 수 있으며, 동일한 장면을 다양한 카메라 각도로 표현하거나 이미지를 영상으로 변환하는 기능도 제공합니다. ChatGPT Plus 구독자는 Sora를 바로 사용할 수 있어 접근성이 높습니다.",
     url: "https://sora.com",
     category: "video",
@@ -698,7 +698,7 @@ export const aiTools: AITool[] = [
   {
     id: "pika",
     name: "Pika",
-    description: "텍스트와 이미지로 비디오를 생성하는 AI. 쉬운 인터페이스로 빠르게 애니메이션을 만들 수 있습니다.",
+    description: "Pika(피카) — 텍스트와 이미지로 비디오를 생성하는 AI. 쉬운 인터페이스로 빠르게 애니메이션을 만들 수 있습니다.",
     longDescription: "Pika는 사용자 친화적인 인터페이스로 빠르게 인기를 얻은 AI 비디오 생성 플랫폼입니다. 텍스트 설명이나 이미지를 입력하면 3~4초 만에 영상을 생성해주는 속도가 큰 장점입니다. 립싱크 기능으로 인물 사진에 음성을 입히거나, 기존 영상에 새로운 요소를 추가하는 편집 기능도 제공합니다. 디스코드와 웹 모두에서 사용 가능하며, 무료 플랜으로도 충분한 양의 영상을 생성할 수 있어 처음 AI 비디오를 경험하는 사람에게 적합합니다.",
     url: "https://pika.art",
     category: "video",
@@ -718,7 +718,7 @@ export const aiTools: AITool[] = [
   {
     id: "heygen",
     name: "HeyGen",
-    description: "AI 아바타로 마케팅 비디오를 생성하는 플랫폼. 100개 이상의 언어로 비디오 번역도 지원합니다.",
+    description: "HeyGen(헤이젠) — AI 아바타로 마케팅 비디오를 생성하는 플랫폼. 100개 이상의 언어로 비디오 번역도 지원합니다.",
     longDescription: "HeyGen은 AI 아바타와 음성 합성 기술을 결합해 카메라 없이도 전문적인 발표 영상을 만들 수 있는 플랫폼입니다. 100가지 이상의 AI 아바타 중 선택하거나 본인 얼굴로 개인 아바타를 만들 수 있습니다. 가장 주목받는 기능은 '영상 번역'으로, 기존 영상을 업로드하면 입 모양까지 맞춰가며 100개 이상의 언어로 자동 더빙해줍니다. 온보딩 영상, 제품 설명, 교육 자료 등 반복 제작이 필요한 기업 영상에 특히 효과적입니다.",
     url: "https://www.heygen.com",
     category: "video",
@@ -767,7 +767,7 @@ export const aiTools: AITool[] = [
   {
     id: "capcut",
     name: "CapCut",
-    description: "ByteDance의 올인원 비디오 편집 앱. AI 기능이 내장되어 전 세계 10억+ 사용자를 보유했습니다.",
+    description: "CapCut(캡컷) — ByteDance의 올인원 비디오 편집 앱. AI 기능이 내장되어 전 세계 10억+ 사용자를 보유했습니다.",
     longDescription: "CapCut(캡컷)은 TikTok 개발사 ByteDance가 만든 무료 비디오 편집 및 AI 크리에이티브 도구입니다. AI 자동 자막, 배경 제거, 텍스트-비디오 생성 등 강력한 AI 기능이 내장되어 있으며, 초보자도 직관적으로 사용할 수 있습니다. 웹 버전과 모바일 앱 모두 제공되며, AI가 영상을 자동으로 편집해주는 AutoCut 기능으로 편집 시간을 획기적으로 줄여줍니다. 폰트, 효과, 템플릿 등 풍부한 리소스 라이브러리를 무료로 제공합니다.",
     url: "https://www.capcut.com",
     category: "video",
@@ -816,7 +816,7 @@ export const aiTools: AITool[] = [
   {
     id: "github-copilot",
     name: "GitHub Copilot",
-    description: "GitHub과 OpenAI가 개발한 AI 코딩 어시스턴트. VS Code에서 실시간 코드 제안과 자동 완성을 제공합니다.",
+    description: "GitHub Copilot(깃허브 코파일럿) — GitHub과 OpenAI가 개발한 AI 코딩 어시스턴트. VS Code에서 실시간 코드 제안과 자동 완성을 제공합니다.",
     longDescription: "GitHub Copilot은 GitHub과 OpenAI가 공동 개발한 AI 코딩 어시스턴트로, 전 세계 개발자들이 가장 많이 사용하는 AI 코딩 도구입니다. VS Code, JetBrains, Neovim 등 주요 에디터에서 실시간 코드 자동 완성, 함수 생성, 주석→코드 변환을 지원합니다. Copilot Chat은 코드에 대한 질문, 설명, 리팩토링 제안을 대화 형식으로 제공합니다. GitHub 저장소의 방대한 코드를 학습해 다양한 언어와 프레임워크에서 높은 정확도를 보여주며, 개발 생산성을 평균 55% 향상시킨다는 연구 결과가 있습니다.",
     url: "https://github.com/features/copilot",
     category: "coding",
@@ -856,7 +856,7 @@ export const aiTools: AITool[] = [
   {
     id: "cursor",
     name: "Cursor",
-    description: "AI 네이티브 코드 에디터. Claude, GPT-4 기반으로 코드베이스 전체를 이해하고 편집합니다.",
+    description: "Cursor(커서) — AI 네이티브 코드 에디터. Claude, GPT-4 기반으로 코드베이스 전체를 이해하고 편집합니다.",
     longDescription: "Cursor는 VS Code를 기반으로 만들어진 AI 네이티브 코드 에디터입니다. 단순한 자동 완성을 넘어, 프로젝트 전체 코드베이스를 분석해 문맥을 이해한 수정을 제안합니다. 'Cmd+K'로 자연어로 코드 편집을 지시하고, 'Composer' 기능으로 여러 파일에 걸친 복잡한 변경 사항을 한 번에 처리할 수 있습니다. Claude Sonnet, GPT-4o, Gemini 등 최신 AI 모델을 선택해 사용할 수 있으며, 코드베이스 검색·참조 기능으로 대규모 프로젝트에서도 정확한 제안을 제공합니다.",
     url: "https://cursor.sh",
     category: "coding",
@@ -891,7 +891,7 @@ export const aiTools: AITool[] = [
   {
     id: "v0",
     name: "v0 by Vercel",
-    description: "텍스트 설명으로 React UI 컴포넌트를 생성하는 AI. shadcn/ui 기반의 코드를 즉시 생성합니다.",
+    description: "v0 by Vercel(v0) — 텍스트 설명으로 React UI 컴포넌트를 생성하는 AI. shadcn/ui 기반의 코드를 즉시 생성합니다.",
     longDescription: "v0는 Vercel이 만든 AI UI 생성 도구로, 텍스트로 원하는 UI를 설명하면 즉시 React 컴포넌트 코드를 생성합니다. shadcn/ui, Tailwind CSS 기반의 깔끔하고 실제로 사용 가능한 코드를 생성하며, 생성된 컴포넌트를 채팅으로 수정하거나 Next.js 프로젝트에 바로 붙여넣을 수 있습니다. 디자인 목업 이미지를 업로드하면 그에 맞는 코드를 생성하는 기능도 있어 디자이너와 개발자 사이의 핸드오프를 가속화합니다.",
     url: "https://v0.dev",
     category: "coding",
@@ -912,7 +912,7 @@ export const aiTools: AITool[] = [
   {
     id: "bolt",
     name: "Bolt.new",
-    description: "브라우저에서 풀스택 앱을 빠르게 프로토타이핑하는 AI 개발 도구. StackBlitz 기반으로 실행됩니다.",
+    description: "Bolt.new(볼트) — 브라우저에서 풀스택 앱을 빠르게 프로토타이핑하는 AI 개발 도구. StackBlitz 기반으로 실행됩니다.",
     longDescription: "Bolt.new는 StackBlitz가 만든 브라우저 기반 AI 풀스택 개발 도구입니다. 자연어로 앱 아이디어를 설명하면 프론트엔드부터 백엔드, 데이터베이스 설정까지 완전한 풀스택 앱을 생성합니다. 브라우저 안에서 직접 코드를 실행하고 수정할 수 있어 로컬 환경 설정이 전혀 필요 없습니다. React, Vue, Svelte, Next.js, Remix 등 다양한 프레임워크를 지원하며, npm 패키지도 브라우저에서 바로 설치해 사용할 수 있습니다.",
     url: "https://bolt.new",
     category: "coding",
@@ -932,7 +932,7 @@ export const aiTools: AITool[] = [
       {
     id: "replit-ai",
     name: "Replit AI",
-    description: "Replit IDE에 통합된 AI. 코드 생성, 디버깅, 설명을 제공하며 클라우드에서 바로 실행됩니다.",
+    description: "Replit(레플릿) IDE에 통합된 AI. 코드 생성, 디버깅, 설명을 제공하며 클라우드에서 바로 실행됩니다.",
     longDescription: "Replit AI는 클라우드 기반 IDE Replit에 통합된 AI 개발 도구입니다. 브라우저에서 코드를 작성하고 바로 실행할 수 있어 로컬 환경 설정이 필요 없으며, AI가 코드 생성, 디버깅, 오류 설명, 코드 변환을 도와줍니다. Ghostwriter Complete는 실시간 자동 완성을, Ghostwriter Chat은 대화형 코딩 보조를 제공합니다. 50개 이상의 프로그래밍 언어를 지원하며, 교육 목적으로 많이 사용됩니다. Replit Deployments로 만든 앱을 바로 배포할 수도 있습니다.",
     url: "https://replit.com",
     category: "coding",
@@ -954,7 +954,7 @@ export const aiTools: AITool[] = [
   {
     id: "windsurf",
     name: "Windsurf",
-    description: "Codeium이 개발한 AI 네이티브 IDE. Cursor의 강력한 대항마로 주목받고 있습니다.",
+    description: "Windsurf(윈드서프) — Codeium이 개발한 AI 네이티브 IDE. Cursor의 강력한 대항마로 주목받고 있습니다.",
     longDescription: "Windsurf는 Codeium(기존 Codeium)이 개발한 AI 네이티브 통합 개발 환경(IDE)입니다. 기존 VS Code 기반 IDE와 달리 AI가 코드 편집 전반에 깊게 통합되어 있어, 개발자의 의도를 이해하고 능동적으로 코드를 제안-완성합니다. AI Flow 패러다임을 도입해 개발자가 코드를 작성할 때 AI가 함께 흐름을 읽으며 다음 동작을 예측합니다. 멀티 파일 편집, 리팩토링, 코드 리뷰 등 고급 기능을 무료로 제공하며 개발자들 사이에서 빠르게 채택되고 있습니다.",
     url: "https://codeium.com/windsurf",
     category: "coding",
@@ -974,7 +974,7 @@ export const aiTools: AITool[] = [
   {
     id: "devin",
     name: "Devin",
-    description: "Cognition Labs의 AI 소프트웨어 엔지니어. 독립적으로 코딩하고 버그를 수정합니다.",
+    description: "Devin(데빈) — Cognition Labs의 AI 소프트웨어 엔지니어. 독립적으로 코딩하고 버그를 수정합니다.",
     longDescription: "Devin은 Cognition Labs가 개발한 세계 최초의 AI 소프트웨어 엔지니어로, 사람 개발자처럼 독립적으로 코드를 작성하고, 버그를 수정하며, 소프트웨어를 배포합니다. Devin은 자체 터미널, 코드 편집기, 웹 브라우저를 갖추고 있어 복잡한 작업을 스스로 계획-실행할 수 있습니다. 실제 업계 벤치마크(SWE-bench)에서 기존 AI 코딩 도구를 크게 앞지르는 성과를 보여주며 업계에 큰 충격을 주었습니다.",
     url: "https://www.cognition.ai",
     category: "coding",
@@ -994,7 +994,7 @@ export const aiTools: AITool[] = [
   {
     id: "suno",
     name: "Suno AI",
-    description: "텍스트 프롬프트만으로 완성된 노래를 만드는 AI. 가사, 멜로디, 보컬까지 자동으로 생성합니다.",
+    description: "Suno(수노) — 텍스트 프롬프트만으로 완성된 노래를 만드는 AI. 가사, 멜로디, 보컬까지 자동으로 생성합니다.",
     longDescription: "Suno AI는 텍스트 설명만으로 가사, 멜로디, 보컬, 악기 편성까지 완성된 노래를 생성하는 혁신적인 AI 음악 플랫폼입니다. '밝은 느낌의 K-pop 사랑 노래'처럼 간단한 설명만 입력하면 2분 내외의 완성된 곡을 즉시 만들어냅니다. 팝, 록, 힙합, 클래식, 재즈, 트로트 등 거의 모든 장르를 지원하며, 직접 가사를 작성해 원하는 내용의 노래를 만들 수도 있습니다. 무료 플랜으로도 하루 10곡을 생성할 수 있어 부담 없이 시작할 수 있습니다.",
     url: "https://suno.ai",
     category: "music",
@@ -1029,7 +1029,7 @@ export const aiTools: AITool[] = [
   {
     id: "udio",
     name: "Udio",
-    description: "고품질 음악을 생성하는 AI 플랫폼. 다양한 장르와 스타일의 음악을 쉽게 만들 수 있습니다.",
+    description: "Udio(유디오) — 고품질 음악을 생성하는 AI 플랫폼. 다양한 장르와 스타일의 음악을 쉽게 만들 수 있습니다.",
     longDescription: "Udio는 Google DeepMind 출신 연구진이 설립한 AI 음악 생성 플랫폼으로, 전문 음악가 수준의 음질과 세밀한 스타일 표현이 강점입니다. 장르, 악기, 무드, BPM 등 다양한 파라미터로 음악을 정밀하게 제어할 수 있으며, 생성된 음악을 구간별로 연장하거나 편집하는 기능도 제공합니다. Suno와 함께 AI 음악 생성 시장을 선도하며, 특히 전자음악, 앰비언트, 팝 등의 장르에서 뛰어난 품질을 보여줍니다.",
     url: "https://www.udio.com",
     category: "music",
@@ -1060,7 +1060,7 @@ export const aiTools: AITool[] = [
   {
     id: "eleven-labs",
     name: "ElevenLabs",
-    description: "가장 자연스러운 AI 음성 합성 플랫폼. 음성 클로닝, 텍스트→음성 변환으로 콘텐츠 제작에 혁명을 일으킵니다.",
+    description: "ElevenLabs(일레븐랩스) — 가장 자연스러운 AI 음성 합성 플랫폼. 음성 클로닝, 텍스트→음성 변환으로 콘텐츠 제작에 혁명을 일으킵니다.",
     longDescription: "ElevenLabs는 현존하는 AI 음성 합성 중 가장 자연스럽고 감성적인 음성을 생성하는 플랫폼입니다. 텍스트를 입력하면 인간과 구분하기 어려운 수준의 음성으로 변환해주며, 단 1분의 목소리 샘플만으로 특정 사람의 음성을 복제하는 '음성 클로닝' 기능이 있습니다. 29개 언어를 지원하며 한국어도 자연스럽게 구현합니다. 유튜버, 팟캐스터, 게임 개발자, 오디오북 제작자 등 콘텐츠 크리에이터들이 제작 비용과 시간을 크게 절감하는 데 활용하고 있습니다.",
     url: "https://elevenlabs.io",
     category: "other",
@@ -1134,7 +1134,7 @@ export const aiTools: AITool[] = [
   {
     id: "d-id",
     name: "D-ID",
-    description: "사진을 말하는 아바타로 변환하는 AI. 디지털 휴먼 기술로 교육, 마케팅 영상을 쉽게 제작합니다.",
+    description: "D-ID(디아이디) — 사진을 말하는 아바타로 변환하는 AI. 디지털 휴먼 기술로 교육, 마케팅 영상을 쉽게 제작합니다.",
     longDescription: "D-ID는 정지된 사진에 AI 음성과 입 모양을 합성해 실제로 말하는 것처럼 보이게 만드는 디지털 휴먼 플랫폼입니다. 인물 사진만 있으면 카메라 없이도 자연스러운 발표 영상을 만들 수 있어 교육 콘텐츠, 기업 홍보 영상, 마케팅 자료 제작에 활발히 사용됩니다. 텍스트를 입력하거나 음성 파일을 업로드하면 해당 내용을 아바타가 말하는 영상이 생성됩니다. 100개 이상의 언어를 지원하며, API를 통해 대화형 AI 아바타 서비스를 개발할 수도 있습니다.",
     url: "https://www.d-id.com",
     category: "other",
@@ -1154,7 +1154,7 @@ export const aiTools: AITool[] = [
   {
     id: "gamma",
     name: "Gamma",
-    description: "AI로 프레젠테이션, 문서, 웹페이지를 자동 생성하는 도구. 아이디어만 입력하면 슬라이드를 만들어줍니다.",
+    description: "Gamma(감마) — AI로 프레젠테이션, 문서, 웹페이지를 자동 생성하는 도구. 아이디어만 입력하면 슬라이드를 만들어줍니다.",
     longDescription: "Gamma는 주제나 아이디어를 입력하면 AI가 자동으로 전체 프레젠테이션을 생성해주는 서비스입니다. 파워포인트나 키노트 없이 브라우저에서 바로 작성·발표·공유할 수 있으며, 생성된 콘텐츠를 쉽게 편집할 수 있습니다. 프레젠테이션뿐 아니라 문서, 웹페이지 형식도 지원해 다양한 용도로 활용됩니다. 세련된 디자인 템플릿을 자동으로 적용하며, PDF·PowerPoint 내보내기도 지원합니다. 링크 하나로 공유할 수 있어 협업과 배포가 편리합니다.",
     url: "https://gamma.app",
     category: "other",
@@ -1176,7 +1176,7 @@ export const aiTools: AITool[] = [
   {
     id: "manus",
     name: "Manus",
-    description: "2025년 급부상한 AI 에이전트 플랫폼. 사람처럼 생각하고 행동하는 자율 AI 비서입니다.",
+    description: "Manus(마누스) — 2025년 급부상한 AI 에이전트 플랫폼. 사람처럼 생각하고 행동하는 자율 AI 비서입니다.",
     longDescription: "Manus는 2025년 AI 업계에 돌풍을 일으킨 자율 AI 에이전트 플랫폼입니다. 기존 챗봇과 달리, Manus는 복잡한 작업을 스스로 계획하고 실행합니다. 웹 검색, 코드 실행, 파일 처리 등 다양한 도구를 자유자재로 사용하며 결과물을 만들어냅니다. '행동하는 AI'라는 콘셉트로 출시 직후 전 세계적으로 폭발적인 관심을 받았으며, GAIA 벤치마크에서 최고 성적을 기록했습니다.",
     url: "https://manus.im",
     category: "agent",
@@ -1204,7 +1204,7 @@ export const aiTools: AITool[] = [
   {
     id: "zapier-ai",
     name: "Zapier AI",
-    description: "세계 최대 자동화 플랫폼의 AI 기능. 6,000개 이상의 앱을 연결해 워크플로우를 자동화합니다.",
+    description: "Zapier AI(재피어) — 세계 최대 자동화 플랫폼의 AI 기능. 6,000개 이상의 앱을 연결해 워크플로우를 자동화합니다.",
     longDescription: "Zapier는 6,000개 이상의 앱을 코드 없이 연결하는 세계 최대 자동화 플랫폼으로, AI가 통합되어 더욱 강력해졌습니다. Zapier AI는 이메일, 스프레드시트, CRM 등에서 데이터를 추출-가공-전송하는 워크플로우를 AI가 자동으로 생성합니다. 자연어로 원하는 작업을 설명하면 AI가 적절한 트리거와 액션을 조합해 자동화를 만들어줍니다. GPT, Claude 등 AI 모델을 통합해 AI 기반 의사결정 자동화도 가능합니다.",
     url: "https://zapier.com",
     category: "agent",
@@ -1225,7 +1225,7 @@ export const aiTools: AITool[] = [
   {
     id: "kling",
     name: "Kling AI",
-    description: "중국 Kuaishou의 고품질 AI 비디오 생성 모델. 텍스트와 이미지로 사실적인 영상을 생성합니다.",
+    description: "Kling(클링) — 중국 Kuaishou의 고품질 AI 비디오 생성 모델. 텍스트와 이미지로 사실적인 영상을 생성합니다.",
     url: "https://kling.kuaishou.com",
     category: "video",
     tags: ["AI 비디오", "텍스트→비디오", "중국", "Kuaishou"],
@@ -1244,7 +1244,7 @@ export const aiTools: AITool[] = [
   {
     id: "veo",
     name: "Google Veo",
-    description: "Google DeepMind의 AI 비디오 생성 모델. Gemini에 통합되어 고품질 영상을 생성합니다.",
+    description: "Veo(베오) — Google DeepMind의 AI 비디오 생성 모델. Gemini에 통합되어 고품질 영상을 생성합니다.",
     url: "https://deepmind.google/technologies/veo/",
     category: "video",
     tags: ["Google", "AI 비디오", "DeepMind", "고품질"],
@@ -1262,7 +1262,7 @@ export const aiTools: AITool[] = [
   {
     id: "auto-gpt",
     name: "AutoGPT",
-    description: "자율적으로 목표를 계획하고 실행하는 AI 에이전트. 복잡한 작업을 스스로 분해하고 처리합니다.",
+    description: "AutoGPT(오토GPT) — 자율적으로 목표를 계획하고 실행하는 AI 에이전트. 복잡한 작업을 스스로 분해하고 처리합니다.",
     url: "https://agpt.co",
     category: "agent",
     tags: ["AI 에이전트", "자율 작업", "오픈소스", "자동화"],
@@ -1315,7 +1315,7 @@ export const aiTools: AITool[] = [
   {
     id: "crewai",
     name: "CrewAI",
-    description: "여러 AI 에이전트가 팀을 이뤄 협업하는 프레임워크. 역할 기반으로 복잡한 작업을 분산 처리합니다.",
+    description: "CrewAI(크루AI) — 여러 AI 에이전트가 팀을 이뤄 협업하는 프레임워크. 역할 기반으로 복잡한 작업을 분산 처리합니다.",
     url: "https://crewai.com",
     category: "agent",
     tags: ["멀티 에이전트", "프레임워크", "오픈소스", "협업"],
@@ -1351,7 +1351,7 @@ export const aiTools: AITool[] = [
   {
     id: "autogen",
     name: "AutoGen",
-    description: "Microsoft의 멀티 에이전트 대화 프레임워크. 여러 AI가 대화하며 문제를 해결합니다.",
+    description: "AutoGen(오토젠) — Microsoft의 멀티 에이전트 대화 프레임워크. 여러 AI가 대화하며 문제를 해결합니다.",
     url: "https://microsoft.github.io/autogen/",
     category: "agent",
     tags: ["멀티 에이전트", "Microsoft", "오픈소스", "대화형"],
@@ -1369,7 +1369,7 @@ export const aiTools: AITool[] = [
   {
     id: "hermes",
     name: "Hermes Agent",
-    description: "오픈소스 AI 에이전트 CLI 프레임워크. 터미널 기반으로 도구 사용·크론·멀티세션을 지원합니다.",
+    description: "Hermes Agent(헤르메스) — 오픈소스 AI 에이전트 CLI 프레임워크. 터미널 기반으로 도구 사용·크론·멀티세션을 지원합니다.",
     url: "https://hermes-agent.nousresearch.com",
     category: "agent",
     tags: ["AI 에이전트", "CLI", "오픈소스", "프레임워크"],
@@ -1387,7 +1387,7 @@ export const aiTools: AITool[] = [
   {
     id: "open-claw",
     name: "OpenClaw",
-    description: "오픈소스 Claude 터미널 클라이언트. 로컬에서 Claude API로 코딩·분석을 자동화합니다.",
+    description: "OpenClaw(오픈클로) — 오픈소스 Claude 터미널 클라이언트. 로컬에서 Claude API로 코딩·분석을 자동화합니다.",
     url: "https://github.com/openclaw",
     category: "agent",
     tags: ["Claude", "CLI", "오픈소스", "코딩"],
