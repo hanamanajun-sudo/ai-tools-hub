@@ -24,6 +24,7 @@ const RATING_LABELS: Record<keyof ExpertRating, string> = {
 /* ── 한국어 검색어 매핑 (Google Trends 기반) ── */
 const KO_TOOL_NAMES: Record<string, { h1: string; short: string }> = {
   chatgpt:      { h1: "챗GPT(ChatGPT)", short: "챗GPT" },
+  claude:       { h1: "Claude(클로드)", short: "Claude" },
   gemini:       { h1: "제미나이(Gemini)", short: "제미나이" },
   grok:         { h1: "그록(Grok)", short: "그록" },
   midjourney:   { h1: "미드저니(Midjourney)", short: "미드저니" },
