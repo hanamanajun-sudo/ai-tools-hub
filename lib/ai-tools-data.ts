@@ -88,9 +88,9 @@ export const aiTools: AITool[] = [
     ],
     comparisonNotes: "일반 사용자: Free로 충분. GPT-4o 우선 접근이 필요하면 Plus. 고급 데이터 분석과 코드 작업이 많으면 Pro. 기업 팀은 Team.",
     screenshots: [
-      "https://ai.ktoolu.com/screenshots/chatgpt-1.png",
-      "https://ai.ktoolu.com/screenshots/chatgpt-2.png",
-      "https://ai.ktoolu.com/screenshots/chatgpt-3.png"
+      "/screenshots/chatgpt-1.png",
+      "/screenshots/chatgpt-2.png",
+      "/screenshots/chatgpt-3.png"
     ],
     expertRating: { accuracy: 4.3, easeOfUse: 4.5, features: 4.8, performance: 4.5, value: 4.7, innovation: 4.6 },
     whoIsFor: ["AI 초보자 — 무료로 시작해보고 싶은 분", "개발자 — 코드 작성 및 디버깅이 필요한 분", "콘텐츠 크리에이터 — 글쓰기·번역이 필요한 분", "일반 사무직 — 보고서·이메일 자동화를 원하는 분"],
@@ -143,9 +143,9 @@ export const aiTools: AITool[] = [
     ],
     comparisonNotes: "긴 문서·논문 분석이 주 목적: Free로 시작. 하루 5시간 이상 사용: Pro. 연구실·팀 단위: Team. 대규모 기업 보안: Enterprise.",
     screenshots: [
-      "https://ai.ktoolu.com/screenshots/claude-1.png",
-      "https://ai.ktoolu.com/screenshots/claude-2.png",
-      "https://ai.ktoolu.com/screenshots/claude-3.png"
+      "/screenshots/claude-1.png",
+      "/screenshots/claude-2.png",
+      "/screenshots/claude-3.png"
     ],
     expertRating: { accuracy: 4.6, easeOfUse: 4.3, features: 4.4, performance: 4.7, value: 4.5, innovation: 4.4 },
     whoIsFor: ["연구자·학생 — 긴 논문·문서 분석이 필요한 분", "개발자 — 코드 리뷰 및 복잡한 분석이 필요한 분", "작가·에디터 — 고품질 글쓰기가 중요한 분", "기업 문서 담당자 — 긴 계약서·보고서 처리자"],
@@ -192,7 +192,7 @@ export const aiTools: AITool[] = [
     useCases: ["실시간 뉴스·정보 검색", "Gmail 답장 초안 작성", "Google Docs 문서 요약", "YouTube 영상 내용 분석", "여행·쇼핑 리서치"],
     pricingPlans: [{name:"Free",price:"무료",features:["Gemini 2.0 Flash","Google 계정","1M 토큰"],recommended:true},{name:"Advanced",price:"$19.99/월",features:["Gemini Ultra","2TB Google One","우선 응답"]}],
     comparisonNotes:"일반:Free. Workspace:Business.",
-    screenshots:["https://ai.ktoolu.com/screenshots/gemini-1.png","https://ai.ktoolu.com/screenshots/gemini-2.png"],
+    screenshots:["/screenshots/gemini-1.webp","/screenshots/gemini-2.png","/screenshots/gemini-3.png"],
     expertRating:{accuracy:4.2,easeOfUse:4.6,features:4.5,performance:4.3,value:4.8,innovation:4.4},
     whoIsFor:["Google 생태계 사용자","연구자 — 100만 토큰","일반 사용자"],
     communityReviewSummary: {

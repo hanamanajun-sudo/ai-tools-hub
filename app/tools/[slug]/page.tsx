@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { aiTools, categories, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
 import { SiteHeader } from "@/components/site-header";
+import { ScreenshotGallery } from "@/components/screenshot-gallery";
 import { ReviewsSection } from "@/components/reviews-section";
 import { RelatedNews } from "@/components/related-news";
 import {
@@ -576,29 +577,6 @@ function PlanetComparison({ currentToolSlug }: { currentToolSlug: string }) {
       <p className="text-[10px] text-muted-foreground mt-3 text-center">
         각 도구 상세 페이지에서 더 자세한 정보를 확인하세요
       </p>
-    </div>
-  );
-}
-
-/* ── Screenshot Gallery ── */
-function ScreenshotGallery({ screenshots, toolName }: { screenshots: string[]; toolName: string }) {
-  return (
-    <div className="rounded-xl border border-border/50 bg-card overflow-hidden mb-8">
-      <div className="flex gap-4 overflow-x-auto p-4 scrollbar-hide" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-        {screenshots.map((_src, i) => (
-          <div key={i} className="shrink-0 w-[280px] sm:w-[360px] rounded-lg bg-muted/50 border border-border/30 overflow-hidden">
-            <div className="aspect-[16/10] bg-gradient-to-br from-muted/80 to-muted flex items-center justify-center">
-              <div className="text-center p-4">
-                <div className="text-4xl mb-2 opacity-30">🖥️</div>
-                <p className="text-xs text-muted-foreground">{toolName} 스크린샷 {i + 1}</p>
-              </div>
-            </div>
-            <div className="p-2 text-center">
-              <span className="text-[10px] text-muted-foreground">{i + 1} / {screenshots.length}</span>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
