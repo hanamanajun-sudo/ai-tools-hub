@@ -252,7 +252,7 @@ export function NewsList() {
       groups[group].push(item);
     });
     return groups;
-  }, [filteredNews]);
+  }, [pagedNews]);
 
   const sortedGroupedNews = useMemo(() => {
     const result: Record<string, AiNews[]> = {};
