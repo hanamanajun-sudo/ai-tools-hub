@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState, useMemo, useRef } from "react";
+import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { ExternalLink, Clock, AlertCircle, RefreshCw, X, Link2, Check, Star, ChevronLeft, ChevronRight, ScrollText, GraduationCap, Zap, BookOpen } from "lucide-react";
+import { newsSlug } from "@/lib/news-slug";
 
 // 🔥 편집자 픽 — tags 배열에 '편집자픽' 포함 여부로 판단 (관리자 페이지에서 실시간 토글)
 function isEditorPick(item: AiNews): boolean {
@@ -123,16 +125,16 @@ export function NewsList() {
 
   const dateScrollRef = useRef<HTMLDivElement>(null);
 
-  function copyArticleLink(id: number) {
-    const url = `${window.location.origin}/news#article-${id}`;
+  function copyArticleLink(item: AiNews) {
+    const url = `${window.location.origin}/news/${newsSlug(item)}`;
     navigator.clipboard.writeText(url);
-    setCopiedId(id);
+    setCopiedId(item.id);
     setTimeout(() => setCopiedId(null), 2000);
   }
 
-  function shareOnX(id: number, title: string) {
-    const url = `${window.location.origin}/news#article-${id}`;
-    const text = encodeURIComponent(`${title}\n${url}`);
+  function shareOnX(item: AiNews) {
+    const url = `${window.location.origin}/news/${newsSlug(item)}`;
+    const text = encodeURIComponent(`${item.title}\n${url}`);
     window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank", "noopener,noreferrer");
   }
 
@@ -388,18 +390,15 @@ export function NewsList() {
                     </span>
                   </div>
 
-                  {/* 제목 */}
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  {/* 제목 → 개별 페이지 */}
+                  <Link
+                    href={`/news/${newsSlug(item)}`}
                     className="group block mb-4"
                   >
-                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors text-base leading-snug line-clamp-2 flex items-start gap-1.5">
+                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors text-base leading-snug line-clamp-2">
                       {item.title}
-                      <ExternalLink className="h-3.5 w-3.5 shrink-0 mt-0.5 opacity-0 group-hover:opacity-60 transition-opacity" />
                     </h3>
-                  </a>
+                  </Link>
 
                   {item.summary && (
                     <div className="mb-3 rounded-xl bg-muted/50 border border-border/40 px-4 py-3">
@@ -467,8 +466,17 @@ export function NewsList() {
                   <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/20 mt-1">
                     <SourceBadge source={item.source} />
                     <div className="flex items-center gap-1.5">
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        title="원문 보기"
+                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                      >
+                        <ExternalLink className="h-3 w-3" /> 원문
+                      </a>
                       <button
-                        onClick={() => copyArticleLink(item.id)}
+                        onClick={() => copyArticleLink(item)}
                         title="링크 복사"
                         className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                       >
@@ -478,7 +486,7 @@ export function NewsList() {
                         }
                       </button>
                       <button
-                        onClick={() => shareOnX(item.id, item.title)}
+                        onClick={() => shareOnX(item)}
                         title="X로 퍼가기"
                         className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                       >
