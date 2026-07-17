@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ExternalLink, ArrowLeft, ScrollText, GraduationCap, Zap, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { newsSlug, parseNewsId, isIndexable } from "@/lib/news-slug";
+import { NewsShareButtons } from "./share-buttons";
 
 export const revalidate = 3600;
 
@@ -255,6 +256,8 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
               원문 보기 ({item.source}) <ExternalLink className="h-3.5 w-3.5" />
             </a>
           </div>
+
+          <NewsShareButtons title={item.title} slug={newsSlug(item)} />
 
           {/* 관련 기사 */}
           {related.length > 0 && (

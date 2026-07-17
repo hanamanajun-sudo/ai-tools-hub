@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { ExternalLink, Clock, AlertCircle, RefreshCw, X, Link2, Check, Star, ChevronLeft, ChevronRight, ScrollText, GraduationCap, Zap, BookOpen } from "lucide-react";
+import { AlertCircle, RefreshCw, X, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { newsSlug } from "@/lib/news-slug";
 
 // 🔥 편집자 픽 — tags 배열에 '편집자픽' 포함 여부로 판단 (관리자 페이지에서 실시간 토글)
@@ -14,32 +14,11 @@ function isEditorPick(item: AiNews): boolean {
 type AiNews = {
   id: number;
   title: string;
-  url: string;
   source: string;
-  summary: string | null;
-  explanation: string | null;
-  importance: string | null;
   collected_at: string;
   is_visible: boolean;
   tags: string[];
-  terms: string[] | null;
 };
-
-type GlossaryTerm = {
-  slug: string;
-  term: string;
-  definition: string;
-};
-
-function splitSentences(text: string): string[] {
-  // 우선 \n 줄바꿈이 있으면 그걸로 분할
-  if (text.includes("\n")) {
-    return text.split("\n").map(s => s.trim()).filter(Boolean);
-  }
-  // 없으면 문장 부호로 분할
-  const parts = text.split(/(?<=[다됩니임했않요도죠함]\.)\s+/);
-  return parts.map(s => s.trim()).filter(Boolean);
-}
 
 const SOURCE_COLORS: Record<string, string> = {
   "The Verge AI":   "bg-violet-500/10 text-violet-400 border-violet-500/20",
@@ -83,16 +62,6 @@ function getDateGroup(dateStr: string): string {
 
 const DATE_GROUP_ORDER = ["오늘", "어제", "이번 주", "이전"];
 
-function parseSummaryLines(text: string): string[] {
-  if (text.includes("•")) {
-    return text.split("\n").map(l => l.replace(/^[•\-]\s*/, "").trim()).filter(Boolean).slice(0, 3);
-  }
-  if (/^\d+\./.test(text.trim())) {
-    return text.split("\n").map(l => l.replace(/^\d+\.\s*/, "").trim()).filter(Boolean).slice(0, 3);
-  }
-  return text.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
-}
-
 /** YYYY-MM-DD 문자열로 변환 */
 function toDateKey(dateStr: string): string {
   const d = new Date(dateStr);
@@ -119,24 +88,9 @@ export function NewsList() {
   const [error, setError] = useState(false);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);
-  const [glossary, setGlossary] = useState<Record<string, GlossaryTerm>>({});
-  const [copiedId, setCopiedId] = useState<number | null>(null);
   const [page, setPage] = useState(0);
 
   const dateScrollRef = useRef<HTMLDivElement>(null);
-
-  function copyArticleLink(item: AiNews) {
-    const url = `${window.location.origin}/news/${newsSlug(item)}`;
-    navigator.clipboard.writeText(url);
-    setCopiedId(item.id);
-    setTimeout(() => setCopiedId(null), 2000);
-  }
-
-  function shareOnX(item: AiNews) {
-    const url = `${window.location.origin}/news/${newsSlug(item)}`;
-    const text = encodeURIComponent(`${item.title}\n${url}`);
-    window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank", "noopener,noreferrer");
-  }
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -160,24 +114,13 @@ export function NewsList() {
       );
       const { data, error } = await supabase
         .from("ai_news")
-        .select("id,title,url,source,summary,explanation,importance,collected_at,is_visible,tags,terms")
+        .select("id,title,source,collected_at,is_visible,tags")
         .eq("is_visible", true)
         .order("collected_at", { ascending: false })
         .limit(50);
 
       if (error) throw error;
       setNews(data || []);
-
-      const allSlugs = [...new Set((data || []).flatMap(n => n.terms || []))];
-      if (allSlugs.length > 0) {
-        const { data: terms } = await supabase
-          .from("glossary")
-          .select("slug,term,definition")
-          .in("slug", allSlugs);
-        if (terms) {
-          setGlossary(Object.fromEntries(terms.map(t => [t.slug, t])));
-        }
-      }
     } catch {
       setError(true);
     } finally {
@@ -367,134 +310,31 @@ export function NewsList() {
               {activeDate && <span className="text-xs text-primary">({formatDateShort(activeDate)})</span>}
               <span className="h-px flex-1 bg-border/60" />
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-2">
               {sortedGroupedNews[group].map(item => (
-                <article
+                <Link
                   key={item.id}
                   id={`article-${item.id}`}
-                  className={`rounded-xl border ${
+                  href={`/news/${newsSlug(item)}`}
+                  className={`group flex items-center justify-between gap-3 rounded-lg border px-4 py-3 transition-colors scroll-mt-6 ${
                     isEditorPick(item)
-                      ? "border-amber-500/30 bg-amber-500/[0.02]"
-                      : "border-border/50 bg-card"
-                  } p-5 transition-all hover:border-border hover:shadow-sm scroll-mt-6`}
+                      ? "border-amber-500/30 bg-amber-500/[0.03] hover:border-amber-500/50"
+                      : "border-border/50 bg-card hover:border-border hover:bg-accent/40"
+                  }`}
                 >
-                  {/* ── 상단: 편집자픽 + 날짜 ── */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-1.5">
-                      {isEditorPick(item) && <EditorPickBadge />}
-                    </div>
-                    <span className="inline-flex items-center rounded-md bg-secondary/40 px-2 py-0.5 text-[11px] font-medium text-muted-foreground whitespace-nowrap">
-                      {new Date(item.collected_at).toLocaleDateString("ko-KR", {
-                        year: "numeric", month: "2-digit", day: "2-digit"
-                      })}
-                    </span>
-                  </div>
-
-                  {/* 제목 → 개별 페이지 */}
-                  <Link
-                    href={`/news/${newsSlug(item)}`}
-                    className="group block mb-4"
-                  >
-                    <h3 className="font-bold text-foreground group-hover:text-primary transition-colors text-base leading-snug line-clamp-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    {isEditorPick(item) && <EditorPickBadge />}
+                    <SourceBadge source={item.source} />
+                    <h3 className="truncate text-sm font-medium text-foreground group-hover:text-primary transition-colors">
                       {item.title}
                     </h3>
-                  </Link>
-
-                  {item.summary && (
-                    <div className="mb-3 rounded-xl bg-muted/50 border border-border/40 px-4 py-3">
-                      <p className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1.5"><ScrollText className="h-3.5 w-3.5" /> 기사 3줄 요약</p>
-                      <ol className="space-y-1.5">
-                        {parseSummaryLines(item.summary).map((line, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-foreground/80 leading-relaxed">
-                            <span className="shrink-0 mt-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-muted-foreground/20 text-[10px] font-bold text-muted-foreground">
-                              {i + 1}
-                            </span>
-                            {line}
-                          </li>
-                        ))}
-                      </ol>
-                    </div>
-                  )}
-
-                  {item.explanation && (
-                    <div className="mb-3 rounded-xl bg-blue-500/5 border border-blue-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-blue-400 mb-2 flex items-center gap-1.5"><GraduationCap className="h-3.5 w-3.5" /> 초등학생도 이해하는 ktoolu 설명</p>
-                      <div className="space-y-1.5">
-                        {splitSentences(item.explanation).map((s, i) => (
-                          <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {item.importance && (
-                    <div className="mb-3 rounded-xl bg-amber-500/5 border border-amber-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-amber-400 mb-2 flex items-center gap-1.5"><Zap className="h-3.5 w-3.5" /> 인사이트 &amp; 시사점</p>
-                      <div className="space-y-1.5">
-                        {splitSentences(item.importance).map((s, i) => (
-                          <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {item.terms && item.terms.length > 0 && (
-                    <div className="mb-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 px-4 py-3">
-                      <p className="text-xs font-semibold text-emerald-400 mb-2 flex items-center gap-1.5"><BookOpen className="h-3.5 w-3.5" /> 용어해설</p>
-                      <div className="space-y-2">
-                        {item.terms.map(slug => {
-                          const g = glossary[slug];
-                          if (!g) return null;
-                          return (
-                            <div key={slug}>
-                              <a
-                                href={`/glossary/${slug}`}
-                                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors mb-0.5"
-                              >
-                                {g.term}
-                                <ExternalLink className="h-2.5 w-2.5" />
-                              </a>
-                              <p className="text-xs text-foreground/60 leading-relaxed line-clamp-2">{g.definition}</p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* ── 하단: 출처 + 퍼가기 ── */}
-                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/20 mt-1">
-                    <SourceBadge source={item.source} />
-                    <div className="flex items-center gap-1.5">
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        title="원문 보기"
-                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                      >
-                        <ExternalLink className="h-3 w-3" /> 원문
-                      </a>
-                      <button
-                        onClick={() => copyArticleLink(item)}
-                        title="링크 복사"
-                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                      >
-                        {copiedId === item.id
-                          ? <><Check className="h-3 w-3 text-green-500" /><span className="text-green-500">복사됨</span></>
-                          : <><Link2 className="h-3 w-3" /> 링크</>
-                        }
-                      </button>
-                      <button
-                        onClick={() => shareOnX(item)}
-                        title="X로 퍼가기"
-                        className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                      >
-                        <span className="font-bold text-[11px]">𝕏</span> 퍼가기
-                      </button>
-                    </div>
                   </div>
-                </article>
+                  <span className="shrink-0 text-xs text-muted-foreground whitespace-nowrap">
+                    {new Date(item.collected_at).toLocaleDateString("ko-KR", {
+                      month: "2-digit", day: "2-digit"
+                    })}
+                  </span>
+                </Link>
               ))}
             </div>
           </section>
