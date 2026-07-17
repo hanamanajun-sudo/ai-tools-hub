@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
-import { ExternalLink, Newspaper, Loader2 } from "lucide-react";
+import { ChevronRight, Newspaper } from "lucide-react";
+import { newsSlug } from "@/lib/news-slug";
 
 interface RelatedNewsProps {
   toolName: string;
@@ -68,11 +70,9 @@ export function RelatedNews({ toolName, toolSlug, toolTags }: RelatedNewsProps) 
       </h2>
       <div className="space-y-2">
         {news.map((item) => (
-          <a
+          <Link
             key={item.id}
-            href={item.url}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/news/${newsSlug(item)}`}
             className="group flex items-start gap-2 rounded-lg border border-border/30 bg-muted/20 p-3 transition-colors hover:bg-muted/40"
           >
             <div className="flex-1 min-w-0">
@@ -83,8 +83,8 @@ export function RelatedNews({ toolName, toolSlug, toolTags }: RelatedNewsProps) 
                 {item.source} · {new Date(item.collected_at).toLocaleDateString("ko-KR")}
               </p>
             </div>
-            <ExternalLink className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted-foreground opacity-0 group-hover:opacity-60 transition-opacity" />
-          </a>
+            <ChevronRight className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted-foreground opacity-0 group-hover:opacity-60 transition-opacity" />
+          </Link>
         ))}
       </div>
     </div>
