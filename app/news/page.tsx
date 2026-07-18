@@ -1,5 +1,5 @@
-import { Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { NewsList } from "./news-list";
 import type { Metadata } from "next";
 
@@ -16,7 +16,7 @@ export default function NewsPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader activePage="news" />
 
-      <main className="mx-auto max-w-4xl px-4 pb-16">
+      <main id="main-content" className="mx-auto max-w-4xl px-4 pb-16">
         <section className="py-10 text-center">
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl mb-3">
             가장 빠른 AI 뉴스 모음
@@ -29,14 +29,7 @@ export default function NewsPage() {
         <NewsList />
       </main>
 
-      <footer className="border-t border-border/40 bg-muted/10 mt-16">
-        <div className="mx-auto max-w-7xl px-4 py-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            <Sparkles className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />
-            ai.ktoolu — 최고의 AI 도구들을 한곳에서
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { BlogShareButtons } from "./share-buttons";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { getBlogPost, getBlogPosts } from "@/lib/notion";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -74,7 +75,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <SiteHeader activePage="blog" />
 
-      <main className="mx-auto max-w-3xl px-5">
+      <main id="main-content" className="mx-auto max-w-3xl px-5">
         {/* Hero */}
         <section className="pt-12 pb-10">
           {/* Meta row */}
@@ -169,13 +170,7 @@ export default async function BlogPostPage({ params }: Props) {
         </div>
       </main>
 
-      <footer className="border-t border-border/40 bg-muted/5">
-        <div className="mx-auto max-w-3xl px-5 py-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            ai.ktoolu — 최고의 AI 도구들을 한곳에서
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

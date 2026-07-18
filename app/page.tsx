@@ -2,9 +2,11 @@ import Link from "next/link";
 import { Sparkles, BookOpen, ArrowRight, Calendar, Newspaper } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { ToolsSection } from "@/components/tools-section";
 import { getBlogPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
+import { newsSlug } from "@/lib/news-slug";
 
 export const revalidate = 3600; // 1시간마다 재생성
 
@@ -44,7 +46,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-background">
       <SiteHeader blogCount={allPosts.length} />
 
-      <main className="mx-auto max-w-7xl px-4 pb-16">
+      <main id="main-content" className="mx-auto max-w-7xl px-4 pb-16">
         {/* Hero */}
         <section className="py-14 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-border/50 bg-muted/30 px-3 py-1.5 text-xs text-muted-foreground mb-6">
@@ -133,11 +135,9 @@ export default async function HomePage() {
               </div>
               <div className="space-y-3">
                 {latestNews.length > 0 ? latestNews.map((item) => (
-                  <a
+                  <Link
                     key={item.id}
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={`/news/${newsSlug(item)}`}
                     className="block rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-md"
                   >
                     <div className="flex items-center gap-2 mb-1.5">
@@ -164,7 +164,7 @@ export default async function HomePage() {
                         {new Date(item.collected_at).toLocaleDateString("ko-KR")}
                       </div>
                     )}
-                  </a>
+                  </Link>
                 )) : (
                   <p className="text-sm text-muted-foreground py-4">AI 뉴스가 없습니다.</p>
                 )}
@@ -175,14 +175,7 @@ export default async function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 bg-muted/10 mt-16">
-        <div className="mx-auto max-w-7xl px-4 py-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            <Sparkles className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />
-            ai.ktoolu — 최고의 AI 도구들을 한곳에서
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

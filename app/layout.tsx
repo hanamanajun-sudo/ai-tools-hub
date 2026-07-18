@@ -15,12 +15,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ai.ktoolu.com"),
   other: {
     "google-site-verification": "X3wLx-M7XBhDQNx05evWnSZeDGDmn-ETAPwgnp9O1jc",
     "naver-site-verification": "e6397e836d51aa8ac6451a90eb94e809754ea940",
   },
   title: "ai.ktoolu - 최고의 AI 도구 모음",
   description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
+  openGraph: {
+    title: "ai.ktoolu - 최고의 AI 도구 모음",
+    description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
+    siteName: "ai.ktoolu",
+    type: "website",
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ai.ktoolu - 최고의 AI 도구 모음",
+    description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
+  },
 };
 
 export default function RootLayout({

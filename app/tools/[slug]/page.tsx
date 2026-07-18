@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { aiTools, categories, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { ScreenshotGallery } from "@/components/screenshot-gallery";
 import { ReviewsSection } from "@/components/reviews-section";
 import { RelatedNews } from "@/components/related-news";
 import {
-  ExternalLink, Sparkles, Star, CheckCircle2, XCircle,
+  ExternalLink, Star, CheckCircle2, XCircle,
   Lightbulb, CreditCard, Users, BarChart3, Newspaper, Check,
   ChevronRight, Medal, FileText, MessageSquare, GitCompare, ThumbsUp, ThumbsDown,
 } from "lucide-react";
@@ -89,7 +90,7 @@ export default async function ToolDetailPage({ params }: Props) {
     <div className="min-h-screen bg-background">
       <SiteHeader />
 
-      <main className="mx-auto max-w-5xl px-4 py-10">
+      <main id="main-content" className="mx-auto max-w-5xl px-4 py-10">
         {/* ── Hero ── */}
         <section id="overview" className="mb-6">
           <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -487,13 +488,7 @@ export default async function ToolDetailPage({ params }: Props) {
         </div>
       </main>
 
-      <footer className="border-t border-border/40 bg-muted/10 mt-16">
-        <div className="mx-auto max-w-4xl px-4 py-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            <Sparkles className="inline h-3.5 w-3.5 mr-1 -mt-0.5" />ai.ktoolu — 최고의 AI 도구들을 한곳에서
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

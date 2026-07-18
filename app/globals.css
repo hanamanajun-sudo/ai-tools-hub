@@ -2,9 +2,20 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* 전체 페이지 스무스 스크롤 */
-html {
-  scroll-behavior: smooth;
+/* 전체 페이지 스무스 스크롤 (모션 최소화 설정 시 비활성화) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @custom-variant dark (&:is(.dark *));

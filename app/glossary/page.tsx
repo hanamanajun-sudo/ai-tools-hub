@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -36,7 +37,7 @@ export default async function GlossaryPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-4xl px-4 pb-16">
+      <main id="main-content" className="mx-auto max-w-4xl px-4 pb-16">
         <section className="py-10 text-center">
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-3">AI 용어해설</h1>
           <p className="text-base text-muted-foreground max-w-xl mx-auto">
@@ -72,6 +73,7 @@ export default async function GlossaryPage() {
           </div>
         )}
       </main>
+      <SiteFooter />
     </div>
   );
 }

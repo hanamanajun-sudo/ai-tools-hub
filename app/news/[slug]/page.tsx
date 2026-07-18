@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, ArrowLeft, ScrollText, GraduationCap, Zap, BookOpen } from "lucide-react";
@@ -153,7 +154,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
 
-      <main className="mx-auto max-w-2xl px-4 pb-16">
+      <main id="main-content" className="mx-auto max-w-2xl px-4 pb-16">
         <div className="pt-8">
           <Link
             href="/news"
@@ -278,6 +279,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
           )}
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

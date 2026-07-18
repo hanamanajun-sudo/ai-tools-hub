@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, ArrowLeft, BookOpen } from "lucide-react";
@@ -54,7 +55,7 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-2xl px-4 pb-16">
+      <main id="main-content" className="mx-auto max-w-2xl px-4 pb-16">
         <div className="pt-8 pb-4">
           <Link
             href="/glossary"
@@ -104,6 +105,7 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
           )}
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Calendar, Tag } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
 import { getBlogPosts } from "@/lib/notion";
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default async function BlogPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader activePage="blog" blogCount={posts.length} />
 
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <main id="main-content" className="mx-auto max-w-4xl px-4 py-10">
         <div className="mb-10">
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-2">블로그</h1>
           <p className="text-muted-foreground">AI 도구 리뷰, 트렌드 뉴스, 활용 팁</p>
@@ -102,13 +103,7 @@ export default async function BlogPage() {
         )}
       </main>
 
-      <footer className="border-t border-border/40 bg-muted/10 mt-16">
-        <div className="mx-auto max-w-4xl px-4 py-8 text-center">
-          <p className="text-sm text-muted-foreground">
-            ai.ktoolu — 최고의 AI 도구들을 한곳에서
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

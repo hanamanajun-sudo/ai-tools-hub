@@ -304,6 +304,7 @@ export function ToolsSection() {
           <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
+            aria-label="AI 도구 검색"
             placeholder="AI 도구 이름, 기능, 태그로 검색..."
             className="h-11 pl-10 pr-4 bg-muted/30 border-border/50 focus:border-border focus-visible:ring-1 focus-visible:ring-ring/50 text-sm"
             value={searchQuery}
