@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -197,9 +197,20 @@ function ToolCard({ tool }: { tool: AITool }) {
    =================================================================== */
 export function ToolsSection() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") ?? "");
   const [selectedCategory, setSelectedCategory] = useState<Category>("all");
   const [viewMode, setViewMode] = useState<"ranking" | "grid">("ranking");
+
+  // 검색어를 URL(?q=)에 동기화 — 홈 WebSite/SearchAction 스키마의 대상 URL을 실제로 동작하게 함
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (searchQuery.trim()) params.set("q", searchQuery);
+    else params.delete("q");
+    const qs = params.toString();
+    router.replace(qs ? `/?${qs}` : "/", { scroll: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
 
   const today = new Date();
   const updateDate = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;

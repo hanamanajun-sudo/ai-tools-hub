@@ -5,8 +5,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExternalLink, ArrowLeft, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
+import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 
 export const revalidate = 3600;
+const BASE_URL = "https://ai.ktoolu.com";
 
 async function getTerm(slug: string) {
   const supabase = createClient(
@@ -43,6 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${term.term} 뜻, 설명 — ai.ktoolu`,
     description: term.definition.slice(0, 150),
+    alternates: { canonical: `${BASE_URL}/glossary/${slug}` },
   };
 }
 
@@ -52,8 +55,15 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
 
   if (!term) notFound();
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "홈", url: BASE_URL },
+    { name: "용어해설", url: `${BASE_URL}/glossary` },
+    { name: term.term, url: `${BASE_URL}/glossary/${slug}` },
+  ]);
+
   return (
     <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }} />
       <SiteHeader />
       <main id="main-content" className="mx-auto max-w-2xl px-4 pb-16">
         <div className="pt-8 pb-4">

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { createClient } from "@supabase/supabase-js";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { aiTools, categories, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
@@ -10,6 +11,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { ScreenshotGallery } from "@/components/screenshot-gallery";
 import { ReviewsSection } from "@/components/reviews-section";
 import { RelatedNews } from "@/components/related-news";
+import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import {
   ExternalLink, Star, CheckCircle2, XCircle,
   Lightbulb, CreditCard, Users, BarChart3, Newspaper, Check,
@@ -17,6 +19,28 @@ import {
 } from "lucide-react";
 
 type Props = { params: Promise<{ slug: string }> };
+
+const BASE_URL = "https://ai.ktoolu.com";
+
+/** 실제 사용자 리뷰 3건 이상일 때만 AggregateRating에 반영(허수 방지) */
+async function getRealReviewAggregate(toolSlug: string): Promise<{ average: number; count: number } | null> {
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data } = await supabase
+      .from("reviews")
+      .select("rating")
+      .eq("tool_slug", toolSlug)
+      .eq("hidden", false);
+    if (!data || data.length < 3) return null;
+    const average = data.reduce((sum, r) => sum + r.rating, 0) / data.length;
+    return { average, count: data.length };
+  } catch {
+    return null;
+  }
+}
 
 const RATING_LABELS: Record<keyof ExpertRating, string> = {
   accuracy: "정확성", easeOfUse: "사용 편의성", features: "기능",
@@ -59,6 +83,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${ko.h1} - ai.ktoolu`,
     description: tool.description,
+    alternates: { canonical: `${BASE_URL}/tools/${tool.id}` },
     openGraph: { title: `${ko.h1} - ai.ktoolu`, description: tool.description, type: "website", siteName: "ai.ktoolu" },
     twitter: { card: "summary", title: `${ko.h1} - ai.ktoolu`, description: tool.description },
     keywords: [tool.name, ...tool.tags, categoryLabel?.label ?? "", "AI 도구", "AI tools"],
@@ -86,8 +111,46 @@ export default async function ToolDetailPage({ params }: Props) {
     ? ratingKeys.reduce((sum, k) => sum + tool.expertRating![k], 0) / ratingKeys.length
     : 0;
 
+  const realReviews = await getRealReviewAggregate(tool.id);
+  const toolUrl = `${BASE_URL}/tools/${tool.id}`;
+  const ko = getKoName(tool);
+
+  const softwareAppJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: tool.name,
+    description: tool.description,
+    url: toolUrl,
+    applicationCategory: "WebApplication",
+    ...(tool.free ? { offers: { "@type": "Offer", price: "0", priceCurrency: "USD" } } : {}),
+    ...(tool.expertRating ? {
+      review: {
+        "@type": "Review",
+        author: { "@type": "Organization", name: "ai.ktoolu" },
+        reviewRating: { "@type": "Rating", ratingValue: avgRating.toFixed(1), bestRating: "5", worstRating: "1" },
+      },
+    } : {}),
+    ...(realReviews ? {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: realReviews.average.toFixed(1),
+        reviewCount: realReviews.count,
+        bestRating: "5",
+        worstRating: "1",
+      },
+    } : {}),
+  };
+
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "홈", url: BASE_URL },
+    { name: categoryLabel?.label ?? "AI 도구", url: `${BASE_URL}/#category-${tool.category}` },
+    { name: ko.h1, url: toolUrl },
+  ]);
+
   return (
     <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(softwareAppJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }} />
       <SiteHeader />
 
       <main id="main-content" className="mx-auto max-w-5xl px-4 py-10">

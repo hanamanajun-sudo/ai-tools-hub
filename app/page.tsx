@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Sparkles, BookOpen, ArrowRight, Calendar, Newspaper } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
@@ -9,6 +10,20 @@ import { aiTools } from "@/lib/ai-tools-data";
 import { newsSlug } from "@/lib/news-slug";
 
 export const revalidate = 3600; // 1시간마다 재생성
+
+const BASE_URL = "https://ai.ktoolu.com";
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "ai.ktoolu",
+  url: BASE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: { "@type": "EntryPoint", urlTemplate: `${BASE_URL}/?q={search_term_string}` },
+    "query-input": "required name=search_term_string",
+  },
+};
 
 const CATEGORY_COLORS: Record<string, string> = {
   "AI 도구 리뷰": "bg-violet-500/10 text-violet-400 border-violet-500/20",
@@ -44,6 +59,10 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd).replace(/</g, "\\u003c") }}
+      />
       <SiteHeader blogCount={allPosts.length} />
 
       <main id="main-content" className="mx-auto max-w-7xl px-4 pb-16">
@@ -67,7 +86,9 @@ export default async function HomePage() {
         </section>
 
         {/* Tools */}
-        <ToolsSection />
+        <Suspense fallback={null}>
+          <ToolsSection />
+        </Suspense>
 
         {/* Blog + News Preview */}
         <section className="mt-20">

@@ -6,8 +6,11 @@ import { BlogShareButtons } from "./share-buttons";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getBlogPost, getBlogPosts } from "@/lib/notion";
+import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 
 type Props = { params: Promise<{ slug: string }> };
+
+const BASE_URL = "https://ai.ktoolu.com";
 
 // force-dynamic: 빌드 시 정적 생성 안 함 → Worker에서 렌더링 → R2 접근 가능 → 이미지 영구 캐싱
 export const dynamic = "force-dynamic";
@@ -20,6 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${post.title} - ai.ktoolu 블로그`,
     description: post.description,
+    alternates: { canonical: `${BASE_URL}/blog/${slug}` },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -68,8 +72,30 @@ export default async function BlogPostPage({ params }: Props) {
   const readingTime = estimateReadingTime(html);
   const cat = CATEGORY_CONFIG[post.category] ?? DEFAULT_CONFIG;
 
+  const postUrl = `${BASE_URL}/blog/${slug}`;
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    url: postUrl,
+    mainEntityOfPage: postUrl,
+    author: { "@type": "Organization", name: "ai.ktoolu" },
+    publisher: { "@type": "Organization", name: "ai.ktoolu" },
+    ...(post.publishedAt ? { datePublished: post.publishedAt, dateModified: post.publishedAt } : {}),
+    ...(post.cover ? { image: post.cover } : {}),
+  };
+
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "홈", url: BASE_URL },
+    { name: "블로그", url: `${BASE_URL}/blog` },
+    { name: post.title, url: postUrl },
+  ]);
+
   return (
     <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(articleJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }} />
       {/* Category gradient top bar */}
       <div className={`h-[3px] w-full bg-gradient-to-r ${cat.gradient}`} />
 

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { ExternalLink, ArrowLeft, ScrollText, GraduationCap, Zap, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { newsSlug, parseNewsId, isIndexable } from "@/lib/news-slug";
+import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import { NewsShareButtons } from "./share-buttons";
 
 export const revalidate = 3600;
@@ -145,14 +146,17 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
     ...(item.summary ? { description: item.summary.replace(/\n/g, " ").slice(0, 200) } : {}),
   };
 
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "홈", url: BASE_URL },
+    { name: "AI 뉴스", url: `${BASE_URL}/news` },
+    { name: item.title, url: `${BASE_URL}/news/${newsSlug(item)}` },
+  ]);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader activePage="news" />
-      <script
-        type="application/ld+json"
-        // JSON.stringify 결과의 `<`를 이스케이프해 제목 등에 `</script>`가 있어도 안전
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }} />
 
       <main id="main-content" className="mx-auto max-w-2xl px-4 pb-16">
         <div className="pt-8">
