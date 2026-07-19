@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { aiTools, categories, type Category, type AITool } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
+import { trackEvent } from "@/lib/analytics";
 import {
   Search, ExternalLink, Star, LayoutGrid, ListOrdered, Calendar,
   FileText, Image, Film, Code, Music, Sparkles, Bot
@@ -181,7 +182,11 @@ function ToolCard({ tool }: { tool: AITool }) {
           <Button
             variant="outline"
             className="w-full gap-2 border-border/50 hover:border-border transition-all group/btn"
-            onClick={(e) => { e.preventDefault(); window.open(tool.url, "_blank", "noopener,noreferrer"); }}
+            onClick={(e) => {
+              e.preventDefault();
+              trackEvent("tool_visit_click", { tool_id: tool.id, tool_name: tool.name, source: "grid_card" });
+              window.open(tool.url, "_blank", "noopener,noreferrer");
+            }}
           >
             <span>사이트 방문</span>
             <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
@@ -446,7 +451,10 @@ export function ToolsSection() {
                                 href={tool.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  trackEvent("tool_visit_click", { tool_id: tool.id, tool_name: tool.name, source: "ranking_table" });
+                                }}
                                 className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                                 title="사이트 방문"
                               >

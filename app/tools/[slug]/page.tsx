@@ -11,6 +11,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { ScreenshotGallery } from "@/components/screenshot-gallery";
 import { ReviewsSection } from "@/components/reviews-section";
 import { RelatedNews } from "@/components/related-news";
+import { OutboundLink } from "@/components/outbound-link";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import {
   ExternalLink, Star, CheckCircle2, XCircle,
@@ -478,12 +479,17 @@ export default async function ToolDetailPage({ params }: Props) {
             <div className="lg:sticky lg:top-24 space-y-4">
               <div className="rounded-xl border border-border/50 bg-card p-6">
                 <h2 className="text-sm font-semibold text-foreground mb-4">사이트 바로가기</h2>
-                <a href={tool.url} target="_blank" rel="noopener noreferrer" className="block w-full">
+                <OutboundLink
+                  href={tool.url}
+                  eventName="tool_visit_click"
+                  eventParams={{ tool_id: tool.id, tool_name: tool.name, source: "detail_cta" }}
+                  className="block w-full"
+                >
                   <Button className="w-full gap-2 group">
                     <span>{getName(tool)} 방문하기</span>
                     <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Button>
-                </a>
+                </OutboundLink>
                 <p className="mt-3 text-xs text-muted-foreground text-center">{tool.url.replace(/^https?:\/\//, "")}</p>
               </div>
 

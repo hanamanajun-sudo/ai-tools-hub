@@ -7,6 +7,7 @@ import { ExternalLink, ArrowLeft, ScrollText, GraduationCap, Zap, BookOpen } fro
 import type { Metadata } from "next";
 import { newsSlug, parseNewsId, isIndexable } from "@/lib/news-slug";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
+import { OutboundLink } from "@/components/outbound-link";
 import { NewsShareButtons } from "./share-buttons";
 
 export const revalidate = 3600;
@@ -252,14 +253,15 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
 
           {/* 원문 출처 */}
           <div className="mt-6 pt-4 border-t border-border/30">
-            <a
+            <OutboundLink
               href={item.url}
-              target="_blank"
               rel="noopener noreferrer nofollow"
+              eventName="news_original_click"
+              eventParams={{ news_id: item.id, source: item.source }}
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               원문 보기 ({item.source}) <ExternalLink className="h-3.5 w-3.5" />
-            </a>
+            </OutboundLink>
           </div>
 
           <NewsShareButtons title={item.title} slug={newsSlug(item)} />
