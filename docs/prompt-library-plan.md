@@ -29,7 +29,7 @@
 | work | 업무·생산성 | 이메일, 보고서, 회의록, 기획서 |
 | coding | 코딩·개발 | 코드리뷰, 디버깅, 리팩터링, 문서화 |
 | learning | 학습·리서치 | 요약, 개념설명, 언어학습, 자료조사 |
-| image | 이미지·디자인 | Midjourney/DALL-E 스타일 프롬프트 작법 |
+| image | 이미지·디자인 | ChatGPT·Gemini 이미지 생성 기준 (자연어 대화형 작법, 사용자 확정 2026-07-19) |
 | career | 커리어·자기계발 | 이력서, 자소서, 면접준비, 포트폴리오 |
 
 - 30개인 이유: 비어 보이지 않는 최소 볼륨이면서 품질 관리가 가능한 규모. 이후 주 2~3개씩 추가.
@@ -132,7 +132,10 @@ $$ update prompts set copy_count = copy_count + 1 where slug = p_slug; $$;
 ## 진행 현황
 
 - [ ] Supabase `prompts` 테이블 + RPC 생성
-- [ ] 시드 프롬프트 30개 작성·입력
+- [x] 시드 프롬프트 30개 **작성** 완료 (2026-07-19) → `scripts/seed-prompts-data.ts`
+      - 6카테고리×5개, 편집자픽 6개, 전부 {{변수}} 포함, example_output은 전부 null(실행 결과 확보 전까지 비워둠)
+      - tools id 실존 검증·슬러그 중복·타입체크 통과
+- [ ] 시드 30개 DB **입력** (테이블 생성 후)
 - [ ] lib/prompts.ts
 - [ ] /prompts 목록 페이지
 - [ ] /prompts/[slug] 상세 페이지 (변수폼/복사/딥링크)
