@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
-import { aiTools } from "@/lib/ai-tools-data";
+import { aiTools, categories } from "@/lib/ai-tools-data";
 import { newsSlug, isIndexable } from "@/lib/news-slug";
 
 const BASE_URL = "https://ai.ktoolu.com";
@@ -35,6 +35,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  const categoryPages: MetadataRoute.Sitemap = categories
+    .filter((c) => c.value !== "all")
+    .map((c) => ({
+      url: `${BASE_URL}/category/${c.value}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.75,
+    }));
+
   const newsPages: MetadataRoute.Sitemap = news.map((item) => ({
     url: `${BASE_URL}/news/${newsSlug(item)}`,
     lastModified: new Date(item.collected_at),
@@ -65,6 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...sectionPages,
     ...infoPages,
+    ...categoryPages,
     ...toolPages,
     ...newsPages,
   ];
