@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
 import { aiTools, categories } from "@/lib/ai-tools-data";
 import { newsSlug, isIndexable } from "@/lib/news-slug";
+import { getPrompts, PROMPT_CATEGORIES } from "@/lib/prompts";
 
 const BASE_URL = "https://ai.ktoolu.com";
 
@@ -25,8 +26,16 @@ async function getIndexableNews() {
   }
 }
 
+async function getIndexablePrompts() {
+  try {
+    return await getPrompts();
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const news = await getIndexableNews();
+  const [news, prompts] = await Promise.all([getIndexableNews(), getIndexablePrompts()]);
 
   const toolPages: MetadataRoute.Sitemap = aiTools.map((tool) => ({
     url: `${BASE_URL}/tools/${tool.id}`,
@@ -51,7 +60,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const sectionPages: MetadataRoute.Sitemap = ["/news", "/blog", "/glossary"].map((path) => ({
+  const promptPages: MetadataRoute.Sitemap = prompts.map((p) => ({
+    url: `${BASE_URL}/prompts/${p.slug}`,
+    lastModified: new Date(p.updated_at),
+    changeFrequency: "monthly",
+    priority: 0.65,
+  }));
+
+  const promptCategoryPages: MetadataRoute.Sitemap = PROMPT_CATEGORIES.map((c) => ({
+    url: `${BASE_URL}/prompts?cat=${c.value}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.55,
+  }));
+
+  const sectionPages: MetadataRoute.Sitemap = ["/news", "/blog", "/glossary", "/prompts"].map((path) => ({
     url: `${BASE_URL}${path}`,
     lastModified: new Date(),
     changeFrequency: "daily",
@@ -77,5 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categoryPages,
     ...toolPages,
     ...newsPages,
+    ...promptCategoryPages,
+    ...promptPages,
   ];
 }

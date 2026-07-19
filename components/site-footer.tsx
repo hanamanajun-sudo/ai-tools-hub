@@ -3,6 +3,7 @@ import { Sparkles } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "AI 도구" },
+  { href: "/prompts", label: "프롬프트 도서관" },
   { href: "/blog", label: "블로그" },
   { href: "/news", label: "AI 뉴스" },
   { href: "/glossary", label: "용어해설" },

@@ -78,10 +78,11 @@ $$ update prompts set copy_count = copy_count + 1 where slug = p_slug; $$;
    - **변수 채우기 폼** (클라이언트 컴포넌트): 변수 입력 → 완성본 미리보기
    - **복사 버튼**: 클릭 시 `increment_prompt_copy` RPC + GA 이벤트 `prompt_copy`
    - **"바로 실행" 딥링크 버튼**: 완성본을 URL 파라미터로 넣어 새 탭
-     - ChatGPT: `https://chatgpt.com/?q={완성본}`
-     - Claude: `https://claude.ai/new?q={완성본}`
-     - Perplexity: `https://www.perplexity.ai/search?q={완성본}`
-     - Gemini: 공개 prefill 파라미터 불확실 → **구현 시점에 웹서치로 재확인**, 안 되면 제외
+     - ChatGPT: `https://chatgpt.com/?q={완성본}` — ✅ 공식 지원 확인(2026-07-20 웹서치)
+     - Perplexity: `https://www.perplexity.ai/search?q={완성본}` — ✅ 지원 확인
+     - Claude: ❌ **제외** — `claude.ai/new?q=` 파라미터가 2025년 10월경 프롬프트 인젝션 보안 문제로 제거됨
+     - Gemini: ❌ **제외** — 네이티브 prefill 파라미터 지원한 적 없음(확장 프로그램 없이는 불가)
+     - Claude/Gemini는 추천 툴 섹션에 일반 링크(`/tools/claude`, `/tools/gemini`)로만 노출, 딥링크 버튼은 ChatGPT·Perplexity 2개만
      - GA 이벤트 `prompt_launch` (tool 파라미터 포함)
    - 사용 팁, 결과 예시(있을 때만), 추천 툴 → `/tools/[id]` 내부링크
    - 관련 프롬프트 (같은 카테고리 4개)
@@ -131,15 +132,22 @@ $$ update prompts set copy_count = copy_count + 1 where slug = p_slug; $$;
 
 ## 진행 현황
 
-- [ ] Supabase `prompts` 테이블 + RPC 생성
+- [x] Supabase `prompts` 테이블 + RPC 생성 (2026-07-20, 사용자가 SQL Editor에서 실행)
+      최초 실행 시 RLS가 기본 활성화돼 INSERT가 막힘 → `alter table prompts disable row level security;` 추가 실행으로 해결
 - [x] 시드 프롬프트 30개 **작성** 완료 (2026-07-19) → `scripts/seed-prompts-data.ts`
       - 6카테고리×5개, 편집자픽 6개, 전부 {{변수}} 포함, example_output은 전부 null(실행 결과 확보 전까지 비워둠)
       - tools id 실존 검증·슬러그 중복·타입체크 통과
-- [ ] 시드 30개 DB **입력** (테이블 생성 후)
-- [ ] lib/prompts.ts
-- [ ] /prompts 목록 페이지
-- [ ] /prompts/[slug] 상세 페이지 (변수폼/복사/딥링크)
-- [ ] 헤더·푸터·사이트맵 연결
-- [ ] 검증 체크리스트 통과 → 배포
+- [x] 시드 30개 DB **입력** 완료 (2026-07-20) — `scripts/seed-insert.mjs`로 REST API POST, 30/30 성공 확인
+- [x] lib/prompts.ts (2026-07-20) — 타입, 카테고리 상수, CRUD, extractVariables/fillTemplate, incrementPromptCopy RPC, getPromptsForTool(역참조)
+- [x] /prompts 목록 페이지 (2026-07-20) — 카테고리 필터(`?cat=`), 편집자픽 우선 정렬, 추천 툴 배지는 aiTools에서 실제 이름 조회(id 그대로 노출 안 함)
+- [x] /prompts/[slug] 상세 페이지 (2026-07-20) — 변수폼/미리보기/복사/딥링크 전부 구현
+      - **딥링크는 ChatGPT·Perplexity만** — Claude `?q=`는 2025-10 보안 이슈로 제거됨, Gemini는 애초 미지원 (웹서치로 확인)
+- [x] 헤더·푸터·사이트맵 연결 (2026-07-20) — sitemap에 프롬프트 개별 30개+카테고리 6개+섹션 1개 = 37개 URL 반영
+- [x] 보너스: 툴 상세페이지에 "이 툴에서 잘 되는 프롬프트" 역참조 섹션 추가 (2026-07-20, `getPromptsForTool`)
+- [x] **실데이터 전체 플로우 검증 완료 (2026-07-20)** — 이 과정에서 실제 버그 1건 발견·수정:
+      - 🐛 `app/prompts/[slug]/page.tsx`가 동적 라우트의 한글 슬러그를 `decodeURIComponent` 없이 그대로 조회에 써서 전체 상세페이지가 404 나는 버그. Next.js가 `[slug]` 파라미터를 자동 디코딩해줄 거라 가정한 게 틀림 (`lib/news-slug.ts`는 이미 이 패턴을 알고 decodeURIComponent 처리하고 있었음 — 새 코드에 동일하게 반영해 수정)
+      - RPC 복사수 증가 자체는 정상 동작 확인(0→1→검증 후 0으로 리셋). 로컬 curl 테스트에서 한글 파라미터가 씹히는 현상은 Windows Git Bash 셸의 UTF-8 인코딩 아티팩트였고 실제 앱(브라우저 JS)엔 영향 없음 — Node fetch로 재확인 완료
+- [x] 타입체크+ESLint 클린 (0 errors, 사전 존재하던 무관한 warning만 잔존)
+- [ ] **다음**: 커밋·푸시·GitHub Actions 배포 → 프로덕션에서 동일 항목 재검증(특히 한글 슬러그 상세페이지 200 확인)
 
 (완료 시 각 항목 체크하고 날짜 기록)

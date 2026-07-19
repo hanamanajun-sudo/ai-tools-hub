@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { aiTools, categories, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
 import { getKoName, getToolShortName as getName } from "@/lib/tool-names";
+import { getPromptsForTool } from "@/lib/prompts";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ScreenshotGallery } from "@/components/screenshot-gallery";
@@ -17,7 +18,7 @@ import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import {
   ExternalLink, Star, CheckCircle2, XCircle,
   Lightbulb, CreditCard, Users, BarChart3, Newspaper, Check,
-  ChevronRight, Medal, FileText, MessageSquare, GitCompare, ThumbsUp, ThumbsDown,
+  ChevronRight, Medal, FileText, MessageSquare, GitCompare, ThumbsUp, ThumbsDown, Wand2,
 } from "lucide-react";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -90,7 +91,10 @@ export default async function ToolDetailPage({ params }: Props) {
     ? ratingKeys.reduce((sum, k) => sum + tool.expertRating![k], 0) / ratingKeys.length
     : 0;
 
-  const realReviews = await getRealReviewAggregate(tool.id);
+  const [realReviews, relatedPrompts] = await Promise.all([
+    getRealReviewAggregate(tool.id),
+    getPromptsForTool(tool.id),
+  ]);
   const toolUrl = `${BASE_URL}/tools/${tool.id}`;
   const ko = getKoName(tool);
 
@@ -369,6 +373,29 @@ export default async function ToolDetailPage({ params }: Props) {
 
               <ReviewsSection toolSlug={tool.id} />
               <RelatedNews toolName={tool.name} toolSlug={tool.id} toolTags={tool.tags} />
+
+              {relatedPrompts.length > 0 && (
+                <div className="rounded-xl border border-border/50 bg-card p-6 mt-4">
+                  <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-1.5">
+                    <Wand2 className="h-4 w-4 text-primary" /> {getName(tool)}에서 잘 되는 프롬프트
+                  </h2>
+                  <div className="space-y-2">
+                    {relatedPrompts.map((p) => (
+                      <Link
+                        key={p.slug}
+                        href={`/prompts/${p.slug}`}
+                        className="group flex items-start gap-2 rounded-lg border border-border/30 bg-muted/20 p-3 transition-colors hover:bg-muted/40"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-foreground group-hover:text-primary transition-colors">{p.title}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{p.description}</p>
+                        </div>
+                        <ChevronRight className="h-3.5 w-3.5 shrink-0 mt-0.5 text-muted-foreground opacity-0 group-hover:opacity-60 transition-opacity" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* ═══ TAB: 가격 비교 ═══ */}
