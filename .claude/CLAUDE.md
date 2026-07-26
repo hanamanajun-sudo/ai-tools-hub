@@ -40,27 +40,53 @@ AI 도구들을 한눈에 볼 수 있는 종합 디렉토리 사이트.
 
 ---
 
-## n8n AI 뉴스 자동수집 워크플로우
+## AI 뉴스 자동수집 — 현재 운영 파이프라인: Hermes cron (n8n 아님)
+
+⚠️ **2026-07-26 확인: 실제 뉴스 수집은 n8n이 아니라 Hermes cron job이 담당하고 있음.**
+n8n 워크플로우(`n8n-workflow-ai-news.json`)는 2026-05-29에 import만 되고 **한 번도 활성화(Active)된 적 없음** —
+n8n을 켜서 뭔가 조사할 필요 없음. 아래 "n8n 워크플로우 (사용 안 함, 참고용)" 섹션은 히스토리 보존용.
+
+- **실제 파이프라인**: Hermes cron job `ktoolu-news` — 매일 09:00 KST 실행
+- **실행 스크립트**: `ktoolu-news.py` (Python)
+- **AI 요약**: DeepSeek API (`deepseek-v4-flash`, 2026-07-26부터 — 아래 사고 참고)
+- **뉴스 소스**: VentureBeat AI, TechCrunch AI, Ars Technica, MIT Tech Review, Wired, IEEE Spectrum, HackerNews API
+- **저장**: Supabase `ai_news` 테이블, 보통 1회 실행당 5개 저장
+- 장애 의심 시: n8n이 아니라 **Hermes cron 실행 로그**부터 확인할 것
+
+### ✅ 해결된 버그: DeepSeek 모델명 폐기로 뉴스 수집 중단 (2026-07-25~26)
+
+**증상**: 07-24까지 매일 정상 수집되던 뉴스가 07-25, 07-26 이틀 연속 0건.
+
+**원인**: DeepSeek가 07-25경 `deepseek-chat` 모델명을 폐기(deprecate). `ktoolu-news.py`가 여전히
+`deepseek-chat`을 호출해 API가 `400 Bad Request: "The supported API model names are
+deepseek-v4-pro or deepseek-v4-flash, but you passed deepseek-chat."` 반환.
+
+**해결**: `ktoolu-news.py` 90번째 줄 `DEEPSEEK_MODEL = "deepseek-chat"` → `"deepseek-v4-flash"`로 수정.
+
+**진단 시 확인한 것들** (장애 재발 시 체크리스트):
+1. Hermes cron 실행 이력에 07-25 이후 실행 시도가 있었는지
+2. DeepSeek API 키 유효기간·잔액
+3. RSS 소스 응답 상태 (전부 정상이었음 — 소스 문제 아님)
+4. Supabase `ai_news` 테이블에서 `collected_at` 최신값으로 마지막 정상 수집 시점 확인:
+   `curl ".../rest/v1/ai_news?select=id,collected_at&order=collected_at.desc&limit=5"`
+
+---
+
+## n8n 워크플로우 (사용 안 함, 참고용 — 위 섹션 참고)
+
+과거 n8n으로 전환을 시도했던 흔적. 실제로는 한 번도 가동되지 않았고 Hermes cron으로 바로 대체됨.
+아래는 n8n 재도입 시에만 참고할 것.
+
 - **워크플로우 파일**: C:\Users\hanam\OneDrive\바탕 화면\클로드cowork\ai.ktoolu\n8n-workflow-ai-news.json
-- **실행 주기**: 6시간마다 (로컬 n8n)
 - **뉴스 소스**: VentureBeat AI, TechCrunch AI, Ars Technica, MIT Tech Review, IEEE Spectrum, HackerNews API
-- **저장**: Supabase ai_news 테이블
 - **흐름**: RSS 수집 → AI 필터링/정렬(48h 이내만) → 중복 URL 제거 → 하나씩 처리 → 프롬프트 준비 → AI 요약 → 결과 파싱 → Supabase 저장
 
-### 🧪 현재 테스트 중: DeepSeek API (2026-06-05~)
-- **API**: DeepSeek Chat (`https://api.deepseek.com/v1/chat/completions`)
-- **모델**: `deepseek-chat`
-- **목적**: Ollama 대비 API 비용 및 한국어 품질 비교 검증 중
-- **API 키 위치**: n8n-workflow-ai-news.json 헤더에 직접 하드코딩
-
-### ⏸️ 기존 Ollama 설정 (테스트 후 복구 가능)
+### ⏸️ Ollama 설정 (n8n용, 미사용)
 - **AI 요약**: Ollama 로컬 실행 (http://127.0.0.1:11434)
-- **현재 사용 모델**: hermes3:latest
-- **추천 모델**: qwen2.5:7b (한국어 품질 더 좋음, 설치 완료)
 - **설치된 Ollama 모델**: hermes3:latest, qwen2.5:7b, llama3.1:8b
-- Ollama 복구 시: 프롬프트 준비 노드를 ollamaRequest 형식으로 되돌리고, HTTP 노드 URL을 `http://127.0.0.1:11434/api/generate`로 변경
+- Ollama 사용 시: 프롬프트 준비 노드를 ollamaRequest 형식으로, HTTP 노드 URL을 `http://127.0.0.1:11434/api/generate`로 변경
 
-### n8n 워크플로우 핵심 주의사항
+### n8n 워크플로우 핵심 주의사항 (재도입 시 참고)
 - DeepSeek HTTP 노드: `contentType: "raw"`, body = `={{ $json.deepseekRequest }}`
 - JSON.stringify를 HTTP 노드 body 표현식에서 직접 호출하면 n8n이 이중 직렬화해서 400 에러 발생
 - Supabase "This is an item, but it's empty" = 정상처럼 보이지만 실제 INSERT 여부는 별도 확인 필요
@@ -148,12 +174,15 @@ npm install @opennextjs/cloudflare wrangler --save-dev
 - 컨텐츠 볼륨업 (40개 툴 상세화)
 - 커스텀 도메인 ai.ktoolu.com
 - 블로그 (Notion CMS)
-- AI 뉴스 자동수집 n8n 워크플로우 → Hermes 에이전트로 전환 예정 (n8n 중단)
+- AI 뉴스 자동수집: n8n → **Hermes cron(`ktoolu-news`, 매일 09:00 KST)으로 완전 전환 완료** (n8n은 미사용)
 - AI 뉴스 페이지 개선: 섹션 타이틀, 날짜 그루핑, 소스/태그 필터
+- AI 뉴스 개별 페이지(`/news/[slug]`) + 게시판형 목록 + 구조화 데이터
+- 프롬프트 도서관 1단계(`/prompts`, 운영자 큐레이션 30개) — 상세는 `docs/prompt-library-plan.md`
+- SEO 진단 기반 개선: metadataBase, OG 이미지, 구조화 데이터(SoftwareApplication/BreadcrumbList/WebSite), Pretendard 폰트, GA4 전환 이벤트, 카테고리 큐레이션 페이지(`/category/[category]`)
 
 ### 🔜 다음 작업
-1. Hermes 에이전트 뉴스 수집 스크립트 구축 및 실행
-2. 뉴스 충분히 쌓이면 스케줄 주기 조정
+1. 뉴스 충분히 쌓이면 스케줄 주기 조정 (현재 하루 1회 5건)
+2. 프롬프트 도서관 2단계(비로그인 localStorage 스크랩) — `docs/prompt-library-plan.md` 참고
 
 ### 🗓️ 트래픽 늘면 고려
 - 이메일 구독 뉴스레터 (Resend 또는 Mailchimp 연동)
