@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { ChevronRight, Newspaper } from "lucide-react";
@@ -24,6 +24,13 @@ export function RelatedNews({ toolName, toolSlug, toolTags }: RelatedNewsProps) 
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 위젯 미리보기와 "더보기" 전체 목록이 같은 키워드로 필터링되도록 공용 계산
+  const keywords = useMemo(
+    () => [toolName.toLowerCase(), ...toolTags.map(t => t.toLowerCase())],
+    [toolName, toolTags]
+  );
+  const moreHref = `/news?q=${encodeURIComponent(keywords.join(","))}&label=${encodeURIComponent(toolName)}`;
+
   useEffect(() => {
     async function fetchRelated() {
       try {
@@ -32,9 +39,6 @@ export function RelatedNews({ toolName, toolSlug, toolTags }: RelatedNewsProps) 
           process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
         );
 
-        // 태그 기반 검색: 도구명이나 태그 중 하나라도 포함된 기사
-        const keywords = [toolName.toLowerCase(), ...toolTags.map(t => t.toLowerCase())];
-        
         const { data } = await supabase
           .from("ai_news")
           .select("id,title,url,source,collected_at")
@@ -58,7 +62,7 @@ export function RelatedNews({ toolName, toolSlug, toolTags }: RelatedNewsProps) 
       }
     }
     fetchRelated();
-  }, [toolName, toolSlug, toolTags]);
+  }, [toolSlug, keywords]);
 
   if (loading) return null;
   if (news.length === 0) return null;
@@ -87,6 +91,13 @@ export function RelatedNews({ toolName, toolSlug, toolTags }: RelatedNewsProps) 
           </Link>
         ))}
       </div>
+      <Link
+        href={moreHref}
+        className="mt-3 flex items-center justify-center gap-1 rounded-lg border border-border/40 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+      >
+        {toolName} 관련 뉴스 더보기
+        <ChevronRight className="h-3 w-3" />
+      </Link>
     </div>
   );
 }

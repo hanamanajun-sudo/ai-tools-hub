@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 import { AlertCircle, RefreshCw, X, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { newsSlug } from "@/lib/news-slug";
@@ -90,6 +91,23 @@ export function NewsList() {
   const [activeDate, setActiveDate] = useState<string | null>(null);
   const [page, setPage] = useState(0);
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const keywordParam = searchParams.get("q");
+  const keywordLabel = searchParams.get("label");
+
+  // 예: /tools/claude "관련 뉴스 더보기" → /news?q=claude,gpt-4o,...&label=Claude
+  const filterKeywords = useMemo(() => {
+    if (!keywordParam) return [];
+    return keywordParam.split(",").map(k => k.trim().toLowerCase()).filter(Boolean);
+  }, [keywordParam]);
+
+  function clearAllFilters() {
+    setActiveTag(null);
+    setActiveDate(null);
+    router.push("/news");
+  }
+
   const dateScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -170,14 +188,18 @@ export function NewsList() {
     return news.filter(item => {
       if (activeTag && !item.tags?.includes(activeTag)) return false;
       if (activeDate && toDateKey(item.collected_at) !== activeDate) return false;
+      if (filterKeywords.length > 0) {
+        const lowerTitle = item.title.toLowerCase();
+        if (!filterKeywords.some(k => lowerTitle.includes(k))) return false;
+      }
       return true;
     });
-  }, [news, activeTag, activeDate]);
+  }, [news, activeTag, activeDate, filterKeywords]);
 
   const totalPages = useMemo(() => Math.max(1, Math.ceil(filteredNews.length / ITEMS_PER_PAGE)), [filteredNews]);
 
   // 필터 변경 시 페이지 초기화
-  useEffect(() => { setPage(0); }, [activeTag, activeDate]);
+  useEffect(() => { setPage(0); }, [activeTag, activeDate, filterKeywords]);
 
   // 데이터 변경 시 페이지 범위 보정
   useEffect(() => {
@@ -256,6 +278,21 @@ export function NewsList() {
 
   return (
     <div>
+      {/* ── 키워드 필터 배너 (예: 툴 상세페이지 "관련 뉴스 더보기"로 유입) ── */}
+      {keywordLabel && (
+        <div className="mb-6 flex items-center justify-between gap-3 rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+          <p className="text-sm text-foreground">
+            <span className="font-semibold">{keywordLabel}</span> 관련 뉴스 {filteredNews.length}건
+          </p>
+          <button
+            onClick={clearAllFilters}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+          >
+            <X className="h-3 w-3" /> 필터 해제
+          </button>
+        </div>
+      )}
+
       {/* ── 날짜 선택 바 ── */}
       {dateList.length > 0 && (
         <div className="flex items-center gap-1 mb-6">
@@ -389,15 +426,16 @@ export function NewsList() {
           </div>
         )}
 
-        {filteredNews.length === 0 && (activeTag || activeDate) && (
+        {filteredNews.length === 0 && (activeTag || activeDate || filterKeywords.length > 0) && (
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <p className="text-muted-foreground text-sm">
+              {keywordLabel && <><span className="font-medium text-foreground">{keywordLabel}</span> 관련 </>}
               {activeTag && <><span className="font-medium text-foreground">#{activeTag}</span> 태그의 </>}
               {activeDate && <><span className="font-medium text-foreground">{formatDateShort(activeDate)}</span> 날짜의 </>}
               기사가 없습니다
             </p>
             <button
-              onClick={() => { setActiveTag(null); setActiveDate(null); }}
+              onClick={clearAllFilters}
               className="text-xs text-primary hover:underline"
             >
               전체 보기

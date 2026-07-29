@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { NewsList } from "./news-list";
@@ -26,7 +27,9 @@ export default function NewsPage() {
           </p>
         </section>
 
-        <NewsList />
+        <Suspense fallback={null}>
+          <NewsList />
+        </Suspense>
       </main>
 
       <SiteFooter />
