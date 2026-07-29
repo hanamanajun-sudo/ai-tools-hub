@@ -25,12 +25,20 @@ async function loadKoreanFont(text: string, weight: 400 | 700) {
   return fontRes.arrayBuffer();
 }
 
+// 이미지 내용이 완전히 정적(파라미터 없음)이라, 같은 Worker 인스턴스가 재사용되는 동안은
+// Google Fonts 재요청 없이 캐시된 폰트를 그대로 씀 — 매 요청마다 외부 fetch 4회 + 렌더링을
+// 반복하다 Cloudflare Worker 리소스 한도(Error 1102)에 걸렸던 문제의 핵심 원인
+let fontCache: Promise<[ArrayBuffer, ArrayBuffer]> | null = null;
+
 export default async function OpengraphImage() {
   const allText = [TITLE, SUBTITLE, ...TAGS, "AI"].join("");
-  const [regular, bold] = await Promise.all([
-    loadKoreanFont(allText, 400),
-    loadKoreanFont(allText, 700),
-  ]);
+  if (!fontCache) {
+    fontCache = Promise.all([
+      loadKoreanFont(allText, 400),
+      loadKoreanFont(allText, 700),
+    ]);
+  }
+  const [regular, bold] = await fontCache;
 
   return new ImageResponse(
     (
@@ -102,6 +110,8 @@ export default async function OpengraphImage() {
         { name: "Noto Sans KR", data: regular, weight: 400, style: "normal" },
         { name: "Noto Sans KR", data: bold, weight: 700, style: "normal" },
       ],
+      // 콘텐츠가 항상 동일 — CDN이 이미지를 캐싱해 재생성을 피하도록 명시적 장기 캐시 지정
+      headers: { "Cache-Control": "public, max-age=31536000, immutable" },
     }
   );
 }
