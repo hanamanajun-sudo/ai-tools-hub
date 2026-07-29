@@ -1,5 +1,70 @@
 # ai.ktoolu.com 진행 현황
 
+## 2026-07-29 작업 내용
+
+### 오늘 한 일
+
+**1. 툴 상세페이지 "관련 뉴스 더보기" + 뉴스 페이지 키워드 필터**
+- `/tools/claude` 등 관련 뉴스 위젯(5개로 제한)에 "{툴명} 관련 뉴스 더보기" 링크 추가
+- `/news?q=키워드들&label=툴명` 형태로 뉴스 페이지에 툴별 필터 기능 추가 (기존 태그/날짜 필터와 동일한 방식)
+- 위젯 미리보기와 "더보기" 전체 목록이 완전히 같은 키워드 기준으로 필터링되도록 로직 공유 (결과 불일치 방지)
+- 실데이터로 검증: 최근 50건 중 Claude/Anthropic 매칭 12건 확인 (위젯엔 5건만 노출 — "더보기"가 실제로 더 보여줄 내용 있음을 확인)
+
+**2. 프로덕션 장애 대응: Cloudflare Worker Error 1102 (리소스 한도 초과)**
+- 증상: ai.ktoolu.com 접속 시 "Worker exceeded resource limits" 에러
+- 원인 진단: `/opengraph-image` 엔드포인트가 `x-nextjs-cache: MISS`, `Cache-Control: max-age=0`로 **캐싱이 전혀 안 되고 매 요청마다 재생성**되고 있었음. 이미지 하나 만드는 데 Google Fonts 외부 fetch 4회 + Satori 렌더링을 매번 반복 — 카카오톡/X 등 링크 공유 시 미리보기 봇이 호출할 때마다 CPU 비용이 누적되어 한도 초과로 이어짐
+- 해결: `ImageResponse`에 `Cache-Control: public, max-age=31536000, immutable` 헤더 추가(CDN 엣지 캐싱 유도) + 폰트 fetch 결과를 모듈 스코프에 캐싱(같은 Worker 인스턴스 재사용 시 재요청 방지)
+- 배포 후 확인: 응답시간 0.9초 → 0.2초(캐시 히트), 사이트 전체 페이지 200 정상
+
+**3. 블로그 신규 글 게시**: "키미 K3, 로컬로 돌아가나? 구축비용 현실적으로 따져봤다"
+- 타겟 키워드: kimi k3, 구축비용, 로컬로 돌아가나?
+- 게시 전 웹서치로 초안 수치 전수 검증 — **VRAM 요구량 오류 1건 발견·수정**: 초안엔 "500GB대 후반"으로 적혀 있었으나, K3 가중치 파일 자체가 1.56TB라 앞뒤가 안 맞는 수치였음(이전 모델 K2의 577~630GB 수치가 잘못 옮겨 붙은 것으로 추정) → "1.5TB 이상"으로 정정. 나머지 수치(896개 전문가 중 16개 활성화, 활성 파라미터 1,040억, 64개 가속기 권장 등)는 교차 확인 후 그대로 반영
+- Notion CMS에 Category="AI 트렌드 뉴스", Slug=`kimi-k3-local-hosting-cost`로 게시, 프로덕션 렌더링 확인 완료
+- 참고: 사이트 렌더러(`lib/notion.ts`)가 Notion 표(table) 블록을 지원하지 않아, 원래 표로 정리하려던 "필요 하드웨어 스펙"은 불릿 리스트로 변환해 정보 유실 방지
+
+---
+
+### 완료된 항목
+
+- [x] 관련뉴스 더보기 + 뉴스 키워드 필터 배포 (`b133d6a`)
+- [x] OG 이미지 캐싱 수정, Error 1102 해결 배포 (`23d54f1`)
+- [x] 블로그 "키미 K3 로컬 구축비용" 게시 완료
+
+---
+
+### 다음에 할 일
+
+- [ ] Error 1102 재발 여부 며칠 지켜보기 (같은 원인의 캐싱 누락이 다른 동적 라우트에도 있는지 여유될 때 점검)
+- [ ] 프롬프트 도서관 2단계(비로그인 localStorage 스크랩) — `docs/prompt-library-plan.md` 참고
+- [ ] 다국어(i18n), 뉴스레터 — 로드맵의 다음 분기 큰 베팅
+
+---
+
+## 2026-06-25 작업 내용
+
+### 오늘 한 일
+
+- 네이버 서치콘솔 등록: `app/layout.tsx`의 `metadata.other`에 `naver-site-verification` 태그를 기존 `google-site-verification`과 병기 추가
+- `public/naver...html` 확인 파일 생성
+- `npm run deploy`(opennextjs-cloudflare build+deploy) 시도했으나 Windows 환경 호환성 경고로 CLI 배포 중단
+- GitHub Actions(`.github/workflows/deploy.yml`) 자동 배포 확인 후 `git push`로 배포 트리거
+
+---
+
+### 완료된 항목
+
+- [x] 네이버 태그 + 확인 파일 코드 반영, GitHub push 완료
+
+---
+
+### 다음에 할 일
+
+- [ ] GitHub Actions 배포 완료 확인
+- [ ] 네이버 서치콘솔 소유 확인 진행
+- [ ] sitemap 제출
+
+---
+
 ## 2026-06-10 작업 내용
 
 ### AI 뉴스 페이지 UI 전면 개선
