@@ -85,9 +85,16 @@ export function ModelRankTable() {
         if (error) throw error;
         if (data && data.length > 0) {
           const latestDate = data[0].collected_date;
-          const todayRows = data.filter((r: ModelRow) => r.collected_date === latestDate);
-          setRows(todayRows);
-          setUpdatedAt(todayRows[0]?.collected_at ?? null);
+          const latestRows = data.filter((r: ModelRow) => r.collected_date === latestDate);
+          // 중복 방지: 같은 label은 최신 행만 유지
+          const seen = new Set<string>();
+          const deduped = latestRows.filter((r: ModelRow) => {
+            if (seen.has(r.label)) return false;
+            seen.add(r.label);
+            return true;
+          });
+          setRows(deduped);
+          setUpdatedAt(deduped[0]?.collected_at ?? null);
         }
       } catch {
         setError(true);
