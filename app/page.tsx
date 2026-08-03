@@ -5,6 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ToolsSection } from "@/components/tools-section";
+import { ModelRankTable } from "@/components/model-rank-table";
 import { getBlogPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
 import { newsSlug } from "@/lib/news-slug";
@@ -83,6 +84,13 @@ export default async function HomePage() {
             텍스트, 이미지, 비디오, 코딩, 음악까지 — 업무와 창작을 혁신할
             AI 도구들을 카테고리별로 정리했습니다.
           </p>
+        </section>
+
+        {/* Model Rank */}
+        <section className="mt-10">
+          <Suspense fallback={null}>
+            <ModelRankTable />
+          </Suspense>
         </section>
 
         {/* Tools */}
