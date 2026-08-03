@@ -87,7 +87,7 @@ export default async function HomePage() {
         </section>
 
         {/* Model Rank */}
-        <section className="mt-10">
+        <section className="mt-10 mb-12">
           <Suspense fallback={null}>
             <ModelRankTable />
           </Suspense>

@@ -18,7 +18,7 @@ import { categoryColors } from "@/lib/tool-styles";
 import { trackEvent } from "@/lib/analytics";
 import { getRankedCategories, getRankEmoji, getHighlight, shortDesc } from "@/lib/tool-ranking";
 import {
-  Search, ExternalLink, Star, LayoutGrid, ListOrdered, Calendar,
+  Search, ExternalLink, Star, LayoutGrid, ListOrdered,
   FileText, Image, Film, Code, Music, Sparkles, Bot
 } from "lucide-react";
 import Link from "next/link";
@@ -117,8 +117,6 @@ export function ToolsSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
-  const today = new Date();
-  const updateDate = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일`;
 
   /* ---------- 랭킹 (수동 오버라이드 + 통합 툴 적용) ---------- */
   const rankedCategories = useMemo(() => {
@@ -173,33 +171,6 @@ export function ToolsSection() {
           />
         </div>
       </section>
-
-      {/* 업데이트 날짜 */}
-      <div className="flex items-center justify-center gap-1.5 mb-6 text-xs text-muted-foreground">
-        <Calendar className="h-3 w-3" />
-        마지막 업데이트: {updateDate}
-      </div>
-
-      {/* 카테고리 점프 탭 */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {categories.filter(c => c.value !== "all").map((cat) => {
-          const colorClass = categoryColors[cat.value] || "";
-          return (
-            <a
-              key={cat.value}
-              href={`#category-${cat.value}`}
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById(`category-${cat.value}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all hover:scale-105 ${colorClass} hover:shadow-sm`}
-            >
-              {CATEGORY_ICONS[cat.value]}
-              {cat.label}
-            </a>
-          );
-        })}
-      </div>
 
       {searchQuery.trim() && (
         <div className="mb-4 flex items-center justify-between">
