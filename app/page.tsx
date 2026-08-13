@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Sparkles, BookOpen, ArrowRight, Calendar, Newspaper } from "lucide-react";
@@ -13,6 +14,10 @@ import { newsSlug } from "@/lib/news-slug";
 export const revalidate = 3600; // 1시간마다 재생성
 
 const BASE_URL = "https://ai.ktoolu.com";
+
+export const metadata: Metadata = {
+  alternates: { canonical: BASE_URL },
+};
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
