@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 import { newsSlug, parseNewsId, isIndexable } from "@/lib/news-slug";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import { OutboundLink } from "@/components/outbound-link";
-import { NewsShareButtons } from "./share-buttons";
+import { ShareButtons } from "@/components/share-buttons";
 
 export const revalidate = 3600;
 
@@ -264,7 +264,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
             </OutboundLink>
           </div>
 
-          <NewsShareButtons title={item.title} slug={newsSlug(item)} />
+          <ShareButtons title={item.title} path={`/news/${newsSlug(item)}`} />
 
           {/* 관련 기사 */}
           {related.length > 0 && (

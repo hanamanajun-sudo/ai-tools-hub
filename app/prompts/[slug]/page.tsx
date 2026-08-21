@@ -9,7 +9,7 @@ import { getKoName } from "@/lib/tool-names";
 import { aiTools } from "@/lib/ai-tools-data";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import { PromptActions } from "./prompt-actions";
-import { PromptShareButtons } from "./share-buttons";
+import { ShareButtons } from "@/components/share-buttons";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -114,7 +114,7 @@ export default async function PromptDetailPage({ params }: Props) {
             </div>
           )}
 
-          <PromptShareButtons title={prompt.title} slug={prompt.slug} />
+          <ShareButtons title={prompt.title} path={`/prompts/${prompt.slug}`} />
 
           {related.length > 0 && (
             <section className="mt-10">

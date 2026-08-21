@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
-import { BlogShareButtons } from "./share-buttons";
+import { ShareButtons } from "@/components/share-buttons";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getBlogPost, getBlogPosts } from "@/lib/notion";
@@ -182,7 +182,7 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         )}
 
-        <BlogShareButtons title={post.title} slug={slug} />
+        <ShareButtons title={post.title} path={`/blog/${slug}`} />
 
         {/* Back link */}
         <div className="mt-10 mb-16">

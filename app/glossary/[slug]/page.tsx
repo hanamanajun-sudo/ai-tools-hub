@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { ExternalLink, ArrowLeft, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
+import { ShareButtons } from "@/components/share-buttons";
 
 export const revalidate = 3600;
 const BASE_URL = "https://ai.ktoolu.com";
@@ -96,6 +97,8 @@ export default async function GlossaryTermPage({ params }: { params: Promise<{ s
               </a>
             )}
           </div>
+
+          <ShareButtons title={term.term} path={`/glossary/${slug}`} />
 
           {articles.length > 0 && (
             <section>

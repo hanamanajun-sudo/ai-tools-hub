@@ -3,28 +3,29 @@
 import { useState } from "react";
 import { Link2, Check } from "lucide-react";
 
-export function BlogShareButtons({ title, slug }: { title: string; slug: string }) {
+/** 사이트 전역 공용 공유 버튼 — 링크 복사 + X 퍼가기. 앰버 톤으로 눈에 띄게 스타일링 */
+export function ShareButtons({ title, path }: { title: string; path: string }) {
   const [copied, setCopied] = useState(false);
 
   function copyLink() {
-    const url = `${window.location.origin}/blog/${slug}`;
+    const url = `${window.location.origin}${path}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
 
   function shareOnX() {
-    const url = `${window.location.origin}/blog/${slug}`;
+    const url = `${window.location.origin}${path}`;
     const text = encodeURIComponent(`${title}\n${url}`);
     window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank", "noopener,noreferrer");
   }
 
   return (
-    <div className="flex items-center gap-2 mt-8 pt-6 border-t border-border/50">
+    <div className="flex items-center gap-2 mt-6 pt-4 border-t border-border/30">
       <span className="text-xs text-muted-foreground font-medium">공유하기</span>
       <button
         onClick={copyLink}
-        className="flex items-center gap-1.5 rounded-lg border border-border/60 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+        className="flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-500 hover:bg-amber-500/25 hover:border-amber-500/60 transition-colors"
       >
         {copied
           ? <><Check className="h-3.5 w-3.5 text-green-500" /><span className="text-green-500">복사됨</span></>
@@ -33,7 +34,7 @@ export function BlogShareButtons({ title, slug }: { title: string; slug: string 
       </button>
       <button
         onClick={shareOnX}
-        className="flex items-center gap-1.5 rounded-lg border border-border/60 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+        className="flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-500 hover:bg-amber-500/25 hover:border-amber-500/60 transition-colors"
       >
         <span className="font-bold text-[12px]">𝕏</span> 퍼가기
       </button>

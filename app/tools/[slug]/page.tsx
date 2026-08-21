@@ -14,6 +14,7 @@ import { ScreenshotGallery } from "@/components/screenshot-gallery";
 import { ReviewsSection } from "@/components/reviews-section";
 import { RelatedNews } from "@/components/related-news";
 import { OutboundLink } from "@/components/outbound-link";
+import { ShareButtons } from "@/components/share-buttons";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import {
   ExternalLink, Star, CheckCircle2, XCircle,
@@ -164,6 +165,7 @@ export default async function ToolDetailPage({ params }: Props) {
           </div>
           <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">{getKoName(tool).h1}</h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-3xl">{tool.longDescription ?? tool.description}</p>
+          <ShareButtons title={getKoName(tool).h1} path={`/tools/${tool.id}`} />
         </section>
 
         {/* ── Screenshots ── */}
