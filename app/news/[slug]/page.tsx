@@ -202,7 +202,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
           {item.explanation && (
             <div className="mb-4 rounded-xl bg-blue-500/5 border border-blue-500/20 px-4 py-3">
               <p className="text-xs font-semibold text-blue-400 mb-2 flex items-center gap-1.5">
-                <GraduationCap className="h-3.5 w-3.5" /> 초등학생도 이해하는 ktoolu 설명
+                <GraduationCap className="h-3.5 w-3.5" /> 초등학생도 이해하는 NEWS 설명
               </p>
               <div className="space-y-1.5">
                 {splitSentences(item.explanation).map((s, i) => (
