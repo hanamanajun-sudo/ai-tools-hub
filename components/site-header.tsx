@@ -40,6 +40,17 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
 
           <div className="flex items-center gap-1">
             <Link
+              href="/news"
+              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
+                activePage === "news"
+                  ? "text-foreground bg-accent"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              }`}
+            >
+              <Newspaper className="h-4 w-4" />
+              <span className="hidden sm:inline">AI 뉴스</span>
+            </Link>
+            <Link
               href="/blog"
               className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
                 activePage === "blog"
@@ -56,15 +67,15 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
               )}
             </Link>
             <Link
-              href="/news"
+              href="/prompts"
               className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                activePage === "news"
+                activePage === "prompts"
                   ? "text-foreground bg-accent"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent"
               }`}
             >
-              <Newspaper className="h-4 w-4" />
-              <span className="hidden sm:inline">AI 뉴스</span>
+              <Wand2 className="h-4 w-4" />
+              <span className="hidden sm:inline">프롬프트</span>
             </Link>
             <Link
               href="/glossary"
@@ -76,17 +87,6 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
             >
               <LibraryBig className="h-4 w-4" />
               <span className="hidden sm:inline">용어해설</span>
-            </Link>
-            <Link
-              href="/prompts"
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                activePage === "prompts"
-                  ? "text-foreground bg-accent"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
-            >
-              <Wand2 className="h-4 w-4" />
-              <span className="hidden sm:inline">프롬프트</span>
             </Link>
 
             <ThemeToggle />

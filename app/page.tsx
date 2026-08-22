@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ToolsSection } from "@/components/tools-section";
 import { ModelRankTable } from "@/components/model-rank-table";
+import { StickyBottomPanel } from "@/components/sticky-bottom-panel";
 import { getBlogPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
 import { newsSlug } from "@/lib/news-slug";
@@ -101,55 +102,9 @@ export default async function HomePage() {
             </Suspense>
           </div>
 
-          {/* ── 사이드바: 최신 블로그 + AI 뉴스 (1/3, sticky) ── */}
-          <div className="lg:col-span-1">
-            <div className="space-y-8 lg:sticky lg:top-20">
-              {/* 최신 블로그 */}
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    <h2 className="text-lg font-bold text-foreground">최신 블로그</h2>
-                  </div>
-                  <Link
-                    href="/blog"
-                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
-                  >
-                    전체 보기
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-                <div className="space-y-3">
-                  {latestPosts.length > 0 ? latestPosts.map((post) => (
-                    <Link
-                      key={post.id}
-                      href={`/blog/${post.slug}`}
-                      className="block rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-md"
-                    >
-                      {post.category && (
-                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium mb-2 ${CATEGORY_COLORS[post.category] ?? "bg-secondary/50 text-muted-foreground border-border"}`}>
-                          {post.category}
-                        </span>
-                      )}
-                      <h3 className="font-bold text-foreground hover:text-primary transition-colors mb-1 line-clamp-2 text-sm">
-                        {post.title}
-                      </h3>
-                      {post.description && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{post.description}</p>
-                      )}
-                      {post.publishedAt && (
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(post.publishedAt).toLocaleDateString("ko-KR")}
-                        </div>
-                      )}
-                    </Link>
-                  )) : (
-                    <p className="text-sm text-muted-foreground py-4">블로그 글이 없습니다.</p>
-                  )}
-                </div>
-              </div>
-
+          {/* ── 사이드바: AI 뉴스 + 최신 블로그 (1/3, 하단 고정) ── */}
+          <StickyBottomPanel className="lg:col-span-1">
+            <div className="space-y-8">
               {/* AI 뉴스 */}
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -202,8 +157,54 @@ export default async function HomePage() {
                   )}
                 </div>
               </div>
+
+              {/* 최신 블로그 */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                    <h2 className="text-lg font-bold text-foreground">최신 블로그</h2>
+                  </div>
+                  <Link
+                    href="/blog"
+                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                  >
+                    전체 보기
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+                <div className="space-y-3">
+                  {latestPosts.length > 0 ? latestPosts.map((post) => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      className="block rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-md"
+                    >
+                      {post.category && (
+                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium mb-2 ${CATEGORY_COLORS[post.category] ?? "bg-secondary/50 text-muted-foreground border-border"}`}>
+                          {post.category}
+                        </span>
+                      )}
+                      <h3 className="font-bold text-foreground hover:text-primary transition-colors mb-1 line-clamp-2 text-sm">
+                        {post.title}
+                      </h3>
+                      {post.description && (
+                        <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{post.description}</p>
+                      )}
+                      {post.publishedAt && (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(post.publishedAt).toLocaleDateString("ko-KR")}
+                        </div>
+                      )}
+                    </Link>
+                  )) : (
+                    <p className="text-sm text-muted-foreground py-4">블로그 글이 없습니다.</p>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
+          </StickyBottomPanel>
         </div>
       </main>
 
