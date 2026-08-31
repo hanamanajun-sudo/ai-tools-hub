@@ -1,5 +1,44 @@
 # ai.ktoolu.com 진행 현황
 
+## 2026-08-31 작업 내용
+
+### 오늘 한 일
+
+**1. 블로그 글에 유튜브 영상 임베드 재생 기능 추가**
+- 기존 `lib/notion.ts` 렌더러(`blockToHtml`)가 Notion의 video/embed 블록을 전혀 처리하지 못해 빈 문자열로 무시하던 문제 발견
+- youtu.be / youtube.com 두 URL 형태 모두에서 video ID를 추출해 반응형 16:9 iframe(`.video-embed`)으로 렌더링하도록 추가, `app/globals.css`에 대응 스타일 추가
+
+**2. 보안 수정: 유튜브 임베드 XSS 취약점**
+- 배포 직후 자동 보안 리뷰가 `lib/notion.ts`에서 XSS 가능성을 잡아냄 — `extractYoutubeId`가 URL에서 뽑아낸 값을 검증 없이 그대로 `iframe src` 속성 문자열에 이어붙이고 있어서, 조작된 video 블록 URL로 속성을 탈출해 스크립트를 주입할 수 있는 경로가 있었음
+- 유튜브 video ID는 항상 영숫자·`-`·`_` 11자리라는 정규식(`^[A-Za-z0-9_-]{11}$`)으로 검증 후 통과한 값만 렌더링하도록 수정, 재배포 후 영상 정상 재생 확인
+
+**3. 블로그 신규 글 게시: "마이크로덕(MicroDuck) 완전 정리: 399달러에 사는 오픈소스 이족보행 로봇"**
+- 사용자 제공 ktoolu 뉴스 기사 + MarkTechPost 기사를 기반으로, Pollen Robotics 공식 페이지·Engadget 기사까지 교차 검증해서 가격/사양/구매처/기능/한계 등 빠짐없이 정리
+- 요청받은 유튜브 소개 영상을 페이지에서 바로 재생되는 임베드로 포함 (위 1번 기능 사용)
+- Notion CMS에 Category="AI 트렌드 뉴스", Slug=`microduck-hugging-face-robot-guide`로 게시, 프로덕션 렌더링 확인 완료
+
+**4. 사소한 문구 수정**
+- `/news/[slug]` 페이지의 "초등학생도 이해하는 ktoolu 설명" 라벨을 "초등학생도 이해하는 NEWS 설명"으로 변경
+
+---
+
+### 완료된 항목
+
+- [x] 블로그 유튜브 영상 임베드 기능 배포 (`20c0b9b`)
+- [x] 유튜브 임베드 XSS 취약점 수정·배포 (`dbccc95`)
+- [x] 마이크로덕 로봇 블로그 글 게시 완료
+- [x] 뉴스 상세 페이지 라벨 문구 수정 배포 (`3c5a9b5`)
+
+---
+
+### 다음에 할 일
+
+- [ ] `/blog` 목록 페이지는 revalidate=3600(1시간 캐시)라 새 글이 목록에 뜨는 데 최대 1시간 소요 — 반영 확인
+- [ ] `lib/notion.ts`의 기존 `image` 블록도 `alt="${caption}"`에서 caption의 큰따옴표(")를 이스케이프하지 않고 있음 — video 블록과 같은 속성-탈출 XSS 패턴이라 다음에 점검·수정 필요
+- [ ] 프롬프트 도서관 2단계(비로그인 localStorage 스크랩) — `docs/prompt-library-plan.md` 참고
+
+---
+
 ## 2026-07-29 작업 내용
 
 ### 오늘 한 일
