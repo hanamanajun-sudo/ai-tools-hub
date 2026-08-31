@@ -98,16 +98,25 @@ function richTextToHtml(items: RichTextItem[]): string {
   }).join("");
 }
 
+const YOUTUBE_ID_RE = /^[A-Za-z0-9_-]{11}$/;
+
+// 반환값은 항상 정규식으로 검증된 11자리 영숫자/-/_ 조합만 통과시켜서,
+// 악의적인 URL(예: v=x"><script>...)이 iframe src 속성 문자열로 그대로
+// 이어붙여질 때 속성 탈출/스크립트 삽입(XSS)이 되지 않도록 한다.
 function extractYoutubeId(url: string): string | null {
   try {
     const u = new URL(url);
-    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1).split("/")[0] || null;
-    if (u.hostname.includes("youtube.com")) {
-      const v = u.searchParams.get("v");
-      if (v) return v;
-      const m = u.pathname.match(/\/embed\/([^/?]+)/);
-      if (m) return m[1];
+    let candidate: string | null = null;
+    if (u.hostname.includes("youtu.be")) {
+      candidate = u.pathname.slice(1).split("/")[0] || null;
+    } else if (u.hostname.includes("youtube.com")) {
+      candidate = u.searchParams.get("v");
+      if (!candidate) {
+        const m = u.pathname.match(/\/embed\/([^/?]+)/);
+        if (m) candidate = m[1];
+      }
     }
+    return candidate && YOUTUBE_ID_RE.test(candidate) ? candidate : null;
   } catch {
     // 잘못된 URL 형식 — 무시
   }
