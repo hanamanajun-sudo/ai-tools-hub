@@ -98,6 +98,22 @@ function richTextToHtml(items: RichTextItem[]): string {
   }).join("");
 }
 
+function extractYoutubeId(url: string): string | null {
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1).split("/")[0] || null;
+    if (u.hostname.includes("youtube.com")) {
+      const v = u.searchParams.get("v");
+      if (v) return v;
+      const m = u.pathname.match(/\/embed\/([^/?]+)/);
+      if (m) return m[1];
+    }
+  } catch {
+    // 잘못된 URL 형식 — 무시
+  }
+  return null;
+}
+
 // imageUrlMap: block.id → resolved permanent URL (for Notion-hosted images)
 function blockToHtml(block: NotionBlock, imageUrlMap?: Map<string, string>): string {
   const b = block[block.type];
@@ -125,6 +141,14 @@ function blockToHtml(block: NotionBlock, imageUrlMap?: Map<string, string>): str
     }
     case "callout":
       return `<div class="callout"><span>${b.icon?.emoji ?? "💡"}</span><div>${richTextToHtml(b.rich_text)}</div></div>`;
+    case "video":
+    case "embed": {
+      const url = b.type === "external" ? b.external?.url : b.url ?? b.file?.url;
+      if (!url) return "";
+      const ytId = extractYoutubeId(url);
+      if (!ytId) return "";
+      return `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${ytId}" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe></div>`;
+    }
     default: return "";
   }
 }
