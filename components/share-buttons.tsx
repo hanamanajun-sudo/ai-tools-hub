@@ -7,7 +7,7 @@ import { Link2, Check, FileText } from "lucide-react";
  * 카카오 JavaScript 키는 클라이언트에 노출되는 것이 정상인 공개 키다.
  * (카카오 개발자 콘솔에 등록된 도메인에서만 동작하도록 제한되므로 비밀값이 아님)
  */
-const KAKAO_JS_KEY = "f4630edec6ea92805ebb7a96541735eb";
+const KAKAO_JS_KEY = "3746f855febf08a430921640054fb288";
 const KAKAO_SDK_URL = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js";
 
 type KakaoSdk = {
