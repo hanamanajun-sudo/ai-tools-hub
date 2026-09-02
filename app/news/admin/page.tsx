@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Star, Eye, EyeOff, LogIn, LogOut, RefreshCw, AlertCircle, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Eye, EyeOff, LogIn, LogOut, RefreshCw, AlertCircle, Check, X, ChevronLeft, ChevronRight, MessageSquareQuote } from "lucide-react";
 
 type AiNews = {
   id: number;
@@ -11,6 +11,7 @@ type AiNews = {
   collected_at: string;
   is_visible: boolean;
   tags: string[];
+  editor_note: string | null;
 };
 
 const PAGE_SIZE = 20;
@@ -25,6 +26,9 @@ export default function AdminPage() {
   const [page, setPage] = useState(0);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [showDeleted, setShowDeleted] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [noteDraft, setNoteDraft] = useState("");
+  const [savingNote, setSavingNote] = useState(false);
 
   function showToast(message: string, type: "success" | "error") {
     setToast({ message, type });
@@ -72,13 +76,22 @@ export default function AdminPage() {
       );
       const { data, error } = await supabase
         .from("ai_news")
-        .select("id,title,source,collected_at,is_visible,tags")
+        .select("id,title,source,collected_at,is_visible,tags,editor_note")
         .order("collected_at", { ascending: false })
         .limit(100);
       if (error) throw error;
       setNews(data || []);
-    } catch {
-      setError("뉴스를 불러오지 못했습니다");
+    } catch (e) {
+      // Supabase 에러는 Error 인스턴스가 아니라 message 필드를 가진 평범한 객체다
+      const msg =
+        typeof e === "object" && e !== null && "message" in e
+          ? String((e as { message: unknown }).message)
+          : String(e);
+      setError(
+        msg.includes("editor_note")
+          ? "editor_note 컬럼이 없습니다. Supabase SQL Editor에서 다음을 실행하세요: ALTER TABLE ai_news ADD COLUMN IF NOT EXISTS editor_note text;"
+          : "뉴스를 불러오지 못했습니다"
+      );
     } finally {
       setLoading(false);
     }
@@ -126,6 +139,39 @@ export default function AdminPage() {
       showToast("ID " + item.id + " " + msg, "success");
     } catch {
       showToast("업데이트 실패", "error");
+    }
+  }
+
+  function startEditNote(item: AiNews) {
+    if (editingId === item.id) {
+      setEditingId(null);
+      return;
+    }
+    setEditingId(item.id);
+    setNoteDraft(item.editor_note || "");
+  }
+
+  async function saveNote(item: AiNews) {
+    setSavingNote(true);
+    try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      // 빈 문자열은 null로 저장 — 뉴스 페이지에서 섹션 자체가 안 나오게
+      const value = noteDraft.trim() || null;
+      const { error } = await supabase
+        .from("ai_news")
+        .update({ editor_note: value })
+        .eq("id", item.id);
+      if (error) throw error;
+      setNews(prev => prev.map(n => n.id === item.id ? { ...n, editor_note: value } : n));
+      setEditingId(null);
+      showToast("ID " + item.id + " " + (value ? "편집자 한마디 저장" : "편집자 한마디 삭제"), "success");
+    } catch {
+      showToast("저장 실패", "error");
+    } finally {
+      setSavingNote(false);
     }
   }
 
@@ -237,12 +283,13 @@ export default function AdminPage() {
                     <th className="text-left px-3 py-2.5 text-xs font-semibold text-muted-foreground w-20">{'\uB0A0\uC9DC'}</th>
                     <th className="text-center px-3 py-2.5 text-xs font-semibold text-muted-foreground w-16">{'\uD45C\uC2DC'}</th>
                     <th className="text-center px-3 py-2.5 text-xs font-semibold text-muted-foreground w-20">{'\uD3B8\uC9D1\uC790\uD53D'}</th>
+                    <th className="text-center px-3 py-2.5 text-xs font-semibold text-muted-foreground w-24">\uD55C\uB9C8\uB514</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pagedNews.map(item => (
+                    <Fragment key={item.id}>
                     <tr
-                      key={item.id}
                       className={"border-b border-border/20 hover:bg-muted/20 transition-colors" + (!item.is_visible ? " opacity-40" : "")}
                     >
                       <td className="px-3 py-2.5 text-xs text-muted-foreground font-mono">{item.id}</td>
@@ -271,7 +318,51 @@ export default function AdminPage() {
                           <Star className={"h-3.5 w-3.5 " + (item.tags?.includes("편집자픽") ? "fill-amber-500" : "")} />
                         </button>
                       </td>
+                      <td className="px-3 py-2.5 text-center">
+                        <button
+                          onClick={() => startEditNote(item)}
+                          className={"inline-flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium transition-colors " + (item.editor_note ? "text-violet-400 bg-violet-500/10 hover:bg-violet-500/20" : "text-muted-foreground/50 hover:text-muted-foreground hover:bg-accent")}
+                          title={item.editor_note ? "편집자 한마디 수정" : "편집자 한마디 입력"}
+                        >
+                          <MessageSquareQuote className="h-3.5 w-3.5" />
+                          {item.editor_note ? "있음" : "입력"}
+                        </button>
+                      </td>
                     </tr>
+                    {editingId === item.id && (
+                      <tr className="border-b border-border/20 bg-violet-500/5">
+                        <td colSpan={7} className="px-3 py-3">
+                          <label className="block text-[11px] font-semibold text-violet-400 mb-1.5">
+                            편집자 한마디 — 뉴스 페이지의 &ldquo;인사이트 &amp; 시사점&rdquo; 아래에 표시됩니다 (비우면 표시 안 됨)
+                          </label>
+                          <textarea
+                            value={noteDraft}
+                            onChange={e => setNoteDraft(e.target.value)}
+                            rows={3}
+                            autoFocus
+                            placeholder="이 뉴스에 대한 직접 코멘트를 적어주세요. 줄바꿈하면 문단으로 나뉩니다."
+                            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-violet-500/30 resize-y"
+                          />
+                          <div className="flex items-center gap-2 mt-2">
+                            <button
+                              onClick={() => saveNote(item)}
+                              disabled={savingNote}
+                              className="rounded-lg bg-violet-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-violet-600 disabled:opacity-50 transition-colors"
+                            >
+                              {savingNote ? "저장 중..." : "저장"}
+                            </button>
+                            <button
+                              onClick={() => setEditingId(null)}
+                              className="rounded-lg border border-border px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              취소
+                            </button>
+                            <span className="text-[11px] text-muted-foreground/60">{noteDraft.length}자</span>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   ))}
                 </tbody>
               </table>

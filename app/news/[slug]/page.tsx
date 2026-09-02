@@ -3,7 +3,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ExternalLink, ArrowLeft, ScrollText, GraduationCap, Zap, BookOpen } from "lucide-react";
+import { ExternalLink, ArrowLeft, ScrollText, GraduationCap, Zap, BookOpen, MessageSquareQuote } from "lucide-react";
 import type { Metadata } from "next";
 import { newsSlug, parseNewsId, isIndexable } from "@/lib/news-slug";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
@@ -26,6 +26,8 @@ type AiNews = {
   is_visible: boolean;
   tags: string[] | null;
   terms: string[] | null;
+  /** 운영자가 /news/admin에서 직접 입력하는 코멘트. 비어 있으면 표시하지 않는다 */
+  editor_note?: string | null;
 };
 
 type GlossaryTerm = { slug: string; term: string; definition: string };
@@ -38,9 +40,10 @@ function client() {
 }
 
 async function getNews(id: number): Promise<AiNews | null> {
+  // select("*") — editor_note 컬럼이 아직 없는 DB에서도 쿼리가 깨지지 않도록
   const { data } = await client()
     .from("ai_news")
-    .select("id,title,url,source,summary,explanation,importance,collected_at,is_visible,tags,terms")
+    .select("*")
     .eq("id", id)
     .eq("is_visible", true)
     .single();
@@ -135,6 +138,24 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
     year: "numeric", month: "2-digit", day: "2-digit",
   });
 
+  const editorNote = item.editor_note?.trim() || "";
+  const pageUrl = `${BASE_URL}/news/${newsSlug(item)}`;
+
+  // "본문 복사" 버튼이 클립보드에 넣을 전문 — 제목 + 각 섹션 + 하단 출처
+  const copyText = [
+    item.title,
+    "",
+    ...(item.summary
+      ? ["[기사 3줄 요약]", ...parseSummaryLines(item.summary).map((l, i) => `${i + 1}. ${l}`), ""]
+      : []),
+    ...(item.explanation ? ["[쉬운 설명]", ...splitSentences(item.explanation), ""] : []),
+    ...(item.importance ? ["[인사이트 & 시사점]", ...splitSentences(item.importance), ""] : []),
+    ...(editorNote ? ["[편집자 한마디]", ...splitSentences(editorNote), ""] : []),
+    "──────────────",
+    `출처: ${item.source} — ${item.url}`,
+    `정리: ai.ktoolu — ${pageUrl}`,
+  ].join("\n");
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -225,6 +246,19 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
             </div>
           )}
 
+          {editorNote && (
+            <div className="mb-4 rounded-xl bg-violet-500/5 border border-violet-500/20 px-4 py-3">
+              <p className="text-xs font-semibold text-violet-400 mb-2 flex items-center gap-1.5">
+                <MessageSquareQuote className="h-3.5 w-3.5" /> 편집자 한마디
+              </p>
+              <div className="space-y-1.5">
+                {splitSentences(editorNote).map((s, i) => (
+                  <p key={i} className="text-sm text-foreground/75 leading-relaxed">{s}</p>
+                ))}
+              </div>
+            </div>
+          )}
+
           {terms.length > 0 && (
             <div className="mb-4 rounded-xl bg-emerald-500/5 border border-emerald-500/20 px-4 py-3">
               <p className="text-xs font-semibold text-emerald-400 mb-2 flex items-center gap-1.5">
@@ -264,7 +298,12 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
             </OutboundLink>
           </div>
 
-          <ShareButtons title={item.title} path={`/news/${newsSlug(item)}`} />
+          <ShareButtons
+            title={item.title}
+            path={`/news/${newsSlug(item)}`}
+            copyText={copyText}
+            description={(item.summary || item.explanation || "").replace(/\n/g, " ").slice(0, 100)}
+          />
 
           {/* 관련 기사 */}
           {related.length > 0 && (
