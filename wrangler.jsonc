@@ -5,6 +5,12 @@
 	"account_id": "f42bab346dd367772b859bec5f7d4611",
 	"compatibility_date": "2025-09-01",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	// wrangler의 esbuild는 keepNames가 기본 true라 함수 본문에 __name(fn,"fn") 호출을
+	// 끼워넣는다. next-themes는 테마 초기화 함수를 script.toString()으로 직렬화해
+	// <head> 인라인 스크립트로 심는데, 브라우저에는 __name 헬퍼가 없어서
+	// "ReferenceError: __name is not defined"로 죽고 하이드레이션 전 테마 적용이
+	// 통째로 건너뛰어졌다(다크모드 깜빡임). 이 옵션으로 계측 자체를 끈다.
+	"keep_names": false,
 	"assets": {
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"
