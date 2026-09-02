@@ -23,7 +23,7 @@ declare global {
 }
 
 const BTN_CLASS =
-  "flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-500 hover:bg-amber-500/25 hover:border-amber-500/60 transition-colors";
+  "flex items-center gap-1.5 rounded-lg border border-amber-500/40 bg-amber-500/15 px-3 py-1.5 text-xs font-semibold text-amber-500 hover:bg-amber-500/25 hover:border-amber-500/60 transition-colors cursor-pointer";
 
 /**
  * 사이트 전역 공용 공유 버튼 — 링크 복사 + 본문 복사(옵션) + 카카오톡 + X 퍼가기.
@@ -151,7 +151,7 @@ export function ShareButtons({
       {kakaoReady && (
         <button
           onClick={shareOnKakao}
-          className="flex items-center gap-1.5 rounded-lg border border-[#FEE500] bg-[#FEE500] px-3 py-1.5 text-xs font-bold text-[#191600] hover:brightness-95 transition-all"
+          className="flex items-center gap-1.5 rounded-lg border border-[#FEE500] bg-[#FEE500] px-3 py-1.5 text-xs font-bold text-[#191600] hover:brightness-95 transition-all cursor-pointer"
         >
           <KakaoIcon />
           {kakaoError ? "공유 실패" : "카카오톡"}
