@@ -283,7 +283,7 @@ export default function AdminPage() {
                     <th className="text-left px-3 py-2.5 text-xs font-semibold text-muted-foreground w-20">{'\uB0A0\uC9DC'}</th>
                     <th className="text-center px-3 py-2.5 text-xs font-semibold text-muted-foreground w-16">{'\uD45C\uC2DC'}</th>
                     <th className="text-center px-3 py-2.5 text-xs font-semibold text-muted-foreground w-20">{'\uD3B8\uC9D1\uC790\uD53D'}</th>
-                    <th className="text-center px-3 py-2.5 text-xs font-semibold text-muted-foreground w-24">\uD55C\uB9C8\uB514</th>
+                    <th className="text-center px-3 py-2.5 text-xs font-semibold text-muted-foreground w-24">{'\uD55C\uB9C8\uB514'}</th>
                   </tr>
                 </thead>
                 <tbody>
