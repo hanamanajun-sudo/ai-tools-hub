@@ -92,14 +92,20 @@
 
 ## 5. 인증 / 키 관리
 
+> 🔐 **2026-09-11 보안 강화 적용됨**: Supabase **쓰기는 service_role 키**, 읽기(브라우저)는 anon 키.
+
 | 용도 | 키 | 위치 |
 |------|-----|------|
-| Supabase (스크립트) | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ① Hermes `C:\Users\hanam\AppData\Local\hermes\.env` ② 없으면 `ai-tools-hub\.env.local` (폴백) |
-| Supabase (프론트) | `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ① `wrangler.jsonc`의 `vars` ② 로컬은 `.env.local` |
+| Supabase **쓰기** (스크립트) | `SUPABASE_SERVICE_ROLE_KEY` | Hermes `C:\Users\hanam\AppData\Local\hermes\.env` (2026-09-11 추가) |
+| Supabase **읽기** (프론트/브라우저) | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ① `wrangler.jsonc`의 `vars` ② 로컬 `.env.local` |
+| Supabase 관리 (DDL/RLS) | `SUPABASE_ACCESS_TOKEN` (PAT, 30일 만료) | Hermes `.env` — 스크립트: `hermes/scripts/supabase_admin.py` |
 | AA 스크래핑 | 없음 | `User-Agent: Mozilla/5.0` 헤더만 |
 
 - Supabase URL은 **스크립트에 하드코딩**돼 있음: `aa_rank.py:17` `SUPABASE_URL = "https://wgnlsmiicynpizkbzyvu.supabase.co"`
-- anon key로 **INSERT/DELETE가 되려면 RLS 정책이 열려 있어야** 함 (새 프로젝트로 옮기면 이 정책을 반드시 재현)
+- **RLS 정책 (2026-09-11 이후)**: `anon` = SELECT 전용 / `INSERT·UPDATE·DELETE` = `service_role` 전용
+  - 대상: `ai_model_rank`, `ai_news`, `glossary`, `prompts`, `reviews`
+  - SQL 원본: `docs/sql/rls_tighten_ai_ktoolu.sql`
+- ⚠️ **새 프로젝트로 옮길 때**: 위 RLS 정책을 반드시 재현해야 함. anon에 쓰기를 열어두면 방문자가 데이터를 삭제할 수 있음(2026-09-11 이전 상태가 그랬음).
 
 ---
 
@@ -173,6 +179,8 @@ npm run deploy     # Cloudflare 배포
 | `[ERROR] Artificial Analysis 데이터 수집 실패` 후 종료 | AA 사이트 HTML 구조(ld+json) 변경 | `fetch_aa_data()` 파싱 로직 점검 |
 | `[ERROR] Supabase key not found` | Hermes `.env` / `.env.local`에 anon key 없음 | 키 위치 3곳 확인 (섹션 5) |
 | 저장 0/10 성공 | RLS 정책 문제 또는 URL 오류 | 새 Supabase 프로젝트면 RLS 재확인 |
+| `HTTP 401` / `403` (INSERT/DELETE) | service_role 키 없이 anon 키로 쓰기 시도 | Hermes `.env`의 `SUPABASE_SERVICE_ROLE_KEY` 확인 (anon으로 쓰지 않도록 설계됨) |
+| `[ERROR] SUPABASE_SERVICE_ROLE_KEY not found` | Hermes `.env`에 키 없음 | 키 3곳 확인 (섹션 5). **anon으로 자동 폴백하지 않음 — 의도된 동작** |
 | 홈에 랭킹 표 안 보임 | `error \|\| rows.length === 0`이면 컴포넌트가 `null` 반환 (조용히 숨김) | Supabase 데이터 존재 여부 + env 키 확인 |
 | `__name is not defined` (다크모드 깜빡임) | wrangler esbuild keepNames | `wrangler.jsonc`의 `"keep_names": false` 유지 |
 

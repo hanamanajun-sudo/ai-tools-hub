@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Copy, Check, ExternalLink } from "lucide-react";
-import { extractVariables, fillTemplate, incrementPromptCopy } from "@/lib/prompts";
+import { extractVariables, fillTemplate } from "@/lib/prompts";
 import { trackEvent } from "@/lib/analytics";
 
 /** ChatGPT·Perplexity만 URL 프리필을 공식 지원. Claude(2025-10 제거)·Gemini(미지원)는 제외 */
@@ -24,7 +24,6 @@ export function PromptActions({ slug, content }: { slug: string; content: string
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     trackEvent("prompt_copy", { prompt_slug: slug, filled: !hasEmptyVariables });
-    incrementPromptCopy(slug);
   }
 
   function handleLaunch(tool: string, buildUrl: (text: string) => string) {

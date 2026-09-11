@@ -25,7 +25,6 @@ export type Prompt = {
   tools: string[];
   tips: string | null;
   example_output: string | null;
-  copy_count: number;
   is_visible: boolean;
   is_featured: boolean;
   created_at: string;
@@ -33,7 +32,7 @@ export type Prompt = {
 };
 
 const PROMPT_COLUMNS =
-  "id,slug,title,description,content,category,tools,tips,example_output,copy_count,is_visible,is_featured,created_at,updated_at";
+  "id,slug,title,description,content,category,tools,tips,example_output,is_visible,is_featured,created_at,updated_at";
 
 function client() {
   return createClient(
@@ -48,7 +47,7 @@ export async function getPrompts(category?: PromptCategory): Promise<Prompt[]> {
     .select(PROMPT_COLUMNS)
     .eq("is_visible", true);
   if (category) query = query.eq("category", category);
-  const { data } = await query.order("is_featured", { ascending: false }).order("copy_count", { ascending: false });
+  const { data } = await query.order("is_featured", { ascending: false }).order("created_at", { ascending: false });
   return (data as Prompt[]) || [];
 }
 
@@ -69,7 +68,7 @@ export async function getRelatedPrompts(category: PromptCategory, excludeSlug: s
     .eq("category", category)
     .eq("is_visible", true)
     .neq("slug", excludeSlug)
-    .order("copy_count", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(limit);
   return (data as Prompt[]) || [];
 }
@@ -98,10 +97,6 @@ export function fillTemplate(content: string, values: Record<string, string>): s
   });
 }
 
-export async function incrementPromptCopy(slug: string): Promise<void> {
-  await client().rpc("increment_prompt_copy", { p_slug: slug });
-}
-
 /** 특정 AI 툴에 추천된 프롬프트 목록 (툴 상세페이지 역참조용) */
 export async function getPromptsForTool(toolId: string, limit = 3): Promise<Prompt[]> {
   const { data } = await client()
@@ -109,7 +104,7 @@ export async function getPromptsForTool(toolId: string, limit = 3): Promise<Prom
     .select(PROMPT_COLUMNS)
     .contains("tools", [toolId])
     .eq("is_visible", true)
-    .order("copy_count", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(limit);
   return (data as Prompt[]) || [];
 }

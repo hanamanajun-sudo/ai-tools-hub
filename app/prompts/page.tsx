@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Star, Copy, Wand2 } from "lucide-react";
+import { Star, Wand2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { getPrompts, PROMPT_CATEGORIES, getPromptCategoryMeta, type PromptCategory } from "@/lib/prompts";
@@ -114,9 +114,6 @@ export default async function PromptsPage({ searchParams }: Props) {
                         </span>
                       ))}
                     </div>
-                    <span className="flex items-center gap-1">
-                      <Copy className="h-3 w-3" /> {p.copy_count}
-                    </span>
                   </div>
                 </Link>
               );
