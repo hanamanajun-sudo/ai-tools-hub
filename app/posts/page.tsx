@@ -1,36 +1,85 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Calendar, Tag } from "lucide-react";
+import { Calendar, Tag, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { getBlogPosts } from "@/lib/notion";
+import { getPosts } from "@/lib/notion";
+import { ALL_CATEGORIES, CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from "@/lib/post-categories";
 
 export const metadata: Metadata = {
   title: "블로그 - ai.ktoolu",
-  description: "AI 도구 리뷰, 트렌드 뉴스, 활용 팁을 공유합니다.",
+  description: "AI 도구를 소개하고, 그 도구로 직접 만들어 본 기록을 씁니다.",
+  alternates: { canonical: "https://ai.ktoolu.com/posts" },
 };
 
 export const revalidate = 3600;
 
-const CATEGORY_COLORS: Record<string, string> = {
-  "AI 도구 리뷰": "bg-violet-500/10 text-violet-600 border-violet-500/25 dark:text-violet-400",
-  "AI 트렌드 뉴스": "bg-blue-500/10 text-blue-600 border-blue-500/25 dark:text-blue-400",
-  "카테고리별 추천": "bg-emerald-500/10 text-emerald-600 border-emerald-500/25 dark:text-emerald-400",
-  "AI 활용 팁": "bg-amber-500/10 text-amber-600 border-amber-500/25 dark:text-amber-400",
-};
+type Props = { searchParams: Promise<{ category?: string }> };
 
-export default async function BlogPage() {
-  const posts = await getBlogPosts();
+export default async function PostsPage({ searchParams }: Props) {
+  const { category: selectedCategory } = await searchParams;
+  const allPosts = await getPosts();
+  const posts = selectedCategory
+    ? allPosts.filter((p) => p.category === selectedCategory)
+    : allPosts;
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader activePage="blog" blogCount={posts.length} />
+      <SiteHeader activePage="blog" blogCount={allPosts.length} />
 
       <main id="main-content" className="mx-auto max-w-4xl px-4 py-10">
-        <div className="mb-10">
-          <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-2">블로그</h1>
-          <p className="text-muted-foreground">AI 도구 리뷰, 트렌드 뉴스, 활용 팁</p>
+        <div className="mb-6">
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-2">
+            {selectedCategory ?? "블로그"}
+          </h1>
+          <p className="text-muted-foreground">
+            {selectedCategory
+              ? `${posts.length}개의 글이 있어요`
+              : "AI 도구를 소개하고, 그 도구로 직접 만들어 본 기록을 씁니다."}
+          </p>
         </div>
+
+        {/* 카테고리 필터 탭 */}
+        <div className="mb-8 flex items-center gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+          <Link
+            href="/posts"
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors ${
+              !selectedCategory
+                ? "bg-primary text-primary-foreground"
+                : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+            }`}
+          >
+            전체
+          </Link>
+          {ALL_CATEGORIES.map((cat) => (
+            <Link
+              key={cat}
+              href={`/posts?category=${encodeURIComponent(cat)}`}
+              className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap transition-colors ${
+                selectedCategory === cat
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+              }`}
+            >
+              {cat}
+            </Link>
+          ))}
+        </div>
+
+        {selectedCategory && (
+          <div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground">
+            <span>
+              <span className="font-semibold text-foreground">{selectedCategory}</span> 카테고리의 글 {posts.length}개
+            </span>
+            <Link
+              href="/posts"
+              className="inline-flex items-center gap-1 rounded-full bg-secondary/60 px-2.5 py-1 text-xs font-medium hover:bg-secondary transition-colors"
+            >
+              <X className="h-3 w-3" />
+              필터 해제
+            </Link>
+          </div>
+        )}
 
         {posts.length === 0 ? (
           <div className="rounded-xl border border-border/50 bg-card p-12 text-center">
@@ -41,7 +90,7 @@ export default async function BlogPage() {
             {posts.map((post) => (
               <Link
                 key={post.id}
-                href={`/blog/${post.slug}`}
+                href={`/posts/${post.slug}`}
                 className="group flex overflow-hidden rounded-xl border border-border/50 bg-card transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-sm"
               >
                 {/* Thumbnail */}
@@ -60,7 +109,7 @@ export default async function BlogPage() {
                   <div>
                     <div className="flex flex-wrap items-center gap-2 mb-2.5">
                       {post.category && (
-                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${CATEGORY_COLORS[post.category] ?? "bg-secondary/50 text-muted-foreground border-border"}`}>
+                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${CATEGORY_COLORS[post.category] ?? DEFAULT_CATEGORY_COLOR}`}>
                           {post.category}
                         </span>
                       )}

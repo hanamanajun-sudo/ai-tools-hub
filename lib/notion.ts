@@ -1,11 +1,22 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { normalizeCategory } from "./post-categories";
 
 const NOTION_API_BASE = "https://api.notion.com/v1";
 const NOTION_VERSION = "2022-06-28";
 
-function notionHeaders(): Record<string, string> {
+// 두 개의 독립된 Notion integration을 함께 다룬다 — 같은 워크스페이스지만
+// 서로 다른 토큰(같은 integration이 상대 DB에 연결돼 있지 않음).
+type NotionSource = "hub" | "ktoolu";
+
+function sourceConfig(source: NotionSource): { apiKey: string; dbId: string } {
+  return source === "hub"
+    ? { apiKey: process.env.NOTION_API_KEY ?? "", dbId: process.env.NOTION_BLOG_DATABASE_ID ?? "" }
+    : { apiKey: process.env.NOTION_API_KEY_KTOOLU ?? "", dbId: process.env.NOTION_DATABASE_ID_KTOOLU ?? "" };
+}
+
+function notionHeaders(apiKey: string): Record<string, string> {
   return {
-    Authorization: `Bearer ${process.env.NOTION_API_KEY ?? ""}`,
+    Authorization: `Bearer ${apiKey}`,
     "Notion-Version": NOTION_VERSION,
     "Content-Type": "application/json",
   };
@@ -29,6 +40,8 @@ export type BlogPost = {
   tags: string[];
   publishedAt: string;
   cover: string | null;
+  noIndex: boolean;
+  source: NotionSource;
 };
 
 // ── Cloudflare R2 Image Persistence ──────────────────────────────────────
@@ -200,27 +213,47 @@ async function resolveImageBlocks(blocks: NotionBlock[]): Promise<Map<string, st
 
 // ── Public API ────────────────────────────────────────────────────────────
 
-function pageToPost(page: any): BlogPost {
+// ai-tools-hub 자체 블로그 DB (Description 속성, 페이지 커버 이미지 사용)
+function hubPageToPost(page: any): BlogPost {
   const p = page.properties;
   return {
     id: page.id,
     slug: getText(p.Slug) || page.id,
     title: getText(p.Title),
     description: getText(p.Description),
-    category: p.Category?.select?.name ?? "",
+    category: normalizeCategory(p.Category?.select?.name ?? ""),
     tags: (p.Tags?.multi_select ?? []).map((t: { name: string }) => t.name),
     publishedAt: p.PublishedAt?.date?.start ?? "",
     cover: null, // resolved asynchronously after
+    noIndex: false, // 이 DB엔 NoIndex 속성이 없음
+    source: "hub",
   };
 }
 
-export async function getBlogPosts(): Promise<BlogPost[]> {
-  const dbId = process.env.NOTION_BLOG_DATABASE_ID;
-  if (!dbId || !process.env.NOTION_API_KEY) return [];
+// ktoolu.com DB (Summary→description, CoverImage는 URL 속성, NoIndex 체크박스 존재)
+function ktooluPageToPost(page: any): BlogPost {
+  const p = page.properties;
+  return {
+    id: page.id,
+    slug: getText(p.Slug) || page.id,
+    title: getText(p.Title),
+    description: getText(p.Summary),
+    category: normalizeCategory(p.Category?.select?.name ?? ""),
+    tags: (p.Tags?.multi_select ?? []).map((t: { name: string }) => t.name),
+    publishedAt: p.PublishedAt?.date?.start ?? "",
+    cover: p.CoverImage?.url ?? null,
+    noIndex: p.NoIndex?.checkbox ?? false,
+    source: "ktoolu",
+  };
+}
+
+async function queryPublishedPosts(source: NotionSource): Promise<BlogPost[]> {
+  const { apiKey, dbId } = sourceConfig(source);
+  if (!dbId || !apiKey) return [];
   try {
     const res = await fetch(`${NOTION_API_BASE}/databases/${dbId}/query`, {
       method: "POST",
-      headers: notionHeaders(),
+      headers: notionHeaders(apiKey),
       body: JSON.stringify({
         filter: { property: "Published", checkbox: { equals: true } },
         sorts: [{ property: "PublishedAt", direction: "descending" }],
@@ -229,61 +262,80 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
     if (!res.ok) return [];
     const data = await res.json() as any;
     const pages = (data.results ?? []).filter((p: any) => p.object === "page");
+    const toPost = source === "hub" ? hubPageToPost : ktooluPageToPost;
 
-    // Resolve cover images in parallel
     return Promise.all(
       pages.map(async (page: any) => {
-        const post = pageToPost(page);
-        post.cover = await resolveCover(page);
+        const post = toPost(page);
+        // hub DB는 페이지 커버 이미지를 R2에 영구 저장, ktoolu DB는 이미 URL 속성이라 그대로 사용
+        if (source === "hub") post.cover = await resolveCover(page);
         return post;
       })
     );
   } catch (e) {
-    console.error("[Notion] getBlogPosts 오류:", e);
+    console.error(`[Notion:${source}] 목록 조회 오류:`, e);
     return [];
   }
 }
 
-export async function getBlogPost(slug: string): Promise<{ post: BlogPost; html: string } | null> {
-  const dbId = process.env.NOTION_BLOG_DATABASE_ID;
-  if (!dbId || !process.env.NOTION_API_KEY) return null;
+export async function getPosts(): Promise<BlogPost[]> {
+  const [hubPosts, ktooluPosts] = await Promise.all([
+    queryPublishedPosts("hub"),
+    queryPublishedPosts("ktoolu"),
+  ]);
+  return [...hubPosts, ...ktooluPosts].sort((a, b) =>
+    (b.publishedAt || "").localeCompare(a.publishedAt || "")
+  );
+}
+
+async function queryPostBySlug(source: NotionSource, slug: string): Promise<any | null> {
+  const { apiKey, dbId } = sourceConfig(source);
+  if (!dbId || !apiKey) return null;
+  const res = await fetch(`${NOTION_API_BASE}/databases/${dbId}/query`, {
+    method: "POST",
+    headers: notionHeaders(apiKey),
+    body: JSON.stringify({
+      filter: {
+        and: [
+          { property: "Published", checkbox: { equals: true } },
+          { property: "Slug", rich_text: { equals: slug } },
+        ],
+      },
+    }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json() as any;
+  return (data.results ?? []).find((p: any) => p.object === "page") ?? null;
+}
+
+export async function getPost(slug: string): Promise<{ post: BlogPost; html: string } | null> {
   try {
-    const res = await fetch(`${NOTION_API_BASE}/databases/${dbId}/query`, {
-      method: "POST",
-      headers: notionHeaders(),
-      body: JSON.stringify({
-        filter: {
-          and: [
-            { property: "Published", checkbox: { equals: true } },
-            { property: "Slug", rich_text: { equals: slug } },
-          ],
-        },
-      }),
-    });
-    if (!res.ok) return null;
-    const data = await res.json() as any;
-    const page = (data.results ?? []).find((p: any) => p.object === "page");
-    if (!page) return null;
+    for (const source of ["hub", "ktoolu"] as const) {
+      const page = await queryPostBySlug(source, slug);
+      if (!page) continue;
 
-    const blocksRes = await fetch(`${NOTION_API_BASE}/blocks/${page.id}/children?page_size=100`, {
-      headers: notionHeaders(),
-    });
-    const blocksData = blocksRes.ok ? await blocksRes.json() as any : { results: [] };
-    const blocks: NotionBlock[] = blocksData.results ?? [];
+      const { apiKey } = sourceConfig(source);
+      const blocksRes = await fetch(`${NOTION_API_BASE}/blocks/${page.id}/children?page_size=100`, {
+        headers: notionHeaders(apiKey),
+      });
+      const blocksData = blocksRes.ok ? await blocksRes.json() as any : { results: [] };
+      const blocks: NotionBlock[] = blocksData.results ?? [];
 
-    // Resolve inline images and cover in parallel
-    const [imageUrlMap, cover] = await Promise.all([
-      resolveImageBlocks(blocks),
-      resolveCover(page),
-    ]);
+      const toPost = source === "hub" ? hubPageToPost : ktooluPageToPost;
+      const [imageUrlMap, cover] = await Promise.all([
+        resolveImageBlocks(blocks),
+        source === "hub" ? resolveCover(page) : Promise.resolve(undefined),
+      ]);
 
-    const html = blocksToHtml(blocks, imageUrlMap);
-    const post = pageToPost(page);
-    post.cover = cover;
+      const html = blocksToHtml(blocks, imageUrlMap);
+      const post = toPost(page);
+      if (cover !== undefined) post.cover = cover;
 
-    return { post, html };
+      return { post, html };
+    }
+    return null;
   } catch (e) {
-    console.error("[Notion] getBlogPost 오류:", e);
+    console.error("[Notion] getPost 오류:", e);
     return null;
   }
 }

@@ -40,7 +40,7 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
 
           <div className="flex items-center gap-1">
             <Link
-              href="/blog"
+              href="/posts"
               className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
                 activePage === "blog"
                   ? "text-foreground bg-accent"

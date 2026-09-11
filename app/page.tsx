@@ -7,8 +7,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { ToolsSection } from "@/components/tools-section";
 import { ModelRankTable } from "@/components/model-rank-table";
 import { StickyBottomPanel } from "@/components/sticky-bottom-panel";
-import { getBlogPosts } from "@/lib/notion";
+import { getPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
+import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from "@/lib/post-categories";
 
 export const revalidate = 3600; // 1시간마다 재생성
 
@@ -30,15 +31,8 @@ const websiteJsonLd = {
   },
 };
 
-const CATEGORY_COLORS: Record<string, string> = {
-  "AI 도구 리뷰": "bg-violet-500/10 text-violet-400 border-violet-500/20",
-  "AI 트렌드 뉴스": "bg-blue-500/10 text-blue-400 border-blue-500/20",
-  "카테고리별 추천": "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  "AI 활용 팁": "bg-amber-500/10 text-amber-400 border-amber-500/20",
-};
-
 export default async function HomePage() {
-  const allPosts = await getBlogPosts();
+  const allPosts = await getPosts();
   const latestPosts = allPosts.slice(0, 3);
 
   return (
@@ -90,7 +84,7 @@ export default async function HomePage() {
                     <h2 className="text-lg font-bold text-foreground">최신 블로그</h2>
                   </div>
                   <Link
-                    href="/blog"
+                    href="/posts"
                     className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
                   >
                     전체 보기
@@ -101,11 +95,11 @@ export default async function HomePage() {
                   {latestPosts.length > 0 ? latestPosts.map((post) => (
                     <Link
                       key={post.id}
-                      href={`/blog/${post.slug}`}
+                      href={`/posts/${post.slug}`}
                       className="block rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-md"
                     >
                       {post.category && (
-                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium mb-2 ${CATEGORY_COLORS[post.category] ?? "bg-secondary/50 text-muted-foreground border-border"}`}>
+                        <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium mb-2 ${CATEGORY_COLORS[post.category] ?? DEFAULT_CATEGORY_COLOR}`}>
                           {post.category}
                         </span>
                       )}

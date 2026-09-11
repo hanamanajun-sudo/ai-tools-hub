@@ -5,11 +5,14 @@ import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { ShareButtons } from "@/components/share-buttons";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { getBlogPost, getBlogPosts } from "@/lib/notion";
+import { getPost } from "@/lib/notion";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
+import { CATEGORY_COLORS, CATEGORY_GRADIENTS, DEFAULT_CATEGORY_COLOR, DEFAULT_CATEGORY_GRADIENT } from "@/lib/post-categories";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// TODO(도메인 이전): ktoolu.com DNS 전환 시 이 값을 "https://ktoolu.com"으로 교체.
+// 지금 바꾸면 아직 존재하지 않는 도메인을 canonical로 선언하는 꼴이라 순서상 안 됨.
 const BASE_URL = "https://ai.ktoolu.com";
 
 // force-dynamic: 빌드 시 정적 생성 안 함 → Worker에서 렌더링 → R2 접근 가능 → 이미지 영구 캐싱
@@ -17,13 +20,14 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const result = await getBlogPost(slug);
+  const result = await getPost(slug);
   if (!result) return {};
   const { post } = result;
   return {
     title: `${post.title} - ai.ktoolu 블로그`,
     description: post.description,
-    alternates: { canonical: `${BASE_URL}/blog/${slug}` },
+    alternates: { canonical: `${BASE_URL}/posts/${slug}` },
+    robots: post.noIndex ? { index: false, follow: true } : undefined,
     openGraph: {
       title: post.title,
       description: post.description,
@@ -34,45 +38,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const CATEGORY_CONFIG: Record<string, { badge: string; gradient: string }> = {
-  "AI 도구 리뷰": {
-    badge: "bg-violet-500/10 text-violet-600 border-violet-500/25 dark:text-violet-400 dark:border-violet-500/30",
-    gradient: "from-violet-500 via-purple-500 to-violet-600",
-  },
-  "AI 트렌드 뉴스": {
-    badge: "bg-blue-500/10 text-blue-600 border-blue-500/25 dark:text-blue-400 dark:border-blue-500/30",
-    gradient: "from-blue-500 via-indigo-500 to-blue-600",
-  },
-  "카테고리별 추천": {
-    badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/25 dark:text-emerald-400 dark:border-emerald-500/30",
-    gradient: "from-emerald-500 via-teal-400 to-emerald-600",
-  },
-  "AI 활용 팁": {
-    badge: "bg-amber-500/10 text-amber-600 border-amber-500/25 dark:text-amber-400 dark:border-amber-500/30",
-    gradient: "from-amber-500 via-orange-400 to-amber-500",
-  },
-};
-
-const DEFAULT_CONFIG = {
-  badge: "bg-secondary/50 text-muted-foreground border-border",
-  gradient: "from-slate-400 via-slate-500 to-slate-400",
-};
-
 function estimateReadingTime(html: string): number {
   const text = html.replace(/<[^>]*>/g, "");
   return Math.max(1, Math.ceil(text.length / 500));
 }
 
-export default async function BlogPostPage({ params }: Props) {
+export default async function PostPage({ params }: Props) {
   const { slug } = await params;
-  const result = await getBlogPost(slug);
+  const result = await getPost(slug);
   if (!result) notFound();
 
   const { post, html } = result;
   const readingTime = estimateReadingTime(html);
-  const cat = CATEGORY_CONFIG[post.category] ?? DEFAULT_CONFIG;
+  const badge = CATEGORY_COLORS[post.category] ?? DEFAULT_CATEGORY_COLOR;
+  const gradient = CATEGORY_GRADIENTS[post.category] ?? DEFAULT_CATEGORY_GRADIENT;
 
-  const postUrl = `${BASE_URL}/blog/${slug}`;
+  const postUrl = `${BASE_URL}/posts/${slug}`;
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -88,7 +69,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   const breadcrumbs = breadcrumbJsonLd([
     { name: "홈", url: BASE_URL },
-    { name: "블로그", url: `${BASE_URL}/blog` },
+    { name: "블로그", url: `${BASE_URL}/posts` },
     { name: post.title, url: postUrl },
   ]);
 
@@ -97,7 +78,7 @@ export default async function BlogPostPage({ params }: Props) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }} />
       {/* Category gradient top bar */}
-      <div className={`h-[3px] w-full bg-gradient-to-r ${cat.gradient}`} />
+      <div className={`h-[3px] w-full bg-gradient-to-r ${gradient}`} />
 
       <SiteHeader activePage="blog" />
 
@@ -107,7 +88,7 @@ export default async function BlogPostPage({ params }: Props) {
           {/* Meta row */}
           <div className="flex flex-wrap items-center gap-2 mb-7">
             {post.category && (
-              <span className={`inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-semibold tracking-wide ${cat.badge}`}>
+              <span className={`inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-semibold tracking-wide ${badge}`}>
                 {post.category}
               </span>
             )}
@@ -162,7 +143,7 @@ export default async function BlogPostPage({ params }: Props) {
         )}
 
         {/* Accent divider */}
-        <div className={`mb-10 h-px bg-gradient-to-r ${cat.gradient} opacity-50 rounded-full`} />
+        <div className={`mb-10 h-px bg-gradient-to-r ${gradient} opacity-50 rounded-full`} />
 
         {/* Article body */}
         <article className="blog-content" dangerouslySetInnerHTML={{ __html: html }} />
@@ -182,12 +163,12 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         )}
 
-        <ShareButtons title={post.title} path={`/blog/${slug}`} />
+        <ShareButtons title={post.title} path={`/posts/${slug}`} />
 
         {/* Back link */}
         <div className="mt-10 mb-16">
           <Link
-            href="/blog"
+            href="/posts"
             className="group inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />

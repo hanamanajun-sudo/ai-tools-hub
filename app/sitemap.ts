@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 import { aiTools, categories } from "@/lib/ai-tools-data";
 import { getPrompts, PROMPT_CATEGORIES } from "@/lib/prompts";
+import { getPosts } from "@/lib/notion";
 
 const BASE_URL = "https://ai.ktoolu.com";
 
@@ -14,8 +15,26 @@ async function getIndexablePrompts() {
   }
 }
 
+async function getIndexablePosts() {
+  try {
+    const posts = await getPosts();
+    return posts.filter((p) => !p.noIndex);
+  } catch {
+    return [];
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const prompts = await getIndexablePrompts();
+  const [prompts, posts] = await Promise.all([getIndexablePrompts(), getIndexablePosts()]);
+
+  // noindex 처리된 글은 sitemap에서도 제외한다 — "색인하지 마"와 "여기 있어" 신호가
+  // 동시에 나가면 모순이라 (ktoolu.com lib/notion.ts와 동일한 원칙).
+  const postPages: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${BASE_URL}/posts/${post.slug}`,
+    lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
 
   const toolPages: MetadataRoute.Sitemap = aiTools.map((tool) => ({
     url: `${BASE_URL}/tools/${tool.id}`,
@@ -47,7 +66,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.55,
   }));
 
-  const sectionPages: MetadataRoute.Sitemap = ["/blog", "/prompts"].map((path) => ({
+  const sectionPages: MetadataRoute.Sitemap = ["/posts", "/prompts"].map((path) => ({
     url: `${BASE_URL}${path}`,
     lastModified: new Date(),
     changeFrequency: "daily",
@@ -72,6 +91,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...infoPages,
     ...categoryPages,
     ...toolPages,
+    ...postPages,
     ...promptCategoryPages,
     ...promptPages,
   ];

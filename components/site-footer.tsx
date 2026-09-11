@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 const NAV_LINKS = [
   { href: "/", label: "AI 도구" },
   { href: "/prompts", label: "프롬프트 도서관" },
-  { href: "/blog", label: "블로그" },
+  { href: "/posts", label: "블로그" },
 ];
 
 const INFO_LINKS = [
