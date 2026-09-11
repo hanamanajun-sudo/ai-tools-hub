@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { createClient } from "@supabase/supabase-js";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { aiTools, categories, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
@@ -11,7 +10,6 @@ import { getPromptsForTool } from "@/lib/prompts";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ScreenshotGallery } from "@/components/screenshot-gallery";
-import { ReviewsSection } from "@/components/reviews-section";
 import { OutboundLink } from "@/components/outbound-link";
 import { ShareButtons } from "@/components/share-buttons";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
@@ -24,26 +22,6 @@ import {
 type Props = { params: Promise<{ slug: string }> };
 
 const BASE_URL = "https://ai.ktoolu.com";
-
-/** 실제 사용자 리뷰 3건 이상일 때만 AggregateRating에 반영(허수 방지) */
-async function getRealReviewAggregate(toolSlug: string): Promise<{ average: number; count: number } | null> {
-  try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-    const { data } = await supabase
-      .from("reviews")
-      .select("rating")
-      .eq("tool_slug", toolSlug)
-      .eq("hidden", false);
-    if (!data || data.length < 3) return null;
-    const average = data.reduce((sum, r) => sum + r.rating, 0) / data.length;
-    return { average, count: data.length };
-  } catch {
-    return null;
-  }
-}
 
 const RATING_LABELS: Record<keyof ExpertRating, string> = {
   accuracy: "정확성", easeOfUse: "사용 편의성", features: "기능",
@@ -91,10 +69,7 @@ export default async function ToolDetailPage({ params }: Props) {
     ? ratingKeys.reduce((sum, k) => sum + tool.expertRating![k], 0) / ratingKeys.length
     : 0;
 
-  const [realReviews, relatedPrompts] = await Promise.all([
-    getRealReviewAggregate(tool.id),
-    getPromptsForTool(tool.id),
-  ]);
+  const relatedPrompts = await getPromptsForTool(tool.id);
   const toolUrl = `${BASE_URL}/tools/${tool.id}`;
   const ko = getKoName(tool);
 
@@ -111,15 +86,6 @@ export default async function ToolDetailPage({ params }: Props) {
         "@type": "Review",
         author: { "@type": "Organization", name: "ai.ktoolu" },
         reviewRating: { "@type": "Rating", ratingValue: avgRating.toFixed(1), bestRating: "5", worstRating: "1" },
-      },
-    } : {}),
-    ...(realReviews ? {
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: realReviews.average.toFixed(1),
-        reviewCount: realReviews.count,
-        bestRating: "5",
-        worstRating: "1",
       },
     } : {}),
   };
@@ -372,7 +338,6 @@ export default async function ToolDetailPage({ params }: Props) {
                 </div>
               )}
 
-              <ReviewsSection toolSlug={tool.id} />
 
               {relatedPrompts.length > 0 && (
                 <div className="rounded-xl border border-border/50 bg-card p-6 mt-4">
