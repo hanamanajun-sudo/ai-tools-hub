@@ -1,4 +1,162 @@
-# ai.ktoolu.com 진행 현황
+# ktoolu.com 진행 현황
+
+> 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
+> (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
+
+## 2026-09-12 작업 내용 — 도메인 통합 (ai.ktoolu.com → ktoolu.com)
+
+### 오늘 한 일
+
+**0. 방향 전환: "리뉴얼"에서 "통합"으로**
+
+기존 ktoolu.com 리뉴얼을 계속 밀기보다 ai.ktoolu.com의 자산을 ktoolu.com으로 합치자는
+제안에서 출발해, 실사 후 **합치는 방향을 반대로 뒤집었다.**
+
+- 처음 판단은 "ai.ktoolu.com 콘텐츠를 ktoolu.com 코드베이스로 가져온다"였으나, 실제로
+  열어보니 ai-tools-hub 쪽이 **모든 면에서 본체 자격**이었다 — Next 16/React 19/Tailwind 4,
+  이미 Cloudflare Workers(OpenNext)에서 운영 중, OG 이미지·R2 이미지 캐싱·JSON-LD·공유
+  버튼 등 인프라 완비. 반면 구 ktoolu.com은 Next 15/React 18/Tailwind 3 + Vercel
+- **옮길 게 적은 쪽을 옮긴다**는 원칙으로, 구 ktoolu.com의 글 26편·페이지 6개만 이쪽으로
+  이식하고 도메인만 apex로 바꾸는 계획으로 전환. 호스팅 이전 작업 자체가 사라졌다
+- ai.ktoolu.com이 이미 이 Worker에서 서빙되고 있었으므로 "workers.dev에서 먼저 검증"
+  같은 안전한 스테이징 단계는 존재하지 않았고, 배포 = 즉시 라이브임을 확인하고 진행
+
+**1. 폐기 — AI 뉴스 189편 · 용어집 288개 · 리뷰 기능** (`299db84`, `aa6474f`, `cdf4bf0`)
+
+- 뉴스를 샘플링해보니 **타 매체(The Verge 등) 기사를 요약·재작성한 900자짜리 자동 생성물**
+  이었고, 구성도 완전히 템플릿화돼 있었다. 애드센스 "스크랩된 콘텐츠" 정책에 직접 걸리는
+  성격이라, 통합 후 apex(애드센스 예정 도메인)에 얹는 건 자산 흡수가 아니라 부채 이전
+- 용어집은 항목당 정의가 **100자**. 288개를 개별 상세 페이지로 색인시키면 뉴스보다 얇은
+  페이지를 대량 생산하는 셈. 뉴스에 딸린 부속물이라 함께 폐기
+- "공개하되 noindex" 안도 검토했으나 **애드센스 심사는 색인 여부와 무관하게 사이트를 본다**는
+  점에서 해법이 못 됨을 확인. 개인 소비용이면 비공개가 정답이라는 결론
+- 리뷰 기능은 트래픽이 없어 1건뿐이었고, RLS를 좁히면 작성 경로가 어차피 막혀 기능째 제거.
+  `/admin`(리뷰 전용, 어디서도 링크 안 됨)과 **인증 없이 R2에 쓰기·삭제를 하던
+  `/api/debug/r2`** 도 함께 제거
+- 프롬프트 복사 카운터는 RLS 강화 후 401로 **조용히 실패**하고 있었다. `trackEvent`로 같은
+  신호를 이미 GA에 보내고 있어 중복이라 카운터를 제거하고 정렬 기준을 `created_at`으로 교체
+
+**2. 글 42편 병합 — 두 Notion DB를 하나의 `/posts`로** (`cd42a14`, `09d7aa1`)
+
+- `/blog` → `/posts`로 경로 통일(구 ktoolu.com의 URL 규칙 승계)
+- `lib/notion.ts`가 **서로 다른 두 integration**(같은 워크스페이스, 다른 토큰)을 병렬 조회해
+  병합. hub DB(Description 속성 + 페이지 커버)와 ktoolu DB(Summary + CoverImage URL 속성
+  + NoIndex 체크박스)의 스키마 차이를 각각 매핑
+- `lib/post-categories.ts` 신설 — 원본 Notion 값은 건드리지 않고 노출 시점에만 6개 통합
+  카테고리로 정규화. 실측 분포: 유튜브&숏폼 14 · **AI 개발·자동화 13(신설)** · AI 도구 비교 9 ·
+  AI 콘텐츠 제작 6 · 글쓰기&소설 0 · 게임·앱 만들기 0
+- **구 ktoolu.com 26편의 slug를 그대로 유지** — 2026-09-04에 canonical 버그를 고쳐 겨우
+  색인시킨 URL이라 경로가 바뀌면 그 작업이 무효가 된다
+- sitemap이 글 목록 페이지만 담고 개별 글은 빠져 있던 것도 함께 수정(noIndex 글 제외 로직 포함)
+
+**3. 페이지 이식 — about·contact·privacy·story·자체 도구** (`b05ae72`, `5d29778`, `e3d99eb`)
+
+- about: 구 ktoolu.com의 브랜드 서사(Cthulhu 유래, 로고, 모토)를 뼈대로 삼고 AI 도구
+  디렉토리·AI 모델 랭킹 축을 추가. 로고 1.39MB→62KB 압축 이식
+- privacy: 두 원본을 그대로 합치지 않고 **현재 코드 기준 사실관계로 재작성.** 양쪽 다 이미
+  삭제된 기능을 고지하고 있었다(ai 쪽은 리뷰·별점, ktoolu 쪽은 2026-09-06에 없앤 뉴스레터).
+  호스팅도 Vercel→Cloudflare로 정정
+- `/story` 랜딩 + 대기명단 API 이식. 디자인 토큰 변환 중 **성공 메시지가 `bg-primary`(라이트
+  모드에서 거의 검정) 위에 `text-foreground`(거의 검정)로 렌더될 뻔한 것**을 발견해 수정.
+  실제 제출까지 종단 검증 후 테스트 데이터는 archive 처리
+- crop·story를 `/made` 같은 별도 경로로 분리하지 않고 **외부 도구 52개와 같은 `/tools`
+  디렉토리에 편입**("내 도구도 같이 소개한다"는 방향). "🐙 ktoolu 제작" 배지 + waitlist는
+  "베타 대기중"으로 정직하게 표시. `expertRating`은 의도적으로 비움 — 남의 도구를 평가하는
+  6축 점수를 자기 도구에 적용하면 자기 상찬이 된다
+- **maker.ktoolu(티어메이커)는 제외** — `maker.ktoolu.com`이 NXDOMAIN(미배포)이라
+  디렉토리에 올리면 죽은 링크가 된다
+
+**4. 도메인 전환** (`f133179`)
+
+- Cloudflare 대시보드에서 apex의 Vercel CNAME 삭제 → Worker 커스텀 도메인 추가
+- BASE_URL 상수 9곳·metadataBase·robots sitemap URL·화면 브랜드 표기를 apex로 일괄 교체
+- **네이버 소유 확인 토큰을 배열로 2개 유지** — 통합 기간에 한 코드베이스가 양쪽 호스트를
+  서빙하는데 네이버는 메타 태그로 확인하므로, 한쪽만 남기면 다른 쪽 인증이 끊긴다
+  (구글은 apex가 DNS TXT 기반이라 영향 없음)
+
+**5. 리디렉션 — 세 번 시도해서 엣지로 안착** (`c86ad1e` → `5410a6c` → `0b6648c`)
+
+같은 문제를 세 가지 방식으로 풀어본 기록. 다음에 같은 작업을 할 때 1·2번은 건너뛸 것:
+
+1. **`proxy.ts`(미들웨어)** → CI 빌드 실패. OpenNext가 `Node.js middleware is not currently
+   supported`로 거부하는데, Next.js 16의 proxy 규약은 기본이 Node 런타임이라 맞지 않음
+2. **`next.config.ts` redirects + `has:host`** → 빌드는 통과했지만 **라이브에서만 500 발생.**
+   `generateStaticParams`를 쓰는 라우트(`/tools/[slug]`, `/category/[category]`)에서만
+   터져서 로컬 dev 서버로는 전혀 안 보였다. 색인된 59개 URL이 500을 내는 상태라 즉시 되돌림
+3. **Cloudflare Redirect Rules(엣지)** → 정답. 워커에 닿기 전에 처리되므로 OpenNext 제약과
+   무관해진다. 규칙 2개를 **조건이 서로 겹치지 않게** 구성해 순서 의존을 제거
+   - `/blog/*` → `/posts/*` (경로가 바뀐 구간이라 단순 301이면 apex에서 404)
+   - 나머지 → apex (단, `/news`·`/glossary` 제외)
+- `/news`·`/glossary`는 리디렉션에서 빼고 **410**으로 응답(`app/` 아래 catch-all 라우트
+  핸들러). apex에 없는 경로를 301로 보내면 "404로 가는 리디렉션"이 되어 그냥 404보다 나쁘고,
+  전체를 301로 덮으면 폐기한 뉴스 189편이 apex로 되살아난다
+
+**6. Supabase RLS 보안 강화 (Hermes 실행)**
+
+- anon 키가 `wrangler.jsonc`(깃)와 브라우저 번들에 공개돼 있는데 **RLS가 anon에 INSERT/
+  DELETE를 허용**하고 있었다. 사이트 방문자 누구나 `ai_model_rank` 360행 히스토리를 지우거나
+  가짜 순위를 넣을 수 있는 상태
+- 키 교체로는 해결 안 되는 문제(새 키도 똑같이 공개됨)라 **RLS를 anon=SELECT 전용으로 좁히고
+  크론은 service_role 키를 쓰도록** 전환. 5개 테이블 전부 401 차단 실측 검증, 데이터 보존 확인
+- Hermes가 작업 중 **`aa_rank.py`의 `.env` 경로 버그**(`LOCALAPPDATA` 뒤에 `.env`를 붙여
+  `AppData\Local\.env`를 보고 있었음)를 발견해 수정 — Hermes `.env`를 한 번도 못 읽고 있었다
+
+### 완료된 항목
+
+- [x] AI 뉴스 189편·용어집 288개·리뷰 기능·`/admin`·`/api/debug/r2` 제거 (`299db84`, `aa6474f`, `cdf4bf0`)
+- [x] 두 Notion DB 병합 → `/posts` 42편, 카테고리 6개 정규화, sitemap 개별 글 포함 (`cd42a14`, `09d7aa1`)
+- [x] about·contact·privacy 재작성, `/story` + 대기명단 이식, 자체 도구 디렉토리 편입 (`b05ae72`, `5d29778`, `e3d99eb`)
+- [x] ktoolu.com DNS를 Worker로 전환, BASE_URL·브랜드 표기 일괄 교체, 네이버 토큰 2개 유지 (`f133179`)
+- [x] Cloudflare Redirect Rules 2개로 구 서브도메인 → apex 301, 폐기 섹션 410 (`0b6648c` + 엣지 규칙)
+- [x] Supabase RLS anon=SELECT 전용으로 축소, 크론 service_role 전환 (Hermes)
+- [x] 라이브 전수 검증 — apex 11개 경로 200 / 404 캐치올 / robots·sitemap Content-Type /
+      OG 이미지 / 대기명단 종단 / 구 호스트 301 1홉 착지 / 폐기 섹션 410 / www 경유 정상
+
+### 다음에 할 일
+
+**지금 할 것**
+
+- [ ] **Hermes PAT revoke** — `.env`의 `SUPABASE_ACCESS_TOKEN`. RLS 작업이 끝나 용도가
+      없는데 계정 전체 관리자 권한을 가진 가장 높은 권한의 자격증명이다 (30일 자동 만료)
+- [ ] Search Console 정리
+  - `ktoolu.com/sitemap.xml` **재제출**(삭제 X) — 표시된 33개는 옛 Vercel 시절 값이고
+    지금 같은 주소가 146개를 서빙 중
+  - `ai.ktoolu.com/sitemap.xml` 항목 **삭제** — 현재 301로 apex sitemap을 가리키는 중복 항목
+  - 색인생성 → 삭제 → 임시 삭제에 `ai.ktoolu.com/news`, `ai.ktoolu.com/glossary` 접두어 제출
+    (⚠️ `ai.ktoolu.com/` 전체를 제출하면 나머지 경로의 301 이전 신호까지 차단된다)
+
+**순서 의존 있음 — 반드시 이 순서로**
+
+- [ ] `www.ktoolu.com` 자립: 현재 `www → Vercel → 301 → apex`로 동작 중. Cloudflare
+      Redirect Rule로 대체해야 함
+- [ ] 그다음 Vercel 프로젝트 정리 (롤백 경로라 2~4주 보존 권장) + `_vercel` TXT 2개 제거
+
+**여유 있을 때**
+
+- [ ] `afterlist.ktoolu.com`에 ktoolu.com으로 돌아오는 링크 추가 — 광고 없음·1페이지 경험물로
+      조건은 잘 지켜져 있으나 **apex로 오는 도관이 없다.** 공유로 유입이 생길 수 있는 유일한
+      비-SEO 자산이라 비용 대비 효과가 가장 좋은 항목
+- [ ] 구 ktoolu.com 저장소 아카이브 또는 README에 이전 안내
+- [ ] 홈 히어로 카피 개편 검토 — 이번엔 도메인/브랜드만 기계적으로 교체해서 여전히
+      "최고의 AI 도구를 한곳에서 탐색하세요"(디렉토리 중심)다. 정리된 4개 축(도구 소개 /
+      내가 만든 도구 / 트렌드(모델 랭킹) / 직접 만든 기록)을 반영할지는 별도 판단
+- [ ] 색인 안정화 후 애드센스 신청 (급하지 않음). `next/script` + `afterInteractive` 필수
+- [ ] 대기명단 신청자에게 실제로 소식을 보낼 발송 수단은 여전히 없음
+
+### 다음 세션에서 알아야 할 것
+
+- **배포는 GitHub Actions(Ubuntu)로만 된다.** 로컬 Windows에서 `npm run deploy`는
+  OpenNext가 Windows를 지원하지 않아 `EXIT=127`로 실패한다. `master`에 푸시 → 자동 배포
+- **`deploy.yml`이 런타임 시크릿을 덮어쓴다.** GitHub 시크릿이 비어 있으면 빈 문자열로
+  `wrangler secret put`을 실행한다. 실제로 첫 배포에서 `NOTION_API_KEY_KTOOLU`가 빈 값으로
+  덮여 `/posts`가 16편만 나왔다. 새 시크릿을 추가할 땐 **GitHub 시크릿과 Worker 시크릿 양쪽**을
+  맞춰야 한다
+- **로컬 빌드 성공은 검증이 아니다.** 리디렉션 500은 빌드도 로컬 dev도 통과하고 라이브에서만
+  드러났다. 배포 후 실제 URL을 curl로 두드릴 것
+- 한 Worker가 `ktoolu.com`과 `ai.ktoolu.com`을 함께 서빙한다. 구 호스트는 엣지 규칙이
+  301로 보내고, `/news`·`/glossary`만 워커까지 도달해 410을 받는다
+
+---
 
 ## 2026-09-02 작업 내용
 
