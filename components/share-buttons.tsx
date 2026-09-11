@@ -104,7 +104,7 @@ export function ShareButtons({
         objectType: "feed",
         content: {
           title,
-          description: description ?? "ai.ktoolu에서 확인하기",
+          description: description ?? "ktoolu에서 확인하기",
           imageUrl: `${window.location.origin}/opengraph-image`,
           link,
         },

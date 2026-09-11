@@ -13,18 +13,18 @@ import { ShareButtons } from "@/components/share-buttons";
 
 type Props = { params: Promise<{ slug: string }> };
 
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug: rawSlug } = await params;
   const slug = decodeURIComponent(rawSlug);
   const prompt = await getPromptBySlug(slug);
-  if (!prompt) return { title: "프롬프트 없음 — ai.ktoolu" };
+  if (!prompt) return { title: "프롬프트 없음 — ktoolu" };
   return {
-    title: `${prompt.title} — ai.ktoolu 프롬프트 도서관`,
+    title: `${prompt.title} — ktoolu 프롬프트 도서관`,
     description: prompt.description,
     alternates: { canonical: `${BASE_URL}/prompts/${slug}` },
-    openGraph: { title: prompt.title, description: prompt.description, type: "article", siteName: "ai.ktoolu" },
+    openGraph: { title: prompt.title, description: prompt.description, type: "article", siteName: "ktoolu" },
   };
 }
 

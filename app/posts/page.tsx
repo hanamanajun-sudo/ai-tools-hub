@@ -7,9 +7,9 @@ import { getPosts } from "@/lib/notion";
 import { ALL_CATEGORIES, CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from "@/lib/post-categories";
 
 export const metadata: Metadata = {
-  title: "블로그 - ai.ktoolu",
+  title: "블로그 - ktoolu",
   description: "AI 도구를 소개하고, 그 도구로 직접 만들어 본 기록을 씁니다.",
-  alternates: { canonical: "https://ai.ktoolu.com/posts" },
+  alternates: { canonical: "https://ktoolu.com/posts" },
 };
 
 export const revalidate = 3600;

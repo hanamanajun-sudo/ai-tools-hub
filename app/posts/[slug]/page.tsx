@@ -11,9 +11,7 @@ import { CATEGORY_COLORS, CATEGORY_GRADIENTS, DEFAULT_CATEGORY_COLOR, DEFAULT_CA
 
 type Props = { params: Promise<{ slug: string }> };
 
-// TODO(도메인 이전): ktoolu.com DNS 전환 시 이 값을 "https://ktoolu.com"으로 교체.
-// 지금 바꾸면 아직 존재하지 않는 도메인을 canonical로 선언하는 꼴이라 순서상 안 됨.
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 // force-dynamic: 빌드 시 정적 생성 안 함 → Worker에서 렌더링 → R2 접근 가능 → 이미지 영구 캐싱
 export const dynamic = "force-dynamic";
@@ -24,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!result) return {};
   const { post } = result;
   return {
-    title: `${post.title} - ai.ktoolu 블로그`,
+    title: `${post.title} - ktoolu 블로그`,
     description: post.description,
     alternates: { canonical: `${BASE_URL}/posts/${slug}` },
     robots: post.noIndex ? { index: false, follow: true } : undefined,
@@ -32,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.title,
       description: post.description,
       type: "article",
-      siteName: "ai.ktoolu",
+      siteName: "ktoolu",
       ...(post.cover ? { images: [{ url: post.cover }] } : {}),
     },
   };
@@ -61,8 +59,8 @@ export default async function PostPage({ params }: Props) {
     description: post.description,
     url: postUrl,
     mainEntityOfPage: postUrl,
-    author: { "@type": "Organization", name: "ai.ktoolu" },
-    publisher: { "@type": "Organization", name: "ai.ktoolu" },
+    author: { "@type": "Organization", name: "ktoolu" },
+    publisher: { "@type": "Organization", name: "ktoolu" },
     ...(post.publishedAt ? { datePublished: post.publishedAt, dateModified: post.publishedAt } : {}),
     ...(post.cover ? { image: post.cover } : {}),
   };

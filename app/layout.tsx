@@ -20,23 +20,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ai.ktoolu.com"),
+  metadataBase: new URL("https://ktoolu.com"),
   other: {
     "google-site-verification": "X3wLx-M7XBhDQNx05evWnSZeDGDmn-ETAPwgnp9O1jc",
-    "naver-site-verification": "e6397e836d51aa8ac6451a90eb94e809754ea940",
+    // 도메인 통합 기간에는 한 코드베이스가 apex와 구 서브도메인 양쪽을 서빙한다.
+    // 네이버는 메타 태그로 소유 확인을 하므로 두 토큰을 모두 남겨야 한쪽 인증이 끊기지 않는다
+    // (구글은 apex가 DNS 기반 도메인 속성이라 태그와 무관).
+    "naver-site-verification": [
+      "e6397e836d51aa8ac6451a90eb94e809754ea940", // 구 서브도메인(ai 호스트) 속성
+      "8a1a558c4ea1d19d9657d399ff82baf19d581d21", // apex 속성
+    ],
   },
-  title: "ai.ktoolu - 최고의 AI 도구 모음",
+  title: "ktoolu - 최고의 AI 도구 모음",
   description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
   openGraph: {
-    title: "ai.ktoolu - 최고의 AI 도구 모음",
+    title: "ktoolu - 최고의 AI 도구 모음",
     description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
-    siteName: "ai.ktoolu",
+    siteName: "ktoolu",
     type: "website",
     locale: "ko_KR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ai.ktoolu - 최고의 AI 도구 모음",
+    title: "ktoolu - 최고의 AI 도구 모음",
     description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
   },
 };

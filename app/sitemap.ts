@@ -3,7 +3,7 @@ import { aiTools, categories } from "@/lib/ai-tools-data";
 import { getPrompts, PROMPT_CATEGORIES } from "@/lib/prompts";
 import { getPosts } from "@/lib/notion";
 
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 export const revalidate = 3600;
 

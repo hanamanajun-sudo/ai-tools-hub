@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://ai.ktoolu.com/sitemap.xml",
+    sitemap: "https://ktoolu.com/sitemap.xml",
   };
 }

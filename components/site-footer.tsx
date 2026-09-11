@@ -21,7 +21,7 @@ export function SiteFooter() {
           <div>
             <div className="flex items-center justify-center gap-1.5 sm:justify-start">
               <Sparkles className="h-4 w-4 text-primary" />
-              <span className="font-bold text-foreground">ai.ktoolu</span>
+              <span className="font-bold text-foreground">ktoolu</span>
             </div>
             <p className="mt-1.5 text-sm text-muted-foreground">
               최고의 AI 도구들을 한곳에서
@@ -38,7 +38,7 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-3 border-t border-border/30 pt-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} ai.ktoolu. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} ktoolu. All rights reserved.</p>
           <nav aria-label="정책 링크" className="flex items-center gap-4">
             {INFO_LINKS.map((link) => (
               <Link key={link.href} href={link.href} className="hover:text-foreground transition-colors">

@@ -12,7 +12,7 @@ import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 
 type Props = { params: Promise<{ category: string }> };
 
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 /** 카테고리별 소개 — 실제로 다른 내용, 템플릿 문구 아님 */
 const CATEGORY_INTRO: Record<Exclude<Category, "all">, string> = {
@@ -38,13 +38,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const cat = getCategory(category);
   if (!cat) return {};
   const count = getRankedToolsForCategory(cat.value as Exclude<Category, "all">).length;
-  const title = `${cat.label} AI 도구 추천 ${count}선 — ai.ktoolu`;
+  const title = `${cat.label} AI 도구 추천 ${count}선 — ktoolu`;
   const description = CATEGORY_INTRO[cat.value as Exclude<Category, "all">];
   return {
     title,
     description,
     alternates: { canonical: `${BASE_URL}/category/${cat.value}` },
-    openGraph: { title, description, type: "website", siteName: "ai.ktoolu" },
+    openGraph: { title, description, type: "website", siteName: "ktoolu" },
   };
 }
 

@@ -1,12 +1,12 @@
-// ktoolu.com(26편) + ai.ktoolu 블로그(16편) 통합 카테고리 체계.
+// ktoolu.com(26편) + ktoolu 블로그(16편) 통합 카테고리 체계.
 // 두 Notion DB 모두 원본 Category 값은 건드리지 않고, 노출 시점에만
 // 아래 매핑으로 6개 통합 카테고리로 정규화한다.
 //
 // 실측 분포(2026-09-11 기준, Published=true 기준):
 //   유튜브 & 숏폼      14  (ktoolu.com)
-//   AI 도구 비교        9  (ktoolu.com 6 + ai.ktoolu "AI 도구 리뷰"/"카테고리별 추천")
+//   AI 도구 비교        9  (ktoolu.com 6 + ktoolu "AI 도구 리뷰"/"카테고리별 추천")
 //   AI 콘텐츠 제작      6  (ktoolu.com)
-//   AI 개발 · 자동화   13  (ai.ktoolu "AI 활용 팁"/"AI 트렌드 뉴스" — Claude Code, Hermes,
+//   AI 개발 · 자동화   13  (ktoolu "AI 활용 팁"/"AI 트렌드 뉴스" — Claude Code, Hermes,
 //                          로컬 LLM 호스팅 등 개발 도구 실사용기 + 하드웨어/이벤트 동향)
 //   글쓰기 & 소설       0  (/story 연동 시 채워질 예정)
 //   게임 · 앱 만들기     0  (티어메이커 등 연동 시 채워질 예정)

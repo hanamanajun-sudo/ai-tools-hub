@@ -21,7 +21,7 @@ import {
 
 type Props = { params: Promise<{ slug: string }> };
 
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 const RATING_LABELS: Record<keyof ExpertRating, string> = {
   accuracy: "정확성", easeOfUse: "사용 편의성", features: "기능",
@@ -39,11 +39,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const ko = getKoName(tool);
   const categoryLabel = categories.find((c) => c.value === tool.category);
   return {
-    title: `${ko.h1} - ai.ktoolu`,
+    title: `${ko.h1} - ktoolu`,
     description: tool.description,
     alternates: { canonical: `${BASE_URL}/tools/${tool.id}` },
-    openGraph: { title: `${ko.h1} - ai.ktoolu`, description: tool.description, type: "website", siteName: "ai.ktoolu" },
-    twitter: { card: "summary", title: `${ko.h1} - ai.ktoolu`, description: tool.description },
+    openGraph: { title: `${ko.h1} - ktoolu`, description: tool.description, type: "website", siteName: "ktoolu" },
+    twitter: { card: "summary", title: `${ko.h1} - ktoolu`, description: tool.description },
     keywords: [tool.name, ...tool.tags, categoryLabel?.label ?? "", "AI 도구", "AI tools"],
   };
 }
@@ -84,7 +84,7 @@ export default async function ToolDetailPage({ params }: Props) {
     ...(tool.expertRating ? {
       review: {
         "@type": "Review",
-        author: { "@type": "Organization", name: "ai.ktoolu" },
+        author: { "@type": "Organization", name: "ktoolu" },
         reviewRating: { "@type": "Rating", ratingValue: avgRating.toFixed(1), bestRating: "5", worstRating: "1" },
       },
     } : {}),

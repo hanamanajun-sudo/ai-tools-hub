@@ -35,7 +35,7 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
         <div className="flex h-12 items-center justify-between gap-2">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-lg font-bold tracking-tight">ai.ktoolu</span>
+            <span className="text-lg font-bold tracking-tight">ktoolu</span>
           </Link>
 
           <div className="flex items-center gap-1">

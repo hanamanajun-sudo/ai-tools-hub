@@ -3,8 +3,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 export const metadata: Metadata = {
-  title: "개인정보처리방침 — ai.ktoolu",
-  description: "ai.ktoolu의 개인정보 수집·이용, 쿠키, 제3자 서비스 사용에 관한 안내입니다.",
+  title: "개인정보처리방침 — ktoolu",
+  description: "ktoolu의 개인정보 수집·이용, 쿠키, 제3자 서비스 사용에 관한 안내입니다.",
 };
 
 const EFFECTIVE_DATE = "2026년 9월 11일";

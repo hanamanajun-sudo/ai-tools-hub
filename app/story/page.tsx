@@ -4,11 +4,10 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WaitlistForm } from "@/components/waitlist-form";
 
-// TODO(도메인 이전): ktoolu.com DNS 전환 시 canonical을 "https://ktoolu.com/story"로 교체.
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 export const metadata: Metadata = {
-  title: "AI 장편소설 쓰기 도구 (베타 준비 중) — ai.ktoolu",
+  title: "AI 장편소설 쓰기 도구 (베타 준비 중) — ktoolu",
   description: "AI로 장편소설을 쓸 때 설정이 무너지는 문제를 해결하는 도구를 만들고 있습니다. 베타 신청하고 가장 먼저 소식을 받아보세요.",
   alternates: { canonical: `${BASE_URL}/story` },
 };

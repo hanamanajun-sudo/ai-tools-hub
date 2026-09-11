@@ -7,7 +7,7 @@ import { aiTools } from "@/lib/ai-tools-data";
 import { ALL_CATEGORIES } from "@/lib/post-categories";
 
 export const metadata: Metadata = {
-  title: "ktoolu란? — ai.ktoolu",
+  title: "ktoolu란? — ktoolu",
   description:
     "ktoolu는 AI 도구를 소개하고, 그 도구로 직접 만들고 써본 기록을 남기는 곳입니다. 크툴루(Cthulhu)에서 영감을 받은 이름처럼, 심해보다 넓고 깊은 정보를 제공합니다.",
 };

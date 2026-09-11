@@ -14,7 +14,7 @@ import { ArrowUpRight } from "lucide-react";
 
 export const revalidate = 3600; // 1시간마다 재생성
 
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 export const metadata: Metadata = {
   alternates: { canonical: BASE_URL },
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "ai.ktoolu",
+  name: "ktoolu",
   url: BASE_URL,
   potentialAction: {
     "@type": "SearchAction",

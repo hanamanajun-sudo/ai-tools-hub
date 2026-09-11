@@ -1,10 +1,10 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "ai.ktoolu — 최고의 AI 도구 모음";
+export const alt = "ktoolu — 최고의 AI 도구 모음";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const TITLE = "ai.ktoolu";
+const TITLE = "ktoolu";
 const SUBTITLE = "최고의 AI 도구를 한곳에서";
 const TAGS = ["텍스트", "이미지", "비디오", "코딩", "음악"];
 

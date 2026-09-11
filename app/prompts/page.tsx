@@ -14,14 +14,14 @@ function toolDisplayName(toolId: string): string {
 
 export const revalidate = 3600;
 
-const BASE_URL = "https://ai.ktoolu.com";
+const BASE_URL = "https://ktoolu.com";
 
 type Props = { searchParams: Promise<{ cat?: string }> };
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const { cat } = await searchParams;
   const catMeta = cat ? getPromptCategoryMeta(cat) : undefined;
-  const title = catMeta ? `${catMeta.label} 프롬프트 모음 — ai.ktoolu 프롬프트 도서관` : "프롬프트 도서관 — ai.ktoolu";
+  const title = catMeta ? `${catMeta.label} 프롬프트 모음 — ktoolu 프롬프트 도서관` : "프롬프트 도서관 — ktoolu";
   const description = "바로 복사해서 쓰는 실전 프롬프트 모음. 글쓰기, 업무, 코딩, 학습, 이미지, 커리어까지 카테고리별로 정리했습니다.";
   return {
     title,

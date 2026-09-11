@@ -5,8 +5,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 export const metadata: Metadata = {
-  title: "문의 — ai.ktoolu",
-  description: "ai.ktoolu 광고·제휴, 콘텐츠 오류 제보, 그 밖의 문의는 카카오톡 채널로 받고 있습니다.",
+  title: "문의 — ktoolu",
+  description: "ktoolu 광고·제휴, 콘텐츠 오류 제보, 그 밖의 문의는 카카오톡 채널로 받고 있습니다.",
 };
 
 const TOPICS = [
