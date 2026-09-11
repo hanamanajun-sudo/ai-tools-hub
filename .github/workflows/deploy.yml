@@ -27,6 +27,7 @@ jobs:
           NOTION_BLOG_DATABASE_ID: ${{ secrets.NOTION_BLOG_DATABASE_ID }}
           NOTION_API_KEY_KTOOLU: ${{ secrets.NOTION_API_KEY_KTOOLU }}
           NOTION_DATABASE_ID_KTOOLU: "5942d5ec28d143a3a7a47057d87616e1"
+          NOTION_WAITLIST_DB_ID_KTOOLU: "3d3975d65268815eafc6f6b8e436c392"
 
       - name: Create R2 bucket (if not exists)
         run: npx wrangler r2 bucket create blog-assets 2>/dev/null || true
