@@ -10,6 +10,7 @@ import { StickyBottomPanel } from "@/components/sticky-bottom-panel";
 import { getPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
 import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from "@/lib/post-categories";
+import { ArrowUpRight } from "lucide-react";
 
 export const revalidate = 3600; // 1시간마다 재생성
 
@@ -30,6 +31,8 @@ const websiteJsonLd = {
     "query-input": "required name=search_term_string",
   },
 };
+
+const MADE_TOOLS = aiTools.filter((t) => t.madeByKtoolu);
 
 export default async function HomePage() {
   const allPosts = await getPosts();
@@ -68,6 +71,37 @@ export default async function HomePage() {
           {/* ── 메인: 모델 랭킹 + AI 툴 (2/3) ── */}
           <div className="lg:col-span-2 space-y-12">
             <ModelRankTable />
+
+            {/* ktoolu가 직접 만든 도구 */}
+            {MADE_TOOLS.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-lg">🐙</span>
+                  <h2 className="text-lg font-bold text-foreground">ktoolu가 만든 도구</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {MADE_TOOLS.map((tool) => (
+                    <Link
+                      key={tool.id}
+                      href={`/tools/${tool.id}`}
+                      className="group flex flex-col rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="inline-flex items-center rounded-full bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 text-xs font-medium text-violet-400">
+                          {tool.status === "waitlist" ? "베타 대기중" : "지금 써보기"}
+                        </span>
+                      </div>
+                      <h3 className="font-bold text-foreground group-hover:text-primary transition-colors mb-1 flex items-center gap-1">
+                        {tool.name}
+                        <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{tool.description}</p>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <Suspense fallback={null}>
               <ToolsSection />
             </Suspense>

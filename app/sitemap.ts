@@ -80,6 +80,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.3,
   }));
 
+  const storyPage: MetadataRoute.Sitemap = [{
+    url: `${BASE_URL}/story`,
+    lastModified: new Date(),
+    changeFrequency: "weekly",
+    priority: 0.6,
+  }];
+
   return [
     {
       url: BASE_URL,
@@ -89,6 +96,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...sectionPages,
     ...infoPages,
+    ...storyPage,
     ...categoryPages,
     ...toolPages,
     ...postPages,

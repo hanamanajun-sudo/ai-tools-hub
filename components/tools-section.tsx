@@ -53,6 +53,13 @@ function ToolCard({ tool }: { tool: AITool }) {
             </div>
           </div>
         )}
+        {tool.madeByKtoolu && (
+          <div className="absolute -top-2 -left-2 z-10">
+            <div className="flex items-center gap-1 rounded-full bg-violet-500 px-2 py-0.5 text-xs font-semibold text-white shadow-lg">
+              🐙 ktoolu 제작
+            </div>
+          </div>
+        )}
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1">
@@ -60,7 +67,9 @@ function ToolCard({ tool }: { tool: AITool }) {
                 <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium ${colorClass}`}>
                   {CATEGORY_ICONS[tool.category]} {categoryLabel?.label}
                 </span>
-                {tool.free ? (
+                {tool.status === "waitlist" ? (
+                  <span className="inline-flex items-center rounded-full bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 text-xs font-medium text-violet-400">베타 대기중</span>
+                ) : tool.free ? (
                   <span className="inline-flex items-center rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-xs font-medium text-emerald-400">무료</span>
                 ) : (
                   <span className="inline-flex items-center rounded-full bg-orange-500/10 border border-orange-500/20 px-2 py-0.5 text-xs font-medium text-orange-400">유료</span>
@@ -88,7 +97,7 @@ function ToolCard({ tool }: { tool: AITool }) {
               window.open(tool.url, "_blank", "noopener,noreferrer");
             }}
           >
-            <span>사이트 방문</span>
+            <span>{tool.status === "waitlist" ? "베타 신청하기" : "사이트 방문"}</span>
             <ExternalLink className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
           </Button>
         </CardFooter>
@@ -243,6 +252,9 @@ export function ToolsSection() {
                               </span>
                               {tool.mergeNote && (
                                 <span className="block text-[10px] text-muted-foreground/60 mt-0.5">{tool.mergeNote}</span>
+                              )}
+                              {tool.madeByKtoolu && (
+                                <span className="block text-[10px] text-violet-400 mt-0.5">🐙 ktoolu 제작{tool.status === "waitlist" ? " · 베타 대기중" : ""}</span>
                               )}
                             </td>
                             {/* 설명 (절반 이하로) */}

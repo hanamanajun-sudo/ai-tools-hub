@@ -34,6 +34,10 @@ export interface AITool {
   tags: string[];
   free: boolean;
   popular?: boolean;
+  /** ktoolu가 직접 만든 도구인지 — 디렉토리에서 배지로 구분 표시 */
+  madeByKtoolu?: boolean;
+  /** madeByKtoolu 도구 전용. 미지정 시 live로 취급 */
+  status?: "live" | "waitlist";
   features?: string[];
   pros?: string[];
   cons?: string[];
@@ -1428,5 +1432,39 @@ export const aiTools: AITool[] = [
     whoIsFor: ["Claude 사용자 — Claude API를 보유한 개발자", "터미널 중심 개발자 — IDE보다 CLI를 선호하는 개발자"],
     screenshots:["/screenshots/open-claw-1.png"],
     expertRating: { accuracy: 4.0, easeOfUse: 3.5, features: 3.2, performance: 4.0, value: 4.5, innovation: 3.5 },
+  },
+
+  // === ktoolu 자체 제작 ===
+  {
+    id: "crop",
+    name: "crop.ktoolu",
+    description: "이미지를 분할하고 잘라 LINE 스탬프 제작을 준비하는 무료 브라우저 도구. ktoolu가 직접 만들었습니다.",
+    longDescription: "crop.ktoolu는 브라우저에서 바로 이미지를 분할·자르기 할 수 있는 무료 도구입니다. 회원가입이나 설치 없이 이미지를 올리면 바로 결과를 받을 수 있고, LINE 스탬프 제작에 필요한 규격으로 나누는 작업을 특히 빠르게 처리하도록 만들었습니다. 서버에 이미지를 업로드하지 않고 브라우저에서 직접 처리합니다.",
+    url: "https://crop.ktoolu.com",
+    category: "image",
+    tags: ["이미지 분할", "사진 자르기", "LINE 스탬프", "ktoolu 제작"],
+    free: true,
+    madeByKtoolu: true,
+    status: "live",
+    features: ["이미지 분할·자르기", "LINE 스탬프 규격 지원", "브라우저에서 즉시 처리(서버 업로드 없음)", "가입 없이 바로 사용"],
+    pros: ["완전 무료, 가입 불필요", "이미지가 서버로 전송되지 않아 안전", "브라우저에서 바로 처리돼 빠름"],
+    cons: ["LINE 스탬프 등 특정 용도에 최적화돼 범용 편집 기능은 제한적"],
+    useCases: ["LINE 스탬프 제작용 이미지 분할", "긴 이미지를 여러 장으로 자르기"],
+    whoIsFor: ["LINE 스탬프를 직접 만들려는 사람", "간단한 이미지 분할이 필요한 사람"],
+  },
+  {
+    id: "story",
+    name: "ktoolu 소설 쓰기 도구",
+    description: "AI로 장편소설을 쓸 때 캐릭터 말투·세계관 설정이 무너지지 않게 돕는 도구. 베타 준비 중, ktoolu가 직접 만들고 있습니다.",
+    longDescription: "장편을 AI와 함께 쓰다 보면 캐릭터 말투가 회차마다 바뀌거나, 세계관 설정을 매번 다시 알려줘야 하는 문제가 생깁니다. 이 도구는 인물 관계·말투·세계관 설정을 한 곳에 정리해 AI가 매 회차 참고하도록 연결하는 것을 목표로 만들고 있습니다. 아직 베타 전 단계이며, 완성된 제품이 아니라 실제로 만들어가는 과정을 그대로 공개하고 있습니다.",
+    url: "/story",
+    category: "text",
+    tags: ["소설 쓰기", "AI 글쓰기", "설정 관리", "ktoolu 제작"],
+    free: true,
+    madeByKtoolu: true,
+    status: "waitlist",
+    features: ["캐릭터·세계관 설정 관리(개발 중)", "회차별 진행 상태 추적(설계 중)", "AI 반복 표현 검수(아이디어 단계)"],
+    useCases: ["AI와 함께 장편 웹소설·시리즈 쓰기"],
+    whoIsFor: ["AI로 장편을 쓰는데 설정 관리에 지친 사람"],
   },
 ];
