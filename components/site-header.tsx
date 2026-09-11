@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Newspaper, LibraryBig, Wand2, FileText, Image, Film, Code, Music, Bot, TrendingUp } from "lucide-react";
+import { Sparkles, BookOpen, Wand2, FileText, Image, Film, Code, Music, Bot, TrendingUp } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 // 실제 페이지 렌더링 순서와 동일한 카테고리 링크
@@ -16,7 +16,7 @@ const CATEGORY_LINKS = [
 ];
 
 interface SiteHeaderProps {
-  activePage?: "blog" | "news" | "glossary" | "prompts";
+  activePage?: "blog" | "prompts";
   blogCount?: number;
 }
 
@@ -39,17 +39,6 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
           </Link>
 
           <div className="flex items-center gap-1">
-            <Link
-              href="/news"
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                activePage === "news"
-                  ? "text-foreground bg-accent"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
-            >
-              <Newspaper className="h-4 w-4" />
-              <span className="hidden sm:inline">AI 뉴스</span>
-            </Link>
             <Link
               href="/blog"
               className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
@@ -77,18 +66,6 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
               <Wand2 className="h-4 w-4" />
               <span className="hidden sm:inline">프롬프트</span>
             </Link>
-            <Link
-              href="/glossary"
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                activePage === "glossary"
-                  ? "text-foreground bg-accent"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
-            >
-              <LibraryBig className="h-4 w-4" />
-              <span className="hidden sm:inline">용어해설</span>
-            </Link>
-
             <ThemeToggle />
           </div>
         </div>

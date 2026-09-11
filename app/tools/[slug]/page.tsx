@@ -12,13 +12,12 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ScreenshotGallery } from "@/components/screenshot-gallery";
 import { ReviewsSection } from "@/components/reviews-section";
-import { RelatedNews } from "@/components/related-news";
 import { OutboundLink } from "@/components/outbound-link";
 import { ShareButtons } from "@/components/share-buttons";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 import {
   ExternalLink, Star, CheckCircle2, XCircle,
-  Lightbulb, CreditCard, Users, BarChart3, Newspaper, Check,
+  Lightbulb, CreditCard, Users, BarChart3, Check,
   ChevronRight, Medal, FileText, MessageSquare, GitCompare, ThumbsUp, ThumbsDown, Wand2,
 } from "lucide-react";
 
@@ -374,7 +373,6 @@ export default async function ToolDetailPage({ params }: Props) {
               )}
 
               <ReviewsSection toolSlug={tool.id} />
-              <RelatedNews toolName={tool.name} toolSlug={tool.id} toolTags={tool.tags} />
 
               {relatedPrompts.length > 0 && (
                 <div className="rounded-xl border border-border/50 bg-card p-6 mt-4">

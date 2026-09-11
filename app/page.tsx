@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
-import { Sparkles, BookOpen, ArrowRight, Calendar, Newspaper } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
+import { Sparkles, BookOpen, ArrowRight, Calendar } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ToolsSection } from "@/components/tools-section";
@@ -10,7 +9,6 @@ import { ModelRankTable } from "@/components/model-rank-table";
 import { StickyBottomPanel } from "@/components/sticky-bottom-panel";
 import { getBlogPosts } from "@/lib/notion";
 import { aiTools } from "@/lib/ai-tools-data";
-import { newsSlug } from "@/lib/news-slug";
 
 export const revalidate = 3600; // 1시간마다 재생성
 
@@ -39,29 +37,8 @@ const CATEGORY_COLORS: Record<string, string> = {
   "AI 활용 팁": "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
-async function getLatestNews() {
-  try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-    const { data } = await supabase
-      .from("ai_news")
-      .select("id,title,url,source,summary,collected_at,tags")
-      .eq("is_visible", true)
-      .order("collected_at", { ascending: false })
-      .limit(3);
-    return data || [];
-  } catch {
-    return [];
-  }
-}
-
 export default async function HomePage() {
-  const [allPosts, latestNews] = await Promise.all([
-    getBlogPosts(),
-    getLatestNews(),
-  ]);
+  const allPosts = await getBlogPosts();
   const latestPosts = allPosts.slice(0, 3);
 
   return (
@@ -92,7 +69,7 @@ export default async function HomePage() {
           </p>
         </section>
 
-        {/* Main content (랭킹+툴) + 사이드바(블로그/뉴스) */}
+        {/* Main content (랭킹+툴) + 사이드바(블로그) */}
         <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* ── 메인: 모델 랭킹 + AI 툴 (2/3) ── */}
           <div className="lg:col-span-2 space-y-12">
@@ -102,62 +79,9 @@ export default async function HomePage() {
             </Suspense>
           </div>
 
-          {/* ── 사이드바: AI 뉴스 + 최신 블로그 (1/3, 하단 고정) ── */}
+          {/* ── 사이드바: 최신 블로그 (1/3, 하단 고정) ── */}
           <StickyBottomPanel className="lg:col-span-1">
             <div className="space-y-8">
-              {/* AI 뉴스 */}
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <Newspaper className="h-5 w-5 text-blue-400" />
-                    <h2 className="text-lg font-bold text-foreground">AI 뉴스</h2>
-                  </div>
-                  <Link
-                    href="/news"
-                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
-                  >
-                    전체 보기
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-                <div className="space-y-3">
-                  {latestNews.length > 0 ? latestNews.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={`/news/${newsSlug(item)}`}
-                      className="block rounded-xl border border-border/50 bg-card p-4 transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-md"
-                    >
-                      <div className="flex items-center gap-2 mb-1.5">
-                        {item.source && (
-                          <span className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[10px] font-medium text-blue-400">
-                            {item.source}
-                          </span>
-                        )}
-                        {item.tags && item.tags.length > 0 && item.tags.slice(0, 2).map((tag: string) => (
-                          <span key={tag} className="inline-flex items-center rounded-full bg-secondary/50 px-2 py-0.5 text-[10px] font-medium text-muted-foreground">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <h3 className="font-bold text-foreground hover:text-blue-400 transition-colors mb-1 line-clamp-2 text-sm">
-                        {item.title}
-                      </h3>
-                      {item.summary && (
-                        <p className="text-xs text-muted-foreground line-clamp-2">{item.summary}</p>
-                      )}
-                      {item.collected_at && (
-                        <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
-                          <Calendar className="h-3 w-3" />
-                          {new Date(item.collected_at).toLocaleDateString("ko-KR")}
-                        </div>
-                      )}
-                    </Link>
-                  )) : (
-                    <p className="text-sm text-muted-foreground py-4">AI 뉴스가 없습니다.</p>
-                  )}
-                </div>
-              </div>
-
               {/* 최신 블로그 */}
               <div>
                 <div className="flex items-center justify-between mb-4">
