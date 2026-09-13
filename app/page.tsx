@@ -12,7 +12,14 @@ import { aiTools } from "@/lib/ai-tools-data";
 import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from "@/lib/post-categories";
 import { ArrowUpRight } from "lucide-react";
 
-export const revalidate = 3600; // 1시간마다 재생성
+// revalidate(시간 기반 ISR)는 OpenNext Cloudflare에서 큐 설정이 필수인데
+// 이 프로젝트엔 큐가 없어 동시 요청 시 재검증이 멈춰버린다(실측: 동시 요청
+// 10개로 "Worker's code had hung" 재현, Error 1102). 큐(Durable Object,
+// 유료 플랜 필요)를 새로 붙이는 대신 시간 기반 재검증 자체를 뺐다.
+// force-dynamic 없이 revalidate만 빼면 이 페이지는 dynamic API를 안 써서
+// 빌드 시점에 완전히 정적으로 얼어붙는다(모델 랭킹·최신 글이 다음 배포 전까지
+// 안 바뀜) — 그래서 매 요청 렌더링을 명시한다. 캐시 계층 자체가 없어 큐도 불필요.
+export const dynamic = "force-dynamic";
 
 const BASE_URL = "https://ktoolu.com";
 

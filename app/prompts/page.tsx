@@ -12,7 +12,9 @@ function toolDisplayName(toolId: string): string {
   return tool ? getToolShortName(tool) : toolId;
 }
 
-export const revalidate = 3600;
+// revalidate(시간 기반 ISR) 제거 이유는 app/page.tsx 주석 참고 —
+// 큐 없이 쓰면 동시 요청에서 재검증이 멈춘다(Error 1102 실측 재현).
+// force-dynamic 명시 불필요 — 아래 searchParams 사용 자체가 매 요청 렌더링을 강제한다.
 
 const BASE_URL = "https://ktoolu.com";
 

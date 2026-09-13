@@ -5,7 +5,11 @@ import { getPosts } from "@/lib/notion";
 
 const BASE_URL = "https://ktoolu.com";
 
-export const revalidate = 3600;
+// revalidate(시간 기반 ISR) 제거 이유는 app/page.tsx 주석 참고 —
+// 큐 없이 쓰면 동시 요청에서 재검증이 멈춘다(Error 1102 실측 재현).
+// 검색엔진이 sitemap을 짧은 간격으로 재요청하는 경우가 많아 여기가 특히 취약했다.
+// dynamic API가 없어 revalidate만 빼면 빌드 시점에 얼어붙으므로 force-dynamic 명시.
+export const dynamic = "force-dynamic";
 
 async function getIndexablePrompts() {
   try {
