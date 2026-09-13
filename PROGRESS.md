@@ -3,6 +3,66 @@
 > 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
 > (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
 
+## 2026-09-13 — 장애: 동시 요청 시 사이트 전체 먹통 (Error 1102)
+
+### 오늘 한 일
+
+사용자 신고: ktoolu.com에서 블로그·프롬프트 클릭 시 "Worker exceeded resource
+limits", 헤더/푸터 다른 버튼도 무반응.
+
+**1차 진단(틀림 아닌 절반만 맞음): 시간 기반 revalidate.** `wrangler tail`로
+동시 요청 10개를 보내 재현 → 실제 로그에서 `"Worker's code had hung"` 예외 확인.
+`/`, `/posts`, `/prompts`, `/sitemap.xml`이 `export const revalidate = 3600`을
+쓰는데 `open-next.config.ts`에 큐 override가 없어(OpenNext Cloudflare는 시간
+기반 재검증에 큐가 필수) 동시 요청에서 재검증이 멈추는 것으로 보고 4곳의
+revalidate를 제거·배포(`6ad3008`). `/`, `/sitemap.ts`는 dynamic API가 없어
+revalidate만 빼면 빌드 시점에 얼어붙으므로 `force-dynamic` 명시.
+
+**재현 테스트를 계속 밀어붙여서 진짜 원인을 찾음.** 배경 curl 여러 개(`&` + `wait`)로
+재현을 시도했더니 간헐적으로만 실패해 "고쳐진 듯" 보였는데, 이 테스트 방식 자체가
+신뢰할 수 없었다(Git Bash 백그라운드 프로세스가 클라이언트 쪽 `000` 실패를 서버
+장애와 섞어 보고함). `xargs -P`/`curl -Z` 같은 **진짜 병렬 요청 도구**로 바꾸자
+`/contact`(revalidate가 있지도 않은 순수 정적 페이지) 하나에 동시 요청 6개만 보내도
+**5개가 정확히 클라이언트 타임아웃(10초)까지 매달리는 걸 100% 재현**함.
+
+**진짜 원인: OpenNext Cloudflare의 기본 증분 캐시.** 캐시 override를 하나도
+안 주면(이 프로젝트가 그랬음) 정적 페이지 캐시 조회에 single-flight 락이 걸리는데,
+그 락이 정상적으로 안 풀려 같은 경로에 동시 요청이 들어오면 **첫 요청만 성공하고
+나머지는 락 해제를 기다리다 Cloudflare의 hung-request 감지에 걸려 죽는다.**
+revalidate 유무와 무관 — 순수 정적 페이지도 걸림.
+
+**해결(`4c4ca81`):**
+- R2 버킷 신규 생성 `ktoolu-cache` (`npx wrangler r2 bucket create`)
+- `wrangler.jsonc`에 `NEXT_INC_CACHE_R2_BUCKET` 바인딩(캐시 전용, 이미지용
+  `BLOG_ASSETS`와 별개) + `WORKER_SELF_REFERENCE` 서비스 바인딩(공식 요구사항) 추가
+- `open-next.config.ts`에 `incrementalCache: r2IncrementalCache` 설정.
+  **큐(Durable Object, 유료 플랜 필요)는 설정 안 함** — 시간 기반 재검증을 전부
+  빼둬서 필요 없음
+- 배포 후 동일 조건(`/contact` 동시 6개, 이어서 20-way 혼합 부하)으로 재검증 →
+  전부 200. 사용자 브라우저 확인 완료
+
+### 완료된 항목
+
+- [x] Error 1102 근본 원인 규명 및 수정 — R2 incrementalCache override 추가
+- [x] 시간 기반 revalidate 4곳 제거(부수적으로 필요했던 조치, 유지)
+- [x] 배포 후 동시 요청 부하 테스트로 재현·수정 확인 (6-way, 15-way, 20-way)
+- [x] 사용자 브라우저에서 정상 동작 확인
+
+### 다음 세션에서 알아야 할 것 (추가)
+
+- **`open-next.config.ts`가 더 이상 빈 기본값이 아니다.** `incrementalCache:
+  r2IncrementalCache` 설정돼 있고, 이게 `NEXT_INC_CACHE_R2_BUCKET`(R2 버킷
+  `ktoolu-cache`)과 `WORKER_SELF_REFERENCE` 서비스 바인딩에 의존한다. 이 두 바인딩을
+  `wrangler.jsonc`에서 지우면 다시 이번 장애가 재현된다
+- **동시성 버그는 부하 테스트 도구를 제대로 골라야 드러난다.** 백그라운드 curl(`&`)은
+  신뢰할 수 없다 — `xargs -P` 또는 `curl -Z`(진짜 병렬)를 쓸 것
+- Cloudflare Workers Free 플랜에서도 R2 incrementalCache는 쓸 수 있다(Durable
+  Object 큐만 유료 플랜 필요). 시간 기반 재검증(`revalidate = N`)을 쓰지 않는 한
+  큐 없이도 안전
+- 새로 라우트에 `export const revalidate = N`(시간 기반)을 추가하고 싶어지면,
+  큐를 같이 설정하지 않는 한 **하지 말 것** — 대신 `force-dynamic`이나 fetch 레벨
+  캐싱을 고려
+
 ## 2026-09-12 작업 내용 — 도메인 통합 (ai.ktoolu.com → ktoolu.com)
 
 ### 오늘 한 일
