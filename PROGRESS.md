@@ -3,6 +3,17 @@
 > 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
 > (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
 
+## 2026-09-25 — 순수 유튜브 글 8편 비공개
+
+사이트 정체성(AI 도구 + 직접 만든 것)과 안 맞는 순수 유튜브 글 8편을 Notion에서
+`Published` 해제(삭제 아님, 체크만 다시 켜면 복원). 라이브 `/posts` 42→34편, 해당 URL 404.
+AI 각도를 붙였던 나머지 6편(`2026-youtube-*`)은 유지.
+
+복원 대상 slug (ktoolu Notion DB): `youtube-video-title-formula-10`,
+`before-1000-subscribers-do-dont`, `smartphone-youtube-recording-setup`,
+`first-youtube-video-roadmap`, `youtube-channel-art-banner-guide`,
+`thumbnail-ab-testing-click-rate`, `shorts-hook-20-techniques`, `youtube-channel-name-niche-50`
+
 ## 2026-09-13 — 장애: 동시 요청 시 사이트 전체 먹통 (Error 1102)
 
 ### 오늘 한 일
