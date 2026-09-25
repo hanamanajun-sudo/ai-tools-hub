@@ -38,6 +38,8 @@ export interface AITool {
   madeByKtoolu?: boolean;
   /** madeByKtoolu 도구 전용. 미지정 시 live로 취급 */
   status?: "live" | "waitlist";
+  /** apex 안의 관련 가이드 페이지 */
+  guides?: { title: string; href: string }[];
   features?: string[];
   pros?: string[];
   cons?: string[];
@@ -1438,19 +1440,27 @@ export const aiTools: AITool[] = [
   {
     id: "crop",
     name: "crop.ktoolu",
-    description: "이미지를 분할하고 잘라 LINE 스탬프 제작을 준비하는 무료 브라우저 도구. ktoolu가 직접 만들었습니다.",
-    longDescription: "crop.ktoolu는 브라우저에서 바로 이미지를 분할·자르기 할 수 있는 무료 도구입니다. 회원가입이나 설치 없이 이미지를 올리면 바로 결과를 받을 수 있고, LINE 스탬프 제작에 필요한 규격으로 나누는 작업을 특히 빠르게 처리하도록 만들었습니다. 서버에 이미지를 업로드하지 않고 브라우저에서 직접 처리합니다.",
+    description: "이미지 분할·사진 자르기·LINE 스티커(스탬프) 제출용 ZIP 만들기를 브라우저에서 무료로. 가입도 업로드도 없습니다. ktoolu가 직접 만들었습니다.",
+    longDescription: "crop.ktoolu는 세 가지 이미지 도구를 한곳에 모은 무료 웹 도구입니다. 이미지를 원하는 칸 수로 나눠 ZIP으로 받거나, 정해진 비율로 사진을 자를 수 있고, LINE 스티커를 만들 때는 370x320 캔버스에 10px 안전 여백을 보면서 그림을 맞춘 뒤 제출용 ZIP(스티커 이미지 + 대표 이미지 240x240 + 채팅방 탭 이미지 96x74)을 한 번에 받을 수 있습니다. 모든 처리는 브라우저 안에서 이루어져 이미지가 서버로 전송되지 않습니다.",
     url: "https://crop.ktoolu.com",
     category: "image",
-    tags: ["이미지 분할", "사진 자르기", "LINE 스탬프", "ktoolu 제작"],
+    tags: ["이미지 분할", "사진 자르기", "LINE 스티커", "ktoolu 제작"],
     free: true,
     madeByKtoolu: true,
     status: "live",
-    features: ["이미지 분할·자르기", "LINE 스탬프 규격 지원", "브라우저에서 즉시 처리(서버 업로드 없음)", "가입 없이 바로 사용"],
-    pros: ["완전 무료, 가입 불필요", "이미지가 서버로 전송되지 않아 안전", "브라우저에서 바로 처리돼 빠름"],
-    cons: ["LINE 스탬프 등 특정 용도에 최적화돼 범용 편집 기능은 제한적"],
-    useCases: ["LINE 스탬프 제작용 이미지 분할", "긴 이미지를 여러 장으로 자르기"],
-    whoIsFor: ["LINE 스탬프를 직접 만들려는 사람", "간단한 이미지 분할이 필요한 사람"],
+    features: [
+      "이미지 분할: 가로·세로 1~5칸, 분할선 드래그 조정, 전체 ZIP 다운로드",
+      "사진 자르기: 자유·1:1·4:3·16:9·3:4·9:16 비율",
+      "LINE 스티커 헬퍼: 370x320 캔버스, 10px 안전 여백 가이드, 자동 맞춤·트리밍",
+      "제출용 ZIP: 스티커 이미지 + 대표 이미지(240x240) + 탭 이미지(96x74) 자동 생성",
+      "최대 40장 관리, 순서 변경, 작업 저장·불러오기",
+      "JPG·PNG·WebP·AVIF 입력, 한국어·영어·일본어 지원",
+    ],
+    pros: ["완전 무료, 가입 불필요", "이미지가 서버로 전송되지 않음", "LINE 규격(크기·여백·대표/탭 이미지)을 자동으로 맞춰줌"],
+    cons: ["움직이는 스티커(APNG)·이모티콘 규격은 아직 미지원", "그림을 그리는 기능은 없음 — 완성된 이미지를 정리하는 도구"],
+    useCases: ["직접 그린 LINE 스티커를 제출 규격에 맞추기", "네 컷 이미지를 칸별로 나누기", "SNS 비율에 맞춰 사진 자르기"],
+    whoIsFor: ["LINE 스티커를 처음 만들어 보는 사람", "여러 장을 한꺼번에 규격에 맞춰야 하는 사람", "간단한 이미지 분할·자르기가 필요한 사람"],
+    guides: [{ title: "LINE 스티커(스탬프) 규격 총정리", href: "/guides/line-sticker-size" }],
   },
   {
     id: "story",

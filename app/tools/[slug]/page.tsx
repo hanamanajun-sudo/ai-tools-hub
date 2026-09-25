@@ -475,6 +475,23 @@ export default async function ToolDetailPage({ params }: Props) {
                 <p className="mt-3 text-xs text-muted-foreground text-center">{tool.url.replace(/^https?:\/\//, "")}</p>
               </div>
 
+              {tool.guides && tool.guides.length > 0 && (
+                <div className="rounded-xl border border-violet-500/25 bg-violet-500/[0.04] p-6">
+                  <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-1.5">
+                    <FileText className="h-4 w-4 text-violet-400" />함께 보면 좋은 가이드
+                  </h2>
+                  <ul className="space-y-2">
+                    {tool.guides.map((g) => (
+                      <li key={g.href}>
+                        <Link href={g.href} className="flex items-center gap-1 text-sm text-foreground hover:text-primary transition-colors">
+                          {g.title} <ChevronRight className="h-3.5 w-3.5" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {tool.whoIsFor && tool.whoIsFor.length > 0 && (
                 <div className="rounded-xl border border-border/50 bg-card p-6">
                   <h2 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-1.5">
