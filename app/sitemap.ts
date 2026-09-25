@@ -1,23 +1,27 @@
 import { MetadataRoute } from "next";
-import { aiTools, categories } from "@/lib/ai-tools-data";
-import { getPrompts, PROMPT_CATEGORIES } from "@/lib/prompts";
 import { getPosts } from "@/lib/notion";
 
 const BASE_URL = "https://ktoolu.com";
 
 // revalidate(시간 기반 ISR) 제거 이유는 app/page.tsx 주석 참고 —
 // 큐 없이 쓰면 동시 요청에서 재검증이 멈춘다(Error 1102 실측 재현).
-// 검색엔진이 sitemap을 짧은 간격으로 재요청하는 경우가 많아 여기가 특히 취약했다.
 // dynamic API가 없어 revalidate만 빼면 빌드 시점에 얼어붙으므로 force-dynamic 명시.
 export const dynamic = "force-dynamic";
 
-async function getIndexablePrompts() {
-  try {
-    return await getPrompts();
-  } catch {
-    return [];
-  }
-}
+// sitemap은 "전부"가 아니라 "구글이 먼저 봐줬으면 하는 것"만 담는다.
+// 2026-09 Search Console 기준 색인 8개 / 발견됨-색인 안 됨 145개 — 새 도메인이
+// 크롤 우선순위를 못 받는 상태라, 템플릿형 도구 54개·프롬프트 31개·카테고리 목록을
+// 한꺼번에 밀어 넣지 않는다. 실제로 색인된 유형(직접 써본 글, 핵심 도구)만 남겼다.
+// 빠진 페이지도 사이트 안 링크로는 그대로 발견·접근된다. 색인이 붙으면 다시 늘릴 것.
+const PRIORITY_TOOL_IDS = [
+  // 각 카테고리 랭킹 상위 (lib/tool-ranking.ts RANKING_OVERRIDES)
+  "chatgpt", "claude", "gemini", "cursor", "deepseek", "grok", "perplexity",
+  "midjourney", "seedance", "kling", "runway", "n8n", "hermes",
+  // 이미 색인됐던 페이지
+  "bolt",
+  // 자체 제작
+  "crop", "story",
+];
 
 async function getIndexablePosts() {
   try {
@@ -29,82 +33,23 @@ async function getIndexablePosts() {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [prompts, posts] = await Promise.all([getIndexablePrompts(), getIndexablePosts()]);
+  const posts = await getIndexablePosts();
 
-  // noindex 처리된 글은 sitemap에서도 제외한다 — "색인하지 마"와 "여기 있어" 신호가
-  // 동시에 나가면 모순이라 (ktoolu.com lib/notion.ts와 동일한 원칙).
+  // lastModified는 실제 날짜를 아는 글에만 넣는다. 정적 페이지에 new Date()를 넣으면
+  // 매 요청마다 전 URL이 "오늘 수정됨"으로 나가는 가짜 신선도 신호가 된다.
   const postPages: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${BASE_URL}/posts/${post.slug}`,
-    lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
-    changeFrequency: "monthly",
-    priority: 0.6,
+    ...(post.publishedAt ? { lastModified: new Date(post.publishedAt) } : {}),
   }));
 
-  const toolPages: MetadataRoute.Sitemap = aiTools.map((tool) => ({
-    url: `${BASE_URL}/tools/${tool.id}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
-
-  const categoryPages: MetadataRoute.Sitemap = categories
-    .filter((c) => c.value !== "all")
-    .map((c) => ({
-      url: `${BASE_URL}/category/${c.value}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.75,
-    }));
-
-  const promptPages: MetadataRoute.Sitemap = prompts.map((p) => ({
-    url: `${BASE_URL}/prompts/${p.slug}`,
-    lastModified: new Date(p.updated_at),
-    changeFrequency: "monthly",
-    priority: 0.65,
-  }));
-
-  const promptCategoryPages: MetadataRoute.Sitemap = PROMPT_CATEGORIES.map((c) => ({
-    url: `${BASE_URL}/prompts?cat=${c.value}`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.55,
-  }));
-
-  const sectionPages: MetadataRoute.Sitemap = ["/posts", "/prompts"].map((path) => ({
+  const staticPaths = ["", "/posts", "/about", "/contact", "/privacy", "/story"];
+  const staticPages: MetadataRoute.Sitemap = staticPaths.map((path) => ({
     url: `${BASE_URL}${path}`,
-    lastModified: new Date(),
-    changeFrequency: "daily",
-    priority: 0.8,
   }));
 
-  const infoPages: MetadataRoute.Sitemap = ["/about", "/contact", "/privacy"].map((path) => ({
-    url: `${BASE_URL}${path}`,
-    lastModified: new Date(),
-    changeFrequency: "yearly",
-    priority: 0.3,
+  const toolPages: MetadataRoute.Sitemap = PRIORITY_TOOL_IDS.map((id) => ({
+    url: `${BASE_URL}/tools/${id}`,
   }));
 
-  const storyPage: MetadataRoute.Sitemap = [{
-    url: `${BASE_URL}/story`,
-    lastModified: new Date(),
-    changeFrequency: "weekly",
-    priority: 0.6,
-  }];
-
-  return [
-    {
-      url: BASE_URL,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    ...sectionPages,
-    ...infoPages,
-    ...storyPage,
-    ...categoryPages,
-    ...toolPages,
-    ...postPages,
-    ...promptCategoryPages,
-    ...promptPages,
-  ];
+  return [...staticPages, ...postPages, ...toolPages];
 }
