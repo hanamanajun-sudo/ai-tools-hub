@@ -18,13 +18,12 @@ export const dynamic = "force-dynamic";
 // 색인 우선 목록에 낡은 페이지를 올리면 새 도메인에서 낡은 내용으로 재평가받는다.
 // 같은 날 도구 페이지 정리: 핵심 도구(CORE_TOOL_IDS)만 관리하고 나머지는 간략 모드 + noindex.
 // 여기엔 핵심 중에서도 내용 검증이 끝난 것만 넣는다.
-// 2026-09-26 공식 페이지(또는 복수 보도 교차 확인)로 갱신한 핵심 13개를 넣었다.
-// 아직 가격 미검증인 핵심: midjourney·seedance·grok·n8n·hermes — 모델 세대만 확인하고 남겨둔 상태.
+// 2026-09-26 공식 페이지(또는 복수 보도 교차 확인)로 갱신한 핵심 도구 18개를 넣었다.
+// CORE_TOOL_IDS 20개 중 남은 것은 자체 제작 crop·story(항상 최신).
 const PRIORITY_TOOL_IDS = [
   // 갱신 완료
   "chatgpt", "claude", "gemini", "muse",
   "cursor", "perplexity", "deepseek", "capcut", "suno", "eleven-labs", "manus", "kling", "veo",
-  // 가격 미검증
   "midjourney", "seedance", "grok", "n8n", "hermes",
   // 자체 제작
   "crop", "story",
