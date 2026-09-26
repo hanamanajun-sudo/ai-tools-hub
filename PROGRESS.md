@@ -25,10 +25,14 @@
 ### 다음에 할 일
 
 - [ ] Search Console URL 검사: 가격 비교 글(옛·새 주소), /tools/chatgpt·claude·gemini 추가 가능
-- [ ] **도구 페이지 정리**(방향 전환, 9/26 합의): 54개를 늘리거나 전부 갱신하지 않는다. 직접 써본
-      핵심 10개 안팎만 유지, 나머지는 가격·모델명을 빼고 "무엇을 하는 도구 + 공식 요금제 링크"로
-      축소하거나 noindex. 낡은 5개(cursor·deepseek·perplexity·kling·runway)도 이 기준으로 처리.
-      원칙: 가격은 가격 비교 글 한 곳에만(분기 갱신), 새 글은 날짜 박힌 체험형
+- [x] **도구 페이지 정리**(방향 전환, 9/26 합의) — 핵심 20개(`CORE_TOOL_IDS`, 사용자 선정)만
+      관리, 나머지 35개는 간략 모드(설명 + 공식 링크) + noindex. 짧은 설명의 틀린 사실 11건 수정,
+      Nano Banana 가짜 URL 수정, Sora 서비스 종료 반영, **Muse(Meta) 추가**. bolt는 sitemap에서 제외
+- [ ] 핵심인데 아직 검증 안 된 9개 갱신 후 sitemap 추가: cursor·deepseek·perplexity·kling(낡음),
+      capcut·manus·suno·veo·eleven-labs(가격 미검증). midjourney·seedance·grok·n8n·hermes도
+      가격은 미검증 상태로 sitemap에 있음
+- [ ] Muse 한국 출시되면 description·cons·comparisonNotes 갱신
+- 원칙: 가격은 가격 비교 글 한 곳에만(분기 갱신), 새 글은 날짜 박힌 체험형
 - [ ] 가격 비교 글 제목 "(2026년)"·PublishedAt은 그대로 둠 — 사이트에 "수정일" 표시 기능은 없음
 
 ## 2026-09-25 (계속) — sitemap 축소, crop 버그 수정, LINE 스티커 가이드
