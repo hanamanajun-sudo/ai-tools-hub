@@ -13,10 +13,15 @@ export const dynamic = "force-dynamic";
 // 크롤 우선순위를 못 받는 상태라, 템플릿형 도구 54개·프롬프트 31개·카테고리 목록을
 // 한꺼번에 밀어 넣지 않는다. 실제로 색인된 유형(직접 써본 글, 핵심 도구)만 남겼다.
 // 빠진 페이지도 사이트 안 링크로는 그대로 발견·접근된다. 색인이 붙으면 다시 늘릴 것.
+//
+// 2026-09-26: 내용이 몇 세대 전 모델을 현재형으로 적고 있는 도구는 갱신 전까지 뺐다.
+// 색인 우선 목록에 낡은 페이지를 올리면 새 도메인에서 낡은 내용으로 재평가받는다.
+// 빠진 것(갱신하면 다시 넣을 것): chatgpt(GPT-4o·DALL·E), claude(3.5 Sonnet),
+// gemini(1.5 Pro·"Gemini Advanced"), cursor(GPT-4o), deepseek(R1·2025년),
+// perplexity(GPT-4), kling(2.0·2024년), runway(Gen-2·3).
+// 남긴 것도 가격은 검증 전 — 모델 세대만 기준으로 거른 1차 필터다.
 const PRIORITY_TOOL_IDS = [
-  // 각 카테고리 랭킹 상위 (lib/tool-ranking.ts RANKING_OVERRIDES)
-  "chatgpt", "claude", "gemini", "cursor", "deepseek", "grok", "perplexity",
-  "midjourney", "seedance", "kling", "runway", "n8n", "hermes",
+  "midjourney", "seedance", "grok", "n8n", "hermes",
   // 이미 색인됐던 페이지
   "bolt",
   // 자체 제작
