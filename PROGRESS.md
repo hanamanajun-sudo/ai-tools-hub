@@ -32,9 +32,14 @@
       공식 페이지 직접 확인: Cursor·Perplexity·Suno·ElevenLabs. 복수 보도 교차 확인: CapCut·Manus·
       Kling·Veo·Cursor Pro+/Ultra(페이지에 "복수 보도 기준" 명시). 옛 URL 3건 교체
       (cursor.sh·suno.ai·kling.kuaishou.com). sitemap 61개(도구 20개)
-- [ ] 아직 가격 미검증인 핵심 5개: midjourney·seedance·grok·n8n·hermes (sitemap엔 있음)
-- [ ] 복수 보도 기반 값(CapCut 미국 정가, Manus 크레딧, Kling 요금, Cursor Pro+/Ultra)은
-      공식 페이지를 브라우저로 직접 열어 대조할 수 있으면 대조할 것
+- [x] 나머지 핵심 5개도 갱신 완료(9/26): midjourney·seedance·grok·n8n·hermes. 이로써 **핵심 20개
+      전부 검증 완료**. n8n·Hermes는 공식 페이지 직접 확인, Midjourney·Grok·Seedance는 복수 보도.
+      Seedance는 이름을 "Seedance"로 바꾸고(2.5 세대 출시) 근거 없던 seedance.com·$15/$39 제거,
+      Hermes 단점에 있던 무관한 "OpenNext" 문구 삭제
+- [ ] 복수 보도 기반 값은 공식 페이지를 브라우저로 직접 열어 대조할 것: CapCut 미국 정가, Manus 크레딧,
+      Kling·Seedance 요금, Cursor Pro+/Ultra, Midjourney·Grok 요금, Seedance 한국 이용 가능 여부
+- [ ] **분기마다 재검증**(다음: 2026-12): 가격·모델명이 바뀌는 속도가 빨라 확인 날짜가 오래되면
+      "N월 N일 기준" 문구 자체가 신뢰를 깎는다. 확인 날짜를 데이터로 뽑아 자동 경고하는 것도 고려
 - [ ] Muse 한국 출시되면 description·cons·comparisonNotes 갱신
 - 원칙: 가격은 가격 비교 글 한 곳에만(분기 갱신), 새 글은 날짜 박힌 체험형
 - [ ] 가격 비교 글 제목 "(2026년)"·PublishedAt은 그대로 둠 — 사이트에 "수정일" 표시 기능은 없음
