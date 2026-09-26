@@ -3,46 +3,93 @@
 > 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
 > (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
 
-## 2026-09-26 — 핵심 도구 3개 갱신, 가격 비교 글 갱신, Notion 표 렌더링 버그
+## 2026-09-26 — 콘텐츠 방향 전환, 도구 페이지 정리(핵심 20개 검증), Notion 렌더러 버그
 
-### 오늘 한 일
+> 새 세션은 이 섹션의 "현재 상태"와 "다음에 할 일"부터 읽을 것.
 
-- **도구 16개 점검 → 낡은 8개 sitemap 제외**(`9618a26`): 몇 세대 전 모델을 현재형으로 쓴 페이지
-  (chatgpt·claude·gemini·cursor·deepseek·perplexity·kling·runway)
-- **ChatGPT·Claude·Gemini 페이지 갱신**(`a76e943`): 공식 요금제 페이지(chatgpt.com/pricing,
-  claude.com/pricing, gemini.google/kr/subscriptions) 기준. 모델·요금제·가격·기능 교체, 커뮤니티
-  요약의 낡은 사실 정리(출처 인용문은 원문 유지). sitemap에 3개 복귀 → 52개.
-  Gemini AI Pro 29,000원만 공식 페이지에 원화 표기가 없어 복수 보도로 확인
-- **Notion 글 "AI 구독료 비교"(`ai-subscription-price-comparison-2026`) 가격 갱신**: 표 5개와
-  사실 문장만 수정, 본인 사용 소감은 그대로. 상단에 "9월 26일 갱신" 명시. Grok은 공식 페이지가
-  JS로 가격을 불러와 확인 불가 → 2차 출처 교차 확인값, 모델 버전은 출처끼리 엇갈려 뺐다
-- **렌더러 버그 수정**(`lib/notion.ts`): 최상위 블록만 가져오고 `table` 케이스가 없어서
-  **표·들여쓴 블록이 통째로 사라지고, 100블록 넘는 글은 뒷부분이 잘리고 있었다.**
-  가격 비교 글은 가격표 없이 공개돼 있었음. 영향받던 글 12개(hub 8 · ktoolu 4), 그중
-  `hermes-desktop-10-settings`는 100블록 초과로 결말까지 잘림. `fetchBlockTree`(페이지 넘김 +
-  2단계 재귀)와 표 렌더링 추가, 라이브에서 확인
+### 방향 결정 (사용자 합의)
+
+AI 모델명·가격은 몇 달이면 틀려져서 혼자 따라갈 수 없다(오늘 점검에서 도구 16개 중 8개가 몇 세대 전
+모델을 현재형으로 적고 있었음). 그래서 콘텐츠의 **단위를 바꿨다**:
+
+- **썩는 정보(가격·모델명)는 한 곳에 몬다** — 가격은 `ai-subscription-price-comparison-2026` 글 하나에만
+  적고 분기마다 갱신. 다른 글은 가격을 적지 말고 그 글로 링크. 구체 모델명 대신 "상위 모델"처럼 쓴다
+- **새 글은 날짜 박힌 "해봤다"형** — 모델이 바뀌어도 틀린 글이 아니라 기록으로 남는다
+- **자체 도구·결과물·AI 무관 목적형 가이드**(예: LINE 스티커 규격)가 해자
+- **도구 페이지는 늘리지 않고 줄인다** — 사용자가 직접 써봤거나 글로 다루는 20개만 관리
+- 메모리에 저장됨(`project_ktoolu_content_direction.md`)
+
+### 한 일
+
+1. **도구 페이지 정리**(`508735a`): `lib/ai-tools-data.ts`의 `CORE_TOOL_IDS`(20개) — crop·story(자체 제작),
+   chatgpt·claude·gemini·grok·perplexity·deepseek·n8n·hermes·manus·muse·cursor·midjourney·seedance·kling·
+   veo·capcut·suno·eleven-labs. 나머지 35개는 **간략 모드**(설명 + 공식 링크 + 핵심 도구 안내,
+   가격·모델명·평점 없음) + `robots: noindex, follow`. 주소는 그대로라 링크는 안 깨진다.
+   짧은 설명의 틀린 사실 11건 수정, Sora 서비스 종료 반영(앱·웹 4/26, API 9/24),
+   Image Nanobana → Nano Banana + 가짜 URL(`image-nanobana.example.com`) 교체
+2. **핵심 20개 전부 검증·갱신**(`a76e943`, `6813ef1`, `f85caca`): 모델·요금제·가격·기능·옛 URL 교체,
+   각 페이지에 "2026년 9월 26일 기준"과 확인 방식 명시. 후기 출처 인용문은 원문 유지하고 overall에 시점 표기
+   - **공식 페이지 직접 확인**: chatgpt·claude·gemini(한국 요금제)·cursor·perplexity·suno·eleven-labs·n8n·hermes·muse(Meta 발표)
+   - **복수 보도 교차 확인**(페이지에 "복수 보도 기준" 명시): capcut·manus·kling·veo·midjourney·grok·seedance,
+     cursor Pro+/Ultra, Gemini AI Pro 29,000원
+   - 오류 발견: Suno Pro $10→$8·Premier $30→$24, n8n 클라우드 "$20·5천 실행"→€20·2,500회(연 결제),
+     ElevenLabs Creator $22(첫 달 50% 할인 — 요약본이 거꾸로 읽혀 원문 HTML로 재확인),
+     **Seedance**: 존재하지 않던 `seedance.com`·근거 없던 $15/$39 제거, 실제 경로는 ByteDance Dreamina, 2.5 세대 출시라 "Seedance 2.0"→"Seedance",
+     **Hermes**: Hermes와 무관한 "OpenNext Windows 이슈" 단점 삭제
+3. **Muse(Meta 개인 AI 에이전트) 추가**: muse.ai, 2026-09-08 출시, **미국에서만 이용 가능·한국 출시 미정**을 페이지에 명시
+4. **Notion 글 "AI 구독료 비교" 가격 갱신**: 표 5개와 사실 문장만 수정, 본인 소감은 그대로. 상단에 갱신일 명시.
+   Go·Google AI Plus/Pro/Ultra·SuperGrok Lite 등 새 요금제 반영
+5. **렌더러 버그 수정**(`ec83a27`, `lib/notion.ts`): 최상위 블록만 가져오고 `table` 케이스가 없어서
+   **표·들여쓴 블록이 사라지고, 100블록 넘는 글은 뒷부분이 잘리고 있었다.** 영향받던 글 12개(hub 8 · ktoolu 4),
+   그중 `hermes-desktop-10-settings`는 결말까지 잘림. `fetchBlockTree`(페이지 넘김 + 2단계 재귀) + 표 렌더링
+   + `.table-wrap` 스타일 추가, 라이브에서 확인
+6. **sitemap 정리**: 낡은 도구 8개 제외(`9618a26`) → 갱신 후 복귀, bolt 제외, muse 추가. 현재 **61개**
+   (정적 7 + 글 34 + 도구 20). `PRIORITY_TOOL_IDS`에 핵심 18개(crop·story 포함 20개)
+
+### 현재 상태 (세션 종료 시점)
+
+- 브랜치 master, 작업 트리 clean, 전부 push·배포됨(마지막 코드 커밋 `f85caca`)
+- Search Console(ktoolu.com 속성)에 **9개 색인 요청 완료**(9/26): `/`, 글 4편(hermes-desktop-10-settings·
+  가격 비교·hermes-agent-desktop-guide·github-korean-search-methods), `/guides/line-sticker-size`,
+  `/tools/chatgpt·claude·gemini`. ai.ktoolu.com 옛 주소 4개 요청은 선택 사항(효과 낮음)이라 안 했거나 미확인
+- 사용자가 `/model`로 Sonnet 5로 전환함(커밋 attribution도 Sonnet 5로 바뀜)
 
 ### 다음에 할 일
 
-- [ ] Search Console URL 검사: 가격 비교 글(옛·새 주소), /tools/chatgpt·claude·gemini 추가 가능
-- [x] **도구 페이지 정리**(방향 전환, 9/26 합의) — 핵심 20개(`CORE_TOOL_IDS`, 사용자 선정)만
-      관리, 나머지 35개는 간략 모드(설명 + 공식 링크) + noindex. 짧은 설명의 틀린 사실 11건 수정,
-      Nano Banana 가짜 URL 수정, Sora 서비스 종료 반영, **Muse(Meta) 추가**. bolt는 sitemap에서 제외
-- [x] 핵심 9개 갱신 완료(9/26): cursor·perplexity·deepseek·capcut·suno·eleven-labs·manus·kling·veo.
-      공식 페이지 직접 확인: Cursor·Perplexity·Suno·ElevenLabs. 복수 보도 교차 확인: CapCut·Manus·
-      Kling·Veo·Cursor Pro+/Ultra(페이지에 "복수 보도 기준" 명시). 옛 URL 3건 교체
-      (cursor.sh·suno.ai·kling.kuaishou.com). sitemap 61개(도구 20개)
-- [x] 나머지 핵심 5개도 갱신 완료(9/26): midjourney·seedance·grok·n8n·hermes. 이로써 **핵심 20개
-      전부 검증 완료**. n8n·Hermes는 공식 페이지 직접 확인, Midjourney·Grok·Seedance는 복수 보도.
-      Seedance는 이름을 "Seedance"로 바꾸고(2.5 세대 출시) 근거 없던 seedance.com·$15/$39 제거,
-      Hermes 단점에 있던 무관한 "OpenNext" 문구 삭제
-- [ ] 복수 보도 기반 값은 공식 페이지를 브라우저로 직접 열어 대조할 것: CapCut 미국 정가, Manus 크레딧,
-      Kling·Seedance 요금, Cursor Pro+/Ultra, Midjourney·Grok 요금, Seedance 한국 이용 가능 여부
-- [ ] **분기마다 재검증**(다음: 2026-12): 가격·모델명이 바뀌는 속도가 빨라 확인 날짜가 오래되면
-      "N월 N일 기준" 문구 자체가 신뢰를 깎는다. 확인 날짜를 데이터로 뽑아 자동 경고하는 것도 고려
+**우선**
+- [ ] **3~4일 뒤(9/29~30) Search Console에서 요청한 9개를 URL 검사로 재확인** — "Google에 등록됨"으로
+      바뀌었는지. 재요청은 하지 말 것(빨라지지 않음). 2주(10/10경) 지나도 "발견됨 - 색인 안 됨"이면
+      요청 문제가 아니라 사이트 평가 문제 → 그때 원인 재검토
+- [ ] 결과를 본 뒤 도구 페이지(cursor·perplexity·…)를 색인 요청에 추가 — 13개를 한꺼번에 넣지 말 것
+- [ ] 새 콘텐츠: 날짜 박힌 체험 글, **Muse 한국 출시 대비 글**(한국에선 아직 못 쓰는 도구라
+      "메타 뮤즈 한국에서 쓸 수 있나" 류 검색 수요가 도구 페이지보다 나을 수 있음)
+
+**검증·유지보수**
+- [ ] 복수 보도 기반 값은 공식 페이지를 브라우저로 직접 열어 대조: CapCut 미국 정가, Manus 크레딧,
+      Kling·Seedance 요금, Cursor Pro+/Ultra, Midjourney·Grok 요금, **Seedance 한국 이용 가능 여부**
+- [ ] **분기마다 재검증(다음: 2026-12)** — 확인 날짜가 오래되면 "N월 N일 기준" 문구가 오히려 신뢰를 깎는다.
+      확인 날짜를 데이터 필드로 뽑아 오래되면 자동 경고하는 방안 고려
 - [ ] Muse 한국 출시되면 description·cons·comparisonNotes 갱신
-- 원칙: 가격은 가격 비교 글 한 곳에만(분기 갱신), 새 글은 날짜 박힌 체험형
-- [ ] 가격 비교 글 제목 "(2026년)"·PublishedAt은 그대로 둠 — 사이트에 "수정일" 표시 기능은 없음
+- [ ] Manus: 검색에 "Meta 인수가 중국 규제로 무산됐다"는 보도가 있었으나 출처끼리 엇갈려 페이지엔 넣지 않음.
+      사이트에 쓰려면 별도 확인 필요
+- [ ] 가격 비교 글 제목 "(2026년)"·PublishedAt은 그대로 — 사이트에 "수정일" 표시 기능이 없음
+
+**사용자 직접(이전 세션부터 이월)**
+- [ ] Hermes PAT(`SUPABASE_ACCESS_TOKEN`) 폐기
+- [ ] `www.ktoolu.com` Redirect Rule 설정 후 Vercel 정리, `_vercel` TXT 제거
+- [ ] crop.ktoolu를 git 저장소로(백업 `클로드cowork/crop.ktoolu.backup-20260925`), LINE ZIP 파일명 규칙 실제 제출 때 확인
+- [ ] afterlist.ktoolu apex 백링크
+
+### 작업 팁 (이 환경에서 겪은 것)
+
+- **WebFetch 요약을 그대로 믿지 말 것**: ElevenLabs Creator 가격이 거꾸로 요약됐고, Cursor 요약에는 이상한 "Grok Bot"
+  문구가 섞여 있었다. 가격은 `curl -A 브라우저UA`로 원문 HTML을 받아 확인
+- 공식 요금제 페이지 다수(openai·Midjourney·Perplexity·grok.com·CapCut)는 403/챌린지/JS 로딩이라 직접 못 읽는다 →
+  복수 출처 교차 확인 + 페이지에 확인 방식 명시
+- `rtk git commit -F -`는 stdin을 못 넘겨 커밋이 빈 메시지로 중단됨 → 커밋은 `git commit -F -` 직접 사용
+- Python은 git-bash `/tmp` 경로를 못 읽는다 → 스크래치패드 경로 사용
+- 로컬 Windows에서 배포 불가, push하면 GitHub Actions가 배포 → `gh run watch <id>`로 확인
+- 도구 데이터 일괄 수정은 `patch` 스크립트(문자열 인식 값 범위 탐색)로 했고 `tsc`·`npm run build`로 검증
 
 ## 2026-09-25 (계속) — sitemap 축소, crop 버그 수정, LINE 스티커 가이드
 
