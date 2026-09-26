@@ -25,7 +25,10 @@
 ### 다음에 할 일
 
 - [ ] Search Console URL 검사: 가격 비교 글(옛·새 주소), /tools/chatgpt·claude·gemini 추가 가능
-- [ ] 남은 낡은 도구 5개(cursor·deepseek·perplexity·kling·runway) 갱신 후 sitemap 복귀
+- [ ] **도구 페이지 정리**(방향 전환, 9/26 합의): 54개를 늘리거나 전부 갱신하지 않는다. 직접 써본
+      핵심 10개 안팎만 유지, 나머지는 가격·모델명을 빼고 "무엇을 하는 도구 + 공식 요금제 링크"로
+      축소하거나 noindex. 낡은 5개(cursor·deepseek·perplexity·kling·runway)도 이 기준으로 처리.
+      원칙: 가격은 가격 비교 글 한 곳에만(분기 갱신), 새 글은 날짜 박힌 체험형
 - [ ] 가격 비교 글 제목 "(2026년)"·PublishedAt은 그대로 둠 — 사이트에 "수정일" 표시 기능은 없음
 
 ## 2026-09-25 (계속) — sitemap 축소, crop 버그 수정, LINE 스티커 가이드
