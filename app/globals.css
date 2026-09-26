@@ -317,6 +317,52 @@
   margin-top: 0.1em;
 }
 
+/* Tables (from Notion) — 좁은 화면에선 표만 가로 스크롤 */
+.blog-content .table-wrap {
+  margin: 2rem 0;
+  overflow-x: auto;
+  border: 1px solid oklch(0.9 0 0);
+  border-radius: 0.75rem;
+}
+
+.dark .blog-content .table-wrap {
+  border-color: oklch(0.3 0 0);
+}
+
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.blog-content th,
+.blog-content td {
+  padding: 0.625rem 0.875rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid oklch(0.92 0 0);
+}
+
+.blog-content th {
+  background: oklch(0.97 0.01 270);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.blog-content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dark .blog-content th {
+  background: oklch(0.22 0.02 270);
+}
+
+.dark .blog-content th,
+.dark .blog-content td {
+  border-bottom-color: oklch(0.3 0 0);
+}
+
 /* Divider */
 .blog-content hr {
   margin: 3rem auto;

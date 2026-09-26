@@ -136,18 +136,34 @@ function extractYoutubeId(url: string): string | null {
   return null;
 }
 
+function tableToHtml(block: NotionBlock): string {
+  const rows: NotionBlock[] = (block.children ?? []).filter((r: NotionBlock) => r.type === "table_row");
+  if (!rows.length) return "";
+  const hasHeader = !!block.table?.has_column_header;
+  const rowHtml = (row: NotionBlock, cellTag: "th" | "td") =>
+    `<tr>${(row.table_row?.cells ?? []).map((cell: RichTextItem[]) => `<${cellTag}>${richTextToHtml(cell)}</${cellTag}>`).join("")}</tr>`;
+  const head = hasHeader ? `<thead>${rowHtml(rows[0], "th")}</thead>` : "";
+  const body = (hasHeader ? rows.slice(1) : rows).map((r) => rowHtml(r, "td")).join("");
+  return `<div class="table-wrap"><table>${head}<tbody>${body}</tbody></table></div>`;
+}
+
 // imageUrlMap: block.id → resolved permanent URL (for Notion-hosted images)
 function blockToHtml(block: NotionBlock, imageUrlMap?: Map<string, string>): string {
   const b = block[block.type];
   if (!b) return "";
+  // 노션에서 Tab으로 들여쓴 블록은 부모의 children으로 온다 — 부모 뒤(목록은 li 안)에 이어 붙인다.
+  const nested = block.type !== "table" && block.children?.length
+    ? blocksToHtml(block.children, imageUrlMap)
+    : "";
   switch (block.type) {
-    case "paragraph": return `<p>${richTextToHtml(b.rich_text)}</p>`;
+    case "paragraph": return `<p>${richTextToHtml(b.rich_text)}</p>${nested}`;
     case "heading_1": return `<h1>${richTextToHtml(b.rich_text)}</h1>`;
     case "heading_2": return `<h2>${richTextToHtml(b.rich_text)}</h2>`;
     case "heading_3": return `<h3>${richTextToHtml(b.rich_text)}</h3>`;
-    case "bulleted_list_item": return `<li>${richTextToHtml(b.rich_text)}</li>`;
-    case "numbered_list_item": return `<li>${richTextToHtml(b.rich_text)}</li>`;
-    case "quote": return `<blockquote>${richTextToHtml(b.rich_text)}</blockquote>`;
+    case "bulleted_list_item": return `<li>${richTextToHtml(b.rich_text)}${nested}</li>`;
+    case "numbered_list_item": return `<li>${richTextToHtml(b.rich_text)}${nested}</li>`;
+    case "quote": return `<blockquote>${richTextToHtml(b.rich_text)}</blockquote>${nested}`;
+    case "table": return tableToHtml(block);
     case "code": {
       const code = (b.rich_text as RichTextItem[]).map((r) => r.plain_text).join("")
         .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -196,10 +212,43 @@ function blocksToHtml(blocks: NotionBlock[], imageUrlMap?: Map<string, string>):
   return parts.join("\n");
 }
 
+// 블록 children 전체(100개 넘으면 페이지 넘김)를 가져오고, 하위 블록이 있는 것
+// (표의 행, 들여쓴 문단·목록)은 maxDepth까지 재귀로 채운다. 예전엔 최상위만 가져와서
+// 표와 들여쓴 문단이 통째로 사라졌다(2026-09-26 가격 비교 글에서 발견).
+async function fetchBlockTree(blockId: string, apiKey: string, depth = 0, maxDepth = 2): Promise<NotionBlock[]> {
+  const blocks: NotionBlock[] = [];
+  let cursor: string | undefined;
+  do {
+    const qs = `page_size=100${cursor ? `&start_cursor=${cursor}` : ""}`;
+    const res = await fetch(`${NOTION_API_BASE}/blocks/${blockId}/children?${qs}`, {
+      headers: notionHeaders(apiKey),
+    });
+    if (!res.ok) break;
+    const data = await res.json() as any;
+    blocks.push(...(data.results ?? []));
+    cursor = data.has_more ? data.next_cursor : undefined;
+  } while (cursor);
+
+  if (depth < maxDepth) {
+    await Promise.all(
+      blocks
+        .filter((b) => b.has_children && b.type !== "child_page" && b.type !== "child_database")
+        .map(async (b) => {
+          b.children = await fetchBlockTree(b.id, apiKey, depth + 1, maxDepth);
+        })
+    );
+  }
+  return blocks;
+}
+
+function flattenBlocks(blocks: NotionBlock[]): NotionBlock[] {
+  return blocks.flatMap((b) => [b, ...(b.children ? flattenBlocks(b.children) : [])]);
+}
+
 // Pre-resolve Notion-hosted images → Supabase permanent URLs
 async function resolveImageBlocks(blocks: NotionBlock[]): Promise<Map<string, string>> {
   const map = new Map<string, string>();
-  const imageBlocks = blocks.filter(
+  const imageBlocks = flattenBlocks(blocks).filter(
     (b) => b.type === "image" && b.image?.type === "file" && b.image?.file?.url
   );
   await Promise.all(
@@ -315,11 +364,7 @@ export async function getPost(slug: string): Promise<{ post: BlogPost; html: str
       if (!page) continue;
 
       const { apiKey } = sourceConfig(source);
-      const blocksRes = await fetch(`${NOTION_API_BASE}/blocks/${page.id}/children?page_size=100`, {
-        headers: notionHeaders(apiKey),
-      });
-      const blocksData = blocksRes.ok ? await blocksRes.json() as any : { results: [] };
-      const blocks: NotionBlock[] = blocksData.results ?? [];
+      const blocks = await fetchBlockTree(page.id, apiKey);
 
       const toPost = source === "hub" ? hubPageToPost : ktooluPageToPost;
       const [imageUrlMap, cover] = await Promise.all([
