@@ -3,6 +3,31 @@
 > 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
 > (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
 
+## 2026-09-26 — 핵심 도구 3개 갱신, 가격 비교 글 갱신, Notion 표 렌더링 버그
+
+### 오늘 한 일
+
+- **도구 16개 점검 → 낡은 8개 sitemap 제외**(`9618a26`): 몇 세대 전 모델을 현재형으로 쓴 페이지
+  (chatgpt·claude·gemini·cursor·deepseek·perplexity·kling·runway)
+- **ChatGPT·Claude·Gemini 페이지 갱신**(`a76e943`): 공식 요금제 페이지(chatgpt.com/pricing,
+  claude.com/pricing, gemini.google/kr/subscriptions) 기준. 모델·요금제·가격·기능 교체, 커뮤니티
+  요약의 낡은 사실 정리(출처 인용문은 원문 유지). sitemap에 3개 복귀 → 52개.
+  Gemini AI Pro 29,000원만 공식 페이지에 원화 표기가 없어 복수 보도로 확인
+- **Notion 글 "AI 구독료 비교"(`ai-subscription-price-comparison-2026`) 가격 갱신**: 표 5개와
+  사실 문장만 수정, 본인 사용 소감은 그대로. 상단에 "9월 26일 갱신" 명시. Grok은 공식 페이지가
+  JS로 가격을 불러와 확인 불가 → 2차 출처 교차 확인값, 모델 버전은 출처끼리 엇갈려 뺐다
+- **렌더러 버그 수정**(`lib/notion.ts`): 최상위 블록만 가져오고 `table` 케이스가 없어서
+  **표·들여쓴 블록이 통째로 사라지고, 100블록 넘는 글은 뒷부분이 잘리고 있었다.**
+  가격 비교 글은 가격표 없이 공개돼 있었음. 영향받던 글 12개(hub 8 · ktoolu 4), 그중
+  `hermes-desktop-10-settings`는 100블록 초과로 결말까지 잘림. `fetchBlockTree`(페이지 넘김 +
+  2단계 재귀)와 표 렌더링 추가, 라이브에서 확인
+
+### 다음에 할 일
+
+- [ ] Search Console URL 검사: 가격 비교 글(옛·새 주소), /tools/chatgpt·claude·gemini 추가 가능
+- [ ] 남은 낡은 도구 5개(cursor·deepseek·perplexity·kling·runway) 갱신 후 sitemap 복귀
+- [ ] 가격 비교 글 제목 "(2026년)"·PublishedAt은 그대로 둠 — 사이트에 "수정일" 표시 기능은 없음
+
 ## 2026-09-25 (계속) — sitemap 축소, crop 버그 수정, LINE 스티커 가이드
 
 ### 오늘 한 일
