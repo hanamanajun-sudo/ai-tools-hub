@@ -58,6 +58,26 @@ export interface AITool {
   };
 }
 
+// 직접 써봤거나 글로 다루는 도구만 "핵심"으로 제대로 관리한다(2026-09-26 사용자 선정).
+// 나머지는 상세 페이지를 간략 모드(설명 + 공식 링크)로 보여주고 noindex —
+// 모델명·가격은 몇 달이면 틀려져서 54개 전부를 최신으로 유지할 수 없기 때문.
+export const CORE_TOOL_IDS: ReadonlySet<string> = new Set([
+  // 자체 제작
+  "crop", "story",
+  // 텍스트
+  "chatgpt", "claude", "gemini", "grok", "perplexity", "deepseek",
+  // 에이전트·자동화
+  "n8n", "hermes", "manus", "muse",
+  // 코딩
+  "cursor",
+  // 이미지·영상·음악·음성
+  "midjourney", "seedance", "kling", "veo", "capcut", "suno", "eleven-labs",
+]);
+
+export function isCoreTool(id: string): boolean {
+  return CORE_TOOL_IDS.has(id);
+}
+
 export const categories: { value: Category; label: string; emoji: string }[] = [
   { value: "all", label: "전체", emoji: "🌐" },
   { value: "text", label: "텍스트 / 글쓰기", emoji: "✍️" },
@@ -388,7 +408,7 @@ export const aiTools: AITool[] = [
   {
     id: "kimi",
     name: "Kimi",
-    description: "Kimi(키미) — 중국 Moonshot AI의 대화형 AI. 2026년 7월 공개된 최신 K3 모델은 2.8조 파라미터 규모로 미국 최상위권 모델들과 견줄 성능을 보여주며 화제가 되고 있습니다.",
+    description: "Kimi(키미) — 중국 Moonshot AI가 만든 대화형 AI입니다.",
     longDescription: "Kimi는 중국 AI 스타트업 Moonshot AI(月之暗面)가 개발한 대화형 AI 서비스입니다. 2026년 7월 16일 공개된 최신 모델 Kimi K3는 2.8조 파라미터 규모의 MoE(전문가 혼합) 모델로, Kimi Delta Attention(KDA)과 Attention Residuals(AttnRes)라는 독자 아키텍처를 통해 효율성과 추론 품질을 끌어올렸습니다. 100만 토큰 컨텍스트 윈도우를 지원하고, 기존 K2 시리즈와 달리 별도 모드 전환 없이 항상 추론('Thinking') 상태로 응답하는 것이 특징입니다. 공개 직후 Artificial Analysis 리더보드 3위에 오르며 Anthropic·OpenAI의 최상위권 모델과 경쟁 가능한 성능을 보여줬고, Bloomberg·TechCrunch·Fortune 등 해외 주요 매체가 'DeepSeek 모먼트의 재현'이라 평할 만큼 주목받았습니다. 완전한 오픈 가중치 공개도 예정되어 있어 기업·기관이 자체 서버에서 구동할 수 있다는 점도 강점입니다.",
     url: "https://kimi.com",
     category: "text",
@@ -491,7 +511,7 @@ export const aiTools: AITool[] = [
   {
     id: "dalle3",
     name: "DALL·E 3",
-    description: "DALL-E 3(달리) — OpenAI의 최신 이미지 생성 AI. 텍스트 설명을 정확하게 반영한 고품질 이미지를 생성합니다.",
+    description: "DALL-E 3(달리) — OpenAI의 이전 세대 이미지 생성 모델. 지금 ChatGPT에서는 DALL·E 대신 내장 이미지 생성 기능을 씁니다.",
     longDescription: "DALL·E 3는 OpenAI가 개발한 텍스트→이미지 생성 AI로, 텍스트 프롬프트를 정확하게 반영하는 능력이 핵심 강점입니다. ChatGPT Plus 구독자는 ChatGPT 대화 중에 바로 이미지를 생성할 수 있어 편의성이 높습니다. 이전 버전 대비 텍스트가 포함된 이미지 생성 능력이 크게 향상되었으며, 복잡한 장면 묘사도 정확하게 구현합니다. 안전 필터가 강력해 창작의 자유가 제한될 수 있지만, 상업적으로 안전한 이미지 생성에 적합합니다.",
     url: "https://openai.com/dall-e-3",
     category: "image",
@@ -629,10 +649,10 @@ export const aiTools: AITool[] = [
 
   {
     id: "image-nanobana",
-    name: "Image Nanobana",
-    description: "Image Nanobana(제미니) — 고품질 이미지 생성 AI. 세밀한 디테일과 사실적인 표현력이 강점입니다.",
+    name: "Nano Banana",
+    description: "Nano Banana(나노 바나나) — Google Gemini에 들어 있는 이미지 생성·편집 기능. Gemini 앱에서 대화하듯 이미지를 만들고 고칩니다.",
     longDescription: "Image Nanobana(이미지 나노바나나)는 고품질 이미지 생성에 특화된 AI 도구로, 뛰어난 디테일 표현과 사실적인 이미지 생성 능력이 강점입니다. 짧은 프롬프트만으로도 원하는 느낌의 이미지를 생성할 수 있으며, 생성된 이미지를 짧은 영상으로도 제작 가능합니다. 사용자 친화적인 인터페이스와 빠른 생성 속도로 크리에이터들 사이에서 인기를 얻고 있습니다.",
-    url: "https://image-nanobana.example.com",
+    url: "https://gemini.google.com",
     category: "image",
     tags: ["고품질", "이미지 생성", "크리에이티브"],
     free: false,
@@ -650,7 +670,7 @@ export const aiTools: AITool[] = [
   {
     id: "chatgpt-image",
     name: "ChatGPT Image",
-    description: "ChatGPT Image(챗GPT) — ChatGPT에 내장된 이미지 생성 기능. GPT-4o의 멀티모달 능력으로 텍스트와 이미지를 통합 생성합니다.",
+    description: "ChatGPT Image(챗GPT) — ChatGPT에 내장된 이미지 생성 기능. 대화하듯 이미지를 만들고 고칠 수 있습니다.",
     longDescription: "ChatGPT Image는 ChatGPT에 내장된 AI 이미지 생성 기능으로, GPT-4o의 멀티모달 능력을 활용해 텍스트와 이미지를 통합적으로 생성합니다. DALL-E와 달리 ChatGPT와의 대화 맥락을 이해하고 이미지를 생성하므로, 이전 대화 내용을 바탕으로 일관된 스타일의 이미지를 만들 수 있습니다. 채팅 내에서 바로 이미지를 생성하고 편집할 수 있어 워크플로우가 매우 간편합니다.",
     url: "https://chat.openai.com",
     category: "image",
@@ -671,7 +691,7 @@ export const aiTools: AITool[] = [
   {
     id: "runway",
     name: "Runway",
-    description: "Runway(런웨이) — 전문적인 AI 비디오 생성 및 편집 플랫폼. Gen-2로 텍스트/이미지를 고품질 비디오로 변환합니다.",
+    description: "Runway(런웨이) — AI 비디오 생성 및 편집 플랫폼. 텍스트·이미지로 영상을 만들고 편집합니다.",
     longDescription: "Runway는 할리우드 영화 제작팀도 사용하는 전문 AI 비디오 플랫폼입니다. Gen-3 Alpha 모델로 텍스트 또는 이미지를 최대 10초의 고품질 비디오로 변환할 수 있으며, 실제 같은 움직임과 세밀한 디테일이 특징입니다. 비디오 편집, 배경 제거, 인페인팅, 오디오 분리 등 전문 편집 도구도 제공합니다. 영화 '에브리씽 에브리웨어 올 앳 원스' 등의 제작에 활용될 만큼 전문가들의 신뢰를 받고 있습니다.",
     url: "https://runwayml.com",
     category: "video",
@@ -700,7 +720,7 @@ export const aiTools: AITool[] = [
   {
     id: "sora",
     name: "Sora",
-    description: "Sora(소라) — OpenAI의 혁신적인 텍스트→비디오 AI. 최대 60초의 놀라운 사실적 영상을 생성합니다.",
+    description: "Sora(소라) — OpenAI의 텍스트→비디오 생성 AI. 서비스가 종료되었습니다(앱·웹 2026년 4월 26일, API 2026년 9월 24일).",
     longDescription: "Sora는 OpenAI가 2024년 출시한 텍스트→비디오 생성 AI로, 물리 법칙을 이해하고 현실적인 장면을 구현하는 능력이 업계를 놀라게 했습니다. 텍스트 설명만으로 최대 1080p, 60초 길이의 고품질 영상을 생성할 수 있으며, 동일한 장면을 다양한 카메라 각도로 표현하거나 이미지를 영상으로 변환하는 기능도 제공합니다. ChatGPT Plus 구독자는 Sora를 바로 사용할 수 있어 접근성이 높습니다.",
     url: "https://sora.com",
     category: "video",
@@ -749,7 +769,7 @@ export const aiTools: AITool[] = [
   {
     id: "heygen",
     name: "HeyGen",
-    description: "HeyGen(헤이젠) — AI 아바타로 마케팅 비디오를 생성하는 플랫폼. 100개 이상의 언어로 비디오 번역도 지원합니다.",
+    description: "HeyGen(헤이젠) — AI 아바타로 마케팅 비디오를 생성하는 플랫폼. 다국어 비디오 번역도 지원합니다.",
     longDescription: "HeyGen은 AI 아바타와 음성 합성 기술을 결합해 카메라 없이도 전문적인 발표 영상을 만들 수 있는 플랫폼입니다. 100가지 이상의 AI 아바타 중 선택하거나 본인 얼굴로 개인 아바타를 만들 수 있습니다. 가장 주목받는 기능은 '영상 번역'으로, 기존 영상을 업로드하면 입 모양까지 맞춰가며 100개 이상의 언어로 자동 더빙해줍니다. 온보딩 영상, 제품 설명, 교육 자료 등 반복 제작이 필요한 기업 영상에 특히 효과적입니다.",
     url: "https://www.heygen.com",
     category: "video",
@@ -847,7 +867,7 @@ export const aiTools: AITool[] = [
   {
     id: "github-copilot",
     name: "GitHub Copilot",
-    description: "GitHub Copilot(깃허브 코파일럿) — GitHub과 OpenAI가 개발한 AI 코딩 어시스턴트. VS Code에서 실시간 코드 제안과 자동 완성을 제공합니다.",
+    description: "GitHub Copilot(깃허브 코파일럿) — GitHub의 AI 코딩 어시스턴트. VS Code 등 에디터에서 코드 제안과 채팅을 제공합니다.",
     longDescription: "GitHub Copilot은 GitHub과 OpenAI가 공동 개발한 AI 코딩 어시스턴트로, 전 세계 개발자들이 가장 많이 사용하는 AI 코딩 도구입니다. VS Code, JetBrains, Neovim 등 주요 에디터에서 실시간 코드 자동 완성, 함수 생성, 주석→코드 변환을 지원합니다. Copilot Chat은 코드에 대한 질문, 설명, 리팩토링 제안을 대화 형식으로 제공합니다. GitHub 저장소의 방대한 코드를 학습해 다양한 언어와 프레임워크에서 높은 정확도를 보여주며, 개발 생산성을 평균 55% 향상시킨다는 연구 결과가 있습니다.",
     url: "https://github.com/features/copilot",
     category: "coding",
@@ -985,7 +1005,7 @@ export const aiTools: AITool[] = [
   {
     id: "windsurf",
     name: "Windsurf",
-    description: "Windsurf(윈드서프) — Codeium이 개발한 AI 네이티브 IDE. Cursor의 강력한 대항마로 주목받고 있습니다.",
+    description: "Windsurf(윈드서프) — AI 네이티브 코드 에디터. Cursor와 자주 비교되는 도구입니다.",
     longDescription: "Windsurf는 Codeium(기존 Codeium)이 개발한 AI 네이티브 통합 개발 환경(IDE)입니다. 기존 VS Code 기반 IDE와 달리 AI가 코드 편집 전반에 깊게 통합되어 있어, 개발자의 의도를 이해하고 능동적으로 코드를 제안-완성합니다. AI Flow 패러다임을 도입해 개발자가 코드를 작성할 때 AI가 함께 흐름을 읽으며 다음 동작을 예측합니다. 멀티 파일 편집, 리팩토링, 코드 리뷰 등 고급 기능을 무료로 제공하며 개발자들 사이에서 빠르게 채택되고 있습니다.",
     url: "https://codeium.com/windsurf",
     category: "coding",
@@ -1233,9 +1253,34 @@ export const aiTools: AITool[] = [
     },
   },
   {
+    // 2026-09-26 추가. Meta 공식 발표(about.fb.com)·TechCrunch로 확인한 사실만 적었다.
+    // 한국 출시 여부가 바뀌면 description·cons·comparisonNotes를 같이 고칠 것.
+    id: "muse",
+    name: "Muse",
+    description: "Muse(뮤즈) — Meta가 2026년 9월 출시한 개인 AI 에이전트. 대답만 하는 게 아니라 이메일 발송·여행 예약·양식 작성 같은 일을 직접 처리합니다. 현재 미국에서만 이용할 수 있습니다.",
+    longDescription: "Muse는 Meta가 2026년 9월 8일 출시한 개인 AI 에이전트입니다. Meta의 에이전트용 멀티모달 모델 Muse Spark로 동작하며, 질문에 답하는 챗봇과 달리 연결된 계정 안에서 실제로 일을 처리합니다 — 이메일 보내기, 여행 예약, 브라우저를 열어 양식 작성, 목표에 맞춘 실행 계획 세우기, 인스타그램에 저장한 레시피 릴스를 장보기 목록으로 바꾸기 같은 작업입니다. 앱을 닫아도 작업을 이어가고, 민감한 작업은 실행 전에 승인을 요청합니다. iOS·Android 앱, 웹(muse.ai), Mac 앱, WhatsApp 대화에서 쓸 수 있고 AI 안경 지원이 예정되어 있습니다. 2026년 9월 26일 기준 미국에서만 순차 출시 중이며 한국 출시 일정은 발표되지 않았습니다.",
+    url: "https://muse.ai",
+    category: "agent",
+    tags: ["AI 에이전트", "Meta", "Muse Spark", "개인 비서"],
+    free: true,
+    popular: true,
+    features: ["이메일 발송·여행 예약·양식 작성 등 작업 대행", "목표에 맞춘 실행 계획 제안", "앱을 닫아도 작업 계속 진행", "민감한 작업은 실행 전 승인 요청", "작업 기록(감사 로그) 확인", "iOS·Android·웹·Mac·WhatsApp 지원"],
+    pros: ["답변이 아니라 실제 작업을 끝까지 처리", "WhatsApp·인스타그램 등 Meta 서비스와 연결", "무료 플랜 제공(Meta는 대부분 무료로 충분하다고 설명)", "연결할 앱과 권한 범위를 직접 선택"],
+    cons: ["2026년 9월 기준 미국에서만 이용 가능 — 한국 출시 미정", "메일·결제·캘린더 등 넓은 계정 접근 권한이 필요", "Meta의 개인정보 관련 이력(FTC 합의 등)으로 신뢰 문제가 지적됨"],
+    pricing: { free: "주간 사용량 한도 내 무료", paid: "Power $20/월, Maximum $100/월 (미국 기준)" },
+    useCases: ["이메일 정리·발송", "여행 예약", "요금 낮추기·양식 작성 같은 잡무 처리", "목표별 실행 계획 세우기", "저장한 레시피를 장보기 목록으로"],
+    pricingPlans: [
+      { name: "Free", price: "무료", features: ["주간 사용량 한도", "남은 사용량 표시"], recommended: true },
+      { name: "Power", price: "$20/월", features: ["무료보다 많은 사용량"] },
+      { name: "Maximum", price: "$100/월", features: ["가장 많은 사용량"] },
+    ],
+    comparisonNotes: "2026년 9월 26일 기준 미국에서만 이용 가능하고 한국 출시 일정은 발표되지 않았습니다. 요금은 미국 기준이며, 플랜별 세부 한도는 공식 사이트에서 확인하세요. 출처: Meta 공식 발표, TechCrunch.",
+    whoIsFor: ["메일·예약 같은 반복 잡무를 AI에 맡기고 싶은 분", "WhatsApp·인스타그램을 많이 쓰는 분", "AI 에이전트의 최신 흐름이 궁금한 분"],
+  },
+  {
     id: "zapier-ai",
     name: "Zapier AI",
-    description: "Zapier AI(재피어) — 세계 최대 자동화 플랫폼의 AI 기능. 6,000개 이상의 앱을 연결해 워크플로우를 자동화합니다.",
+    description: "Zapier AI(재피어) — 자동화 플랫폼 Zapier의 AI 기능. 수천 개의 앱을 연결해 워크플로우를 자동화합니다.",
     longDescription: "Zapier는 6,000개 이상의 앱을 코드 없이 연결하는 세계 최대 자동화 플랫폼으로, AI가 통합되어 더욱 강력해졌습니다. Zapier AI는 이메일, 스프레드시트, CRM 등에서 데이터를 추출-가공-전송하는 워크플로우를 AI가 자동으로 생성합니다. 자연어로 원하는 작업을 설명하면 AI가 적절한 트리거와 액션을 조합해 자동화를 만들어줍니다. GPT, Claude 등 AI 모델을 통합해 AI 기반 의사결정 자동화도 가능합니다.",
     url: "https://zapier.com",
     category: "agent",
@@ -1425,7 +1470,7 @@ export const aiTools: AITool[] = [
   {
     id: "open-claw",
     name: "OpenClaw",
-    description: "OpenClaw(오픈클로) — 오픈소스 Claude 터미널 클라이언트. 로컬에서 Claude API로 코딩·분석을 자동화합니다.",
+    description: "OpenClaw(오픈클로) — 오픈소스 AI 에이전트. 내 컴퓨터에서 실행하며 작업을 자동화합니다.",
     url: "https://github.com/openclaw",
     category: "agent",
     tags: ["Claude", "CLI", "오픈소스", "코딩"],

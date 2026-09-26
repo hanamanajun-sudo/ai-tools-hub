@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { aiTools, categories, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
+import { aiTools, categories, isCoreTool, type AITool, type ExpertRating, type PricingPlan } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
 import { getKoName, getToolShortName as getName } from "@/lib/tool-names";
 import { getPromptsForTool } from "@/lib/prompts";
@@ -45,6 +45,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: { title: `${ko.h1} - ktoolu`, description: tool.description, type: "website", siteName: "ktoolu" },
     twitter: { card: "summary", title: `${ko.h1} - ktoolu`, description: tool.description },
     keywords: [tool.name, ...tool.tags, categoryLabel?.label ?? "", "AI 도구", "AI tools"],
+    // 핵심이 아닌 도구는 간략 모드 — 검색엔진엔 내보내지 않고 링크만 따라가게 둔다
+    ...(isCoreTool(tool.id) ? {} : { robots: { index: false, follow: true } }),
   };
 }
 
@@ -59,10 +61,14 @@ export default async function ToolDetailPage({ params }: Props) {
   const { slug } = await params;
   const tool = aiTools.find((t) => t.id === slug);
   if (!tool) notFound();
+  if (!isCoreTool(tool.id)) return <BriefToolPage tool={tool} />;
 
   const categoryLabel = categories.find((c) => c.value === tool.category);
   const colorClass = categoryColors[tool.category];
-  const relatedTools = aiTools.filter((t) => t.category === tool.category && t.id !== tool.id).slice(0, 4);
+  const relatedTools = aiTools
+    .filter((t) => t.category === tool.category && t.id !== tool.id)
+    .sort((a, b) => Number(isCoreTool(b.id)) - Number(isCoreTool(a.id)))
+    .slice(0, 4);
 
   const ratingKeys = tool.expertRating ? (Object.keys(tool.expertRating) as (keyof ExpertRating)[]) : [];
   const avgRating = tool.expertRating
@@ -556,6 +562,76 @@ export default async function ToolDetailPage({ params }: Props) {
         </div>
       </main>
 
+      <SiteFooter />
+    </div>
+  );
+}
+
+/* ── 간략 모드 (핵심 도구가 아닌 경우) ──
+ * 가격·모델명·평점처럼 금방 낡는 정보는 빼고, 무엇을 하는 도구인지와 공식 링크만 보여준다.
+ * 핵심 도구 목록은 lib/ai-tools-data.ts의 CORE_TOOL_IDS. */
+function BriefToolPage({ tool }: { tool: AITool }) {
+  const categoryLabel = categories.find((c) => c.value === tool.category);
+  const colorClass = categoryColors[tool.category];
+  const ko = getKoName(tool);
+  const toolUrl = `${BASE_URL}/tools/${tool.id}`;
+  const sameCategoryCore = aiTools.filter((t) => t.category === tool.category && isCoreTool(t.id));
+  const coreTools = (sameCategoryCore.length ? sameCategoryCore : aiTools.filter((t) => isCoreTool(t.id))).slice(0, 6);
+  const breadcrumbs = breadcrumbJsonLd([
+    { name: "홈", url: BASE_URL },
+    { name: categoryLabel?.label ?? "AI 도구", url: `${BASE_URL}/category/${tool.category}` },
+    { name: ko.h1, url: toolUrl },
+  ]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }} />
+      <SiteHeader />
+      <main id="main-content" className="mx-auto max-w-3xl px-4 py-10">
+        <Link
+          href={`/category/${tool.category}`}
+          className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium mb-4 transition-opacity hover:opacity-80 ${colorClass}`}
+        >
+          {categoryLabel?.emoji} {categoryLabel?.label}
+        </Link>
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-4">{ko.h1}</h1>
+        <p className="text-lg text-muted-foreground leading-relaxed mb-6">{tool.description}</p>
+
+        <div className="rounded-xl border border-border/50 bg-muted/30 px-5 py-4 mb-6 text-sm text-muted-foreground leading-relaxed">
+          ktoolu가 직접 써보고 다루는 도구가 아니라서 간단한 소개만 남겨두었습니다.
+          요금제와 최신 기능은 공식 사이트에서 확인하세요.
+        </div>
+
+        <OutboundLink
+          href={tool.url}
+          eventName="tool_visit_click"
+          eventParams={{ tool_id: tool.id, tool_name: tool.name, source: "brief_cta" }}
+          className="inline-block mb-10"
+        >
+          <Button className="gap-2 group">
+            <span>{getName(tool)} 공식 사이트</span>
+            <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Button>
+        </OutboundLink>
+
+        <section>
+          <h2 className="text-base font-bold text-foreground mb-4">
+            ktoolu가 직접 다루는 {sameCategoryCore.length ? categoryLabel?.label : "AI"} 도구
+          </h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {coreTools.map((t) => (
+              <Link
+                key={t.id}
+                href={`/tools/${t.id}`}
+                className="group rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:-translate-y-0.5"
+              >
+                <div className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors mb-1">{getKoName(t).h1}</div>
+                <div className="text-xs text-muted-foreground line-clamp-2">{t.description}</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </main>
       <SiteFooter />
     </div>
   );

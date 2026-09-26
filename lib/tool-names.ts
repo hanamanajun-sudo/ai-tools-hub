@@ -10,7 +10,8 @@ export const KO_TOOL_NAMES: Record<string, { h1: string; short: string }> = {
   sora:         { h1: "소라(Sora)", short: "소라" },
   capcut:       { h1: "캡컷(CapCut)", short: "캡컷" },
   "auto-gpt":   { h1: "오토GPT(AutoGPT)", short: "오토GPT" },
-  "image-nanobana": { h1: "제미니(Image Nanobana)", short: "제미니" },
+  "image-nanobana": { h1: "나노 바나나(Nano Banana)", short: "나노 바나나" },
+  muse:         { h1: "메타 뮤즈(Muse)", short: "뮤즈" },
 };
 
 export function getKoName(tool: { id: string; name: string }): { h1: string; short: string } {
