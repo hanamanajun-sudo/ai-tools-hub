@@ -17,13 +17,14 @@ export const dynamic = "force-dynamic";
 // 2026-09-26: 내용이 몇 세대 전 모델을 현재형으로 적고 있는 도구는 갱신 전까지 뺐다.
 // 색인 우선 목록에 낡은 페이지를 올리면 새 도메인에서 낡은 내용으로 재평가받는다.
 // 같은 날 도구 페이지 정리: 핵심 도구(CORE_TOOL_IDS)만 관리하고 나머지는 간략 모드 + noindex.
-// 여기엔 핵심 중에서도 내용 검증이 끝난 것만 넣는다. 핵심인데 아직 빠진 것(갱신하면 넣을 것):
-// cursor(GPT-4o), deepseek(R1·2025년), perplexity(GPT-4), kling(2.0·2024년),
-// capcut·manus·suno·veo·eleven-labs(가격 미검증).
+// 여기엔 핵심 중에서도 내용 검증이 끝난 것만 넣는다.
+// 2026-09-26 공식 페이지(또는 복수 보도 교차 확인)로 갱신한 핵심 13개를 넣었다.
+// 아직 가격 미검증인 핵심: midjourney·seedance·grok·n8n·hermes — 모델 세대만 확인하고 남겨둔 상태.
 const PRIORITY_TOOL_IDS = [
-  // 공식 페이지 기준 갱신 완료
+  // 갱신 완료
   "chatgpt", "claude", "gemini", "muse",
-  // 모델 세대만 확인(가격 미검증)
+  "cursor", "perplexity", "deepseek", "capcut", "suno", "eleven-labs", "manus", "kling", "veo",
+  // 가격 미검증
   "midjourney", "seedance", "grok", "n8n", "hermes",
   // 자체 제작
   "crop", "story",
