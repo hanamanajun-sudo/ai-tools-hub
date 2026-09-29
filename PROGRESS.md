@@ -3,6 +3,41 @@
 > 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
 > (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
 
+## 2026-09-29~30 — 애드센스 배포 전 준비: /made 신설, ads.txt, 프롬프트 noindex
+
+### 한 일 (2026-09-29, `2f033bd` 이전 커밋들)
+- 다른 세션(claude.ai)과 상의하기 위한 ktoolu.com 현황 보고서 작성(읽기 전용) — 애드센스 준비
+  상태, 서브도메인 소개 방식을 코드 기준으로 조사. `C:\dev\pingping`이 simsns.ktoolu.com
+  (SNS 극락/나락 시뮬레이터, 2026-09-27 라이브)이라는 사실을 이때 확인
+- `/made` 페이지 신설, `lib/ai-tools-data.ts`에 `tagline` 필드 추가 후 simsns를
+  `CORE_TOOL_IDS`에 등록(이후 되돌림, 아래 참고), 푸터에 "직접 만든 것" 링크, sitemap에 `/made`
+- `public/ads.txt`·애드센스 스크립트(`ca-pub-6443201130119317`, GA4와 같은 `next/script`
+  `afterInteractive` 패턴) 추가 — 퍼블리셔 ID는 lalalakorea 저장소에서 확인한 같은 계정 값
+- `/prompts` 30개 전체 본문 글자 수 확인 — **전부 800자 미만**(원문만 최소 271·중앙값 334·최대 428자)
+
+### 한 일 (2026-09-30, `2f033bd`)
+- 개인정보처리방침: "현재 광고를 게재하고 있지 않습니다" 문구 삭제, AdSense 쿠키·옵트아웃
+  (Google 광고 설정 + aboutads.info) 고지 추가, 시행일 갱신 + 변경 이력 섹션 신설
+- `/prompts`, `/prompts/[slug]`에 `robots: noindex, follow` — 30개 전부 800자 미만이라
+  애드센스 심사 전까지 검색엔진에서 뺐다. 사이트 안 링크는 유지. sitemap엔 원래도 없었음
+- simsns를 `CORE_TOOL_IDS`에서 제거 → `/tools/simsns`는 간략 모드(noindex)로,
+  `/made` 카드는 그대로 유지 — 두 노출 경로(핵심 도구 페이지 vs 직접 만든 것 목록)는 별개 기준
+- `<meta name="google-adsense-account" content="ca-pub-6443201130119317">` 추가(소유 확인)
+- 배포 후 라이브에서 전부 확인: sitemap 62개(prompts·tools/simsns 없음), `/tools/simsns`·
+  `/prompts`·`/prompts/[slug]` noindex, privacy 문구 교체, `google-adsense-account` 메타,
+  `ads.txt` 200(text/plain), `/made` 200(카드 2개: crop·simsns)
+
+### 다음에 할 일
+- [ ] 애드센스 신청 — 위 기술 준비(ads.txt·스크립트·소유 확인 메타·방침 고지)는 끝났지만,
+      **광고 단위는 아직 배치하지 않음**(이번 작업 범위 밖). 신청 전 색인 상태 재확인 필요
+      (9/26에 요청한 9개 URL 결과 확인 — 아직 못 함)
+- [ ] `/prompts` noindex는 임시 조치. 프롬프트에 실제 결과 예시를 채워 글자 수를 늘리거나,
+      애드센스 승인 이후 다시 index로 되돌릴지 판단 필요
+- [ ] simsns 도구 데이터(`lib/ai-tools-data.ts`)의 기능·장단점은 비워 둔 채임 — 앱을
+      직접 써본 뒤 채울 것
+- [ ] 남은 핵심 도구 검증(midjourney·seedance·grok·n8n·hermes는 이미 갱신됨, crop·story는
+      자체 제작이라 항상 최신) — 이 항목은 9/26 기록 참고
+
 ## 2026-09-26 — 콘텐츠 방향 전환, 도구 페이지 정리(핵심 20개 검증), Notion 렌더러 버그
 
 > 새 세션은 이 섹션의 "현재 상태"와 "다음에 할 일"부터 읽을 것.
