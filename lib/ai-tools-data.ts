@@ -1564,3 +1564,9 @@ export const aiTools: AITool[] = [
 export const LIVE_MADE_TOOLS = aiTools.filter(
   (t) => t.madeByKtoolu && (t.status ?? "live") === "live"
 );
+
+/** 서드파티 도구 디렉터리(랭킹·카테고리·카드 그리드)에 실제로 보이는 도구.
+ * ktoolu 자체 제작(madeByKtoolu)은 여기서 빼고 /made로만 안내한다.
+ * 도구 개수를 사람에게 보여줄 땐 aiTools.length가 아니라 이 값을 써야
+ * "직접 만든 것도 여기 섞여 있다"는 문구와 실제 디렉터리 개수가 어긋나지 않는다. */
+export const DIRECTORY_TOOLS = aiTools.filter((t) => !t.madeByKtoolu);

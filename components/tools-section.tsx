@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { aiTools, categories, type Category, type AITool } from "@/lib/ai-tools-data";
+import { categories, DIRECTORY_TOOLS, type Category, type AITool } from "@/lib/ai-tools-data";
 import { categoryColors } from "@/lib/tool-styles";
 import { trackEvent } from "@/lib/analytics";
 import { getRankedCategories, getRankEmoji, getHighlight, shortDesc } from "@/lib/tool-ranking";
@@ -22,10 +22,6 @@ import {
   FileText, Image, Film, Code, Music, Sparkles, Bot
 } from "lucide-react";
 import Link from "next/link";
-
-// 서드파티 도구 디렉터리와 ktoolu 자체 제작 도구(crop·simsns 등)를 섞지 않는다 —
-// 자체 제작은 홈 "ktoolu가 만든 도구" 섹션과 /made에서만 노출(2026-09-30).
-const DIRECTORY_TOOLS = aiTools.filter((t) => !t.madeByKtoolu);
 
 /* ===================================================================
    Lucide 아이콘 맵 (이모지 대체)

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ArrowRight, BookOpen, LayoutGrid, Target, TrendingUp, Zap } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { aiTools } from "@/lib/ai-tools-data";
+import { DIRECTORY_TOOLS } from "@/lib/ai-tools-data";
 import { ALL_CATEGORIES } from "@/lib/post-categories";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ const PILLARS = [
   {
     icon: LayoutGrid,
     title: "AI 도구 디렉토리",
-    body: `${aiTools.length}개의 AI 도구를 카테고리별로 정리하고, 그중 저희가 직접 만든 도구도 함께 소개합니다. 장단점, 가격 비교, 대안 도구까지 한 곳에서 확인할 수 있어요.`,
+    body: `${DIRECTORY_TOOLS.length}개의 AI 도구를 카테고리별로 정리했습니다. 직접 만든 도구는 따로 /made에서 소개해요. 장단점, 대안 도구까지 한 곳에서 확인할 수 있어요.`,
   },
   {
     icon: TrendingUp,
@@ -57,11 +57,12 @@ export default function AboutPage() {
               ktoolu란?
             </h1>
             <p className="text-lg text-muted-foreground mb-2">
-              <span className="font-bold text-primary">K Tool for U</span> — AI로 만드는 사람들을 위한 툴킷
+              <span className="font-bold text-primary">K Tool for U</span> — 만드는 사람이 직접 쓰고 기록하는 곳
             </p>
             <p className="mx-auto max-w-xl text-sm text-muted-foreground leading-relaxed mt-4">
-              AI 도구를 고르는 시간을 줄여드립니다. 새로운 AI 서비스가 매일같이 쏟아지지만,
-              정작 &ldquo;내게 맞는 도구가 무엇인지&rdquo;를 확인하는 데는 생각보다 시간이 걸리니까요.
+              AI 도구를 고르는 시간을 줄여드리고, 직접 만든 것도 공개합니다. 새로운 AI 서비스가
+              매일같이 쏟아지지만, 정작 &ldquo;내게 맞는 도구가 무엇인지&rdquo;를 확인하는 데는
+              생각보다 시간이 걸리니까요.
             </p>
           </div>
         </section>

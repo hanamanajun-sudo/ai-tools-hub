@@ -23,7 +23,7 @@ export default function MadePage() {
   return (
     <div className="min-h-screen bg-background">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbs) }} />
-      <SiteHeader />
+      <SiteHeader activePage="made" />
 
       <main id="main-content" className="mx-auto max-w-3xl px-4 pb-16">
         <div className="pt-10 pb-6">

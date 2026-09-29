@@ -67,8 +67,7 @@ export default async function HomePage() {
             </span>
           </h1>
           <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
-            텍스트, 이미지, 비디오, 코딩, 음악까지 — 업무와 창작을 혁신할
-            AI 도구들을 카테고리별로 정리했습니다.
+            AI 도구를 카테고리별로 정리했습니다. 직접 만든 도구는 &lsquo;만든 것&rsquo;에서 따로 소개해요.
           </p>
         </section>
 

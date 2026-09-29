@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Wand2, FileText, Image, Film, Code, Music, Bot, TrendingUp } from "lucide-react";
+import { Sparkles, BookOpen, Wand2, Wrench, FileText, Image, Film, Code, Music, Bot, TrendingUp } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 // 실제 페이지 렌더링 순서와 동일한 카테고리 링크
@@ -16,7 +16,7 @@ const CATEGORY_LINKS = [
 ];
 
 interface SiteHeaderProps {
-  activePage?: "blog" | "prompts";
+  activePage?: "blog" | "prompts" | "made";
   blogCount?: number;
 }
 
@@ -65,6 +65,17 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
             >
               <Wand2 className="h-4 w-4" />
               <span className="hidden sm:inline">프롬프트</span>
+            </Link>
+            <Link
+              href="/made"
+              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
+                activePage === "made"
+                  ? "text-foreground bg-accent"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              }`}
+            >
+              <Wrench className="h-4 w-4" />
+              <span className="hidden sm:inline">만든 것</span>
             </Link>
             <ThemeToggle />
           </div>
