@@ -3,6 +3,35 @@
 > 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
 > (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
 
+## 2026-09-30 — 정체성 정리: ktoolu 자체 제작 도구를 서드파티 디렉터리에서 분리
+
+crop·story·simsns(madeByKtoolu)가 도구 랭킹·카테고리 페이지·"대안 도구" 추천에
+서드파티 도구와 섞여 있었다. `671331a`에서 분리하고 `34c7731`에서 문구·헤더까지 확정.
+
+- 자체 제작 도구는 이제 홈 "ktoolu가 만든 도구" 섹션 + `/made`에서만 노출.
+  카드는 서브도메인(crop.ktoolu.com·simsns.ktoolu.com)으로 직접 연결
+- `lib/ai-tools-data.ts`에 `LIVE_MADE_TOOLS`(운영 중인 자체 제작), `DIRECTORY_TOOLS`
+  (자체 제작 제외한 서드파티 디렉터리) 추가 — 홈·`/made`·`/about`·`tools-section.tsx`가
+  전부 이 두 상수를 공유. 총 도구 56개 중 자체 제작 3개를 뺀 53개가 "디렉터리" 개수
+- `/tools/crop`·`/tools/story`도 robots noindex로 통일(지금까지 core라 색인 대상이었음).
+  라우트·전체 콘텐츠는 그대로 두고 색인만 `/made` 하나로 모음. sitemap에서도 제외
+  (60개, 이전 62개에서 -2). `/tools/simsns`는 계속 noindex
+- 홈 히어로 부제, `/about` 히어로·PILLARS[0] 문구를 "자체 제작은 따로 소개" 방향으로 교체
+  (about 페이지의 낡은 "그중 저희가 직접 만든 도구도 함께 소개합니다" 문구도 같이 정리)
+- 헤더 내비 "프롬프트" 뒤에 "만든 것"(Wrench 아이콘, `/made`) 추가,
+  `SiteHeaderProps.activePage`에 `"made"` 추가해 활성 표시 연결
+
+라이브에서 전부 확인: 홈/about 문구, 헤더 링크, `/made` 200, sitemap 60개
+(tools/crop·story·simsns 없음).
+
+### 다음에 할 일
+- [ ] 위 작업으로 도구 총 개수(56개)·디렉터리 개수(53개) 문구가 여러 곳에 흩어져 있음
+      (`app/page.tsx`의 히어로 배지는 여전히 `aiTools.length`=56 사용, `/about`은
+      `DIRECTORY_TOOLS.length`=53 사용) — 의도한 차이(전체 보유 수 vs 디렉터리 노출 수)지만
+      나중에 헷갈리면 이 기록을 참고
+- [ ] 이전 세션에서 넘어온 항목들(9/26·9/29~30 기록 참고): 애드센스 신청 시점,
+      `/prompts` noindex 임시 조치, simsns 데이터 보강, 색인 요청 결과 확인
+
 ## 2026-09-29~30 — 애드센스 배포 전 준비: /made 신설, ads.txt, 프롬프트 noindex
 
 ### 한 일 (2026-09-29, `2f033bd` 이전 커밋들)
