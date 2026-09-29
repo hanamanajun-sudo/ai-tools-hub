@@ -114,10 +114,11 @@ export function getRankedCategories(): { category: Exclude<Category, "all">; too
     const extras = CROSS_CATEGORY[tool.id] ?? [];
     toolCategoryMap.set(tool.id, [tool.category, ...new Set(extras)]);
   }
-  // 2) 통합 툴 제외하고 카테고리별 수집
+  // 2) 통합 툴과 ktoolu 자체 제작 도구 제외하고 카테고리별 수집
+  // (자체 제작은 서드파티 도구 랭킹과 섞이지 않게 홈 "ktoolu가 만든 도구" 섹션·/made로만 노출한다)
   const catTools = new Map<Exclude<Category, "all">, AITool[]>();
   for (const tool of aiTools) {
-    if (MERGED_TOOLS[tool.id]) continue;
+    if (MERGED_TOOLS[tool.id] || tool.madeByKtoolu) continue;
     const cats = toolCategoryMap.get(tool.id) ?? [tool.category];
     for (const cat of cats) {
       if (!catTools.has(cat)) catTools.set(cat, []);

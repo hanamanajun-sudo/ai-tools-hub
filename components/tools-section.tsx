@@ -23,6 +23,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+// 서드파티 도구 디렉터리와 ktoolu 자체 제작 도구(crop·simsns 등)를 섞지 않는다 —
+// 자체 제작은 홈 "ktoolu가 만든 도구" 섹션과 /made에서만 노출(2026-09-30).
+const DIRECTORY_TOOLS = aiTools.filter((t) => !t.madeByKtoolu);
+
 /* ===================================================================
    Lucide 아이콘 맵 (이모지 대체)
    =================================================================== */
@@ -145,7 +149,7 @@ export function ToolsSection() {
   /* ---------- 카드 그리드 필터 ---------- */
   const filteredCards = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-    return aiTools.filter((tool) => {
+    return DIRECTORY_TOOLS.filter((tool) => {
       const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
       if (!matchesCategory) return false;
       if (!query) return true;
@@ -154,8 +158,8 @@ export function ToolsSection() {
   }, [searchQuery, selectedCategory]);
 
   const catCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: aiTools.length };
-    for (const t of aiTools) counts[t.category] = (counts[t.category] ?? 0) + 1;
+    const counts: Record<string, number> = { all: DIRECTORY_TOOLS.length };
+    for (const t of DIRECTORY_TOOLS) counts[t.category] = (counts[t.category] ?? 0) + 1;
     return counts;
   }, []);
 

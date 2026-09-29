@@ -3,7 +3,7 @@ import { ExternalLink } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { OutboundLink } from "@/components/outbound-link";
-import { aiTools } from "@/lib/ai-tools-data";
+import { LIVE_MADE_TOOLS } from "@/lib/ai-tools-data";
 import { breadcrumbJsonLd, safeJsonLd } from "@/lib/breadcrumb";
 
 const BASE_URL = "https://ktoolu.com";
@@ -13,11 +13,6 @@ export const metadata: Metadata = {
   description: "ktoolu가 직접 만들어 운영하는 무료 도구와 놀거리 모음입니다.",
   alternates: { canonical: `${BASE_URL}/made` },
 };
-
-// 등재 기준: madeByKtoolu 이면서 운영 중(status가 live)인 항목. 목록을 따로 관리하지 않고
-// lib/ai-tools-data.ts의 데이터를 그대로 쓴다 — 새 서비스는 거기에 등록하면 여기에 나온다.
-// 대기 중(waitlist)인 항목은 아직 열어볼 수 없어서 뺀다.
-const madeTools = aiTools.filter((t) => t.madeByKtoolu && (t.status ?? "live") === "live");
 
 export default function MadePage() {
   const breadcrumbs = breadcrumbJsonLd([
@@ -39,7 +34,7 @@ export default function MadePage() {
         </div>
 
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {madeTools.map((tool) => (
+          {LIVE_MADE_TOOLS.map((tool) => (
             <li key={tool.id}>
               <OutboundLink
                 href={tool.url}

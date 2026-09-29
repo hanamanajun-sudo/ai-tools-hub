@@ -8,8 +8,9 @@ import { ToolsSection } from "@/components/tools-section";
 import { ModelRankTable } from "@/components/model-rank-table";
 import { StickyBottomPanel } from "@/components/sticky-bottom-panel";
 import { getPosts } from "@/lib/notion";
-import { aiTools } from "@/lib/ai-tools-data";
+import { aiTools, LIVE_MADE_TOOLS } from "@/lib/ai-tools-data";
 import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from "@/lib/post-categories";
+import { OutboundLink } from "@/components/outbound-link";
 import { ArrowUpRight } from "lucide-react";
 
 // revalidate(시간 기반 ISR)는 OpenNext Cloudflare에서 큐 설정이 필수인데
@@ -38,8 +39,6 @@ const websiteJsonLd = {
     "query-input": "required name=search_term_string",
   },
 };
-
-const MADE_TOOLS = aiTools.filter((t) => t.madeByKtoolu);
 
 export default async function HomePage() {
   const allPosts = await getPosts();
@@ -79,31 +78,42 @@ export default async function HomePage() {
           <div className="lg:col-span-2 space-y-12">
             <ModelRankTable />
 
-            {/* ktoolu가 직접 만든 도구 */}
-            {MADE_TOOLS.length > 0 && (
+            {/* ktoolu가 직접 만든 도구 — /made와 같은 목록(LIVE_MADE_TOOLS), 카드는 서브도메인으로 바로 이동 */}
+            {LIVE_MADE_TOOLS.length > 0 && (
               <section>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-lg">🐙</span>
-                  <h2 className="text-lg font-bold text-foreground">ktoolu가 만든 도구</h2>
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">🐙</span>
+                    <h2 className="text-lg font-bold text-foreground">ktoolu가 만든 도구</h2>
+                  </div>
+                  <Link
+                    href="/made"
+                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                  >
+                    전체 보기
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {MADE_TOOLS.map((tool) => (
-                    <Link
+                  {LIVE_MADE_TOOLS.map((tool) => (
+                    <OutboundLink
                       key={tool.id}
-                      href={`/tools/${tool.id}`}
+                      href={tool.url}
+                      eventName="made_card_click"
+                      eventParams={{ tool_id: tool.id, tool_name: tool.name, source: "home" }}
                       className="group flex flex-col rounded-xl border border-border/50 bg-card p-5 transition-all hover:border-border hover:-translate-y-0.5 hover:shadow-md"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <span className="inline-flex items-center rounded-full bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 text-xs font-medium text-violet-400">
-                          {tool.status === "waitlist" ? "베타 대기중" : "지금 써보기"}
+                          지금 써보기
                         </span>
                       </div>
                       <h3 className="font-bold text-foreground group-hover:text-primary transition-colors mb-1 flex items-center gap-1">
                         {tool.name}
                         <ArrowUpRight className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{tool.description}</p>
-                    </Link>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{tool.tagline ?? tool.description}</p>
+                    </OutboundLink>
                   ))}
                 </div>
               </section>

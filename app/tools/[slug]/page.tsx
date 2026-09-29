@@ -45,8 +45,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: { title: `${ko.h1} - ktoolu`, description: tool.description, type: "website", siteName: "ktoolu" },
     twitter: { card: "summary", title: `${ko.h1} - ktoolu`, description: tool.description },
     keywords: [tool.name, ...tool.tags, categoryLabel?.label ?? "", "AI 도구", "AI tools"],
-    // 핵심이 아닌 도구는 간략 모드 — 검색엔진엔 내보내지 않고 링크만 따라가게 둔다
-    ...(isCoreTool(tool.id) ? {} : { robots: { index: false, follow: true } }),
+    // 핵심이 아닌 도구는 간략 모드 — 검색엔진엔 내보내지 않고 링크만 따라가게 둔다.
+    // ktoolu 자체 제작 도구(crop·story 등)는 core 여부와 무관하게 항상 noindex —
+    // 색인은 /made 하나로 모으고(2026-09-30), 도구 상세 페이지는 서드파티 도구 전용 신호로 남긴다.
+    ...(isCoreTool(tool.id) && !tool.madeByKtoolu ? {} : { robots: { index: false, follow: true } }),
   };
 }
 
@@ -65,8 +67,9 @@ export default async function ToolDetailPage({ params }: Props) {
 
   const categoryLabel = categories.find((c) => c.value === tool.category);
   const colorClass = categoryColors[tool.category];
+  // madeByKtoolu는 대안 도구 목록에서도 뺀다 — 서드파티 디렉터리와 섞이지 않게(2026-09-30)
   const relatedTools = aiTools
-    .filter((t) => t.category === tool.category && t.id !== tool.id)
+    .filter((t) => t.category === tool.category && t.id !== tool.id && !t.madeByKtoolu)
     .sort((a, b) => Number(isCoreTool(b.id)) - Number(isCoreTool(a.id)))
     .slice(0, 4);
 
@@ -575,8 +578,9 @@ function BriefToolPage({ tool }: { tool: AITool }) {
   const colorClass = categoryColors[tool.category];
   const ko = getKoName(tool);
   const toolUrl = `${BASE_URL}/tools/${tool.id}`;
-  const sameCategoryCore = aiTools.filter((t) => t.category === tool.category && isCoreTool(t.id));
-  const coreTools = (sameCategoryCore.length ? sameCategoryCore : aiTools.filter((t) => isCoreTool(t.id))).slice(0, 6);
+  // madeByKtoolu는 여기서도 뺀다 — "핵심 도구" 추천에 자체 제작 도구가 섞이지 않게(2026-09-30)
+  const sameCategoryCore = aiTools.filter((t) => t.category === tool.category && isCoreTool(t.id) && !t.madeByKtoolu);
+  const coreTools = (sameCategoryCore.length ? sameCategoryCore : aiTools.filter((t) => isCoreTool(t.id) && !t.madeByKtoolu)).slice(0, 6);
   const breadcrumbs = breadcrumbJsonLd([
     { name: "홈", url: BASE_URL },
     { name: categoryLabel?.label ?? "AI 도구", url: `${BASE_URL}/category/${tool.category}` },

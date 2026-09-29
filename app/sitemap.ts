@@ -19,14 +19,13 @@ export const dynamic = "force-dynamic";
 // 같은 날 도구 페이지 정리: 핵심 도구(CORE_TOOL_IDS)만 관리하고 나머지는 간략 모드 + noindex.
 // 여기엔 핵심 중에서도 내용 검증이 끝난 것만 넣는다.
 // 2026-09-26 공식 페이지(또는 복수 보도 교차 확인)로 갱신한 핵심 도구 18개를 넣었다.
-// CORE_TOOL_IDS 20개 중 남은 것은 자체 제작 crop·story(항상 최신).
+// 2026-09-30: crop·story(ktoolu 자체 제작)는 뺐다 — 도구 상세 페이지가 noindex로 통일돼서
+// (app/tools/[slug]/page.tsx 참고) sitemap에 올리면 "색인해 달라"는 신호와 충돌한다.
+// 자체 제작 도구의 색인은 /made 하나로 모은다.
 const PRIORITY_TOOL_IDS = [
-  // 갱신 완료
   "chatgpt", "claude", "gemini", "muse",
   "cursor", "perplexity", "deepseek", "capcut", "suno", "eleven-labs", "manus", "kling", "veo",
   "midjourney", "seedance", "grok", "n8n", "hermes",
-  // 자체 제작
-  "crop", "story",
 ];
 
 async function getIndexablePosts() {

@@ -1558,3 +1558,9 @@ export const aiTools: AITool[] = [
     whoIsFor: ["AI로 장편을 쓰는데 설정 관리에 지친 사람"],
   },
 ];
+
+/** madeByKtoolu 이면서 운영 중(live)인 것만 — /made 페이지와 홈 "ktoolu가 만든 도구"
+ * 섹션이 같은 목록을 쓴다. 대기명단(waitlist) 단계인 story는 아직 열어볼 게 없어 뺀다. */
+export const LIVE_MADE_TOOLS = aiTools.filter(
+  (t) => t.madeByKtoolu && (t.status ?? "live") === "live"
+);
