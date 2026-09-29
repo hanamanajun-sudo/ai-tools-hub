@@ -5,6 +5,7 @@ const NAV_LINKS = [
   { href: "/", label: "AI 도구" },
   { href: "/prompts", label: "프롬프트 도서관" },
   { href: "/posts", label: "블로그" },
+  { href: "/made", label: "직접 만든 것" },
 ];
 
 const INFO_LINKS = [

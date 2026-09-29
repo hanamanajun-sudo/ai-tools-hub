@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://ktoolu.com"),
   other: {
     "google-site-verification": "X3wLx-M7XBhDQNx05evWnSZeDGDmn-ETAPwgnp9O1jc",
+    "google-adsense-account": "ca-pub-6443201130119317",
     // 도메인 통합 기간에는 한 코드베이스가 apex와 구 서브도메인 양쪽을 서빙한다.
     // 네이버는 메타 태그로 소유 확인을 하므로 두 토큰을 모두 남겨야 한쪽 인증이 끊기지 않는다
     // (구글은 apex가 DNS 기반 도메인 속성이라 태그와 무관).
@@ -57,6 +58,14 @@ export default function RootLayout({
       <body className={`${pretendard.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
         <ScrollToTop />
+        {/* AdSense 사이트 확인·자동광고용 스크립트. React 사이트에서 head의 async 스크립트는
+            하이드레이션과 경쟁해 광고가 사라지므로(#418/#423) GA4와 같이 afterInteractive로 둔다.
+            광고 단위는 아직 배치하지 않았다. 계정 ID는 public/ads.txt의 pub ID와 같아야 한다. */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6443201130119317"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-L1ZKP1983B" strategy="afterInteractive" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`window.dataLayer = window.dataLayer || [];

@@ -25,6 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: prompt.description,
     alternates: { canonical: `${BASE_URL}/prompts/${slug}` },
     openGraph: { title: prompt.title, description: prompt.description, type: "article", siteName: "ktoolu" },
+    // 프롬프트 30개 전부 본문이 800자 미만(2026-09-30 확인)이라 애드센스 심사 전까지
+    // 검색엔진엔 내보내지 않는다. 사이트 안 링크(관련 프롬프트·도구 상세 등)는 그대로 유지.
+    robots: { index: false, follow: true },
   };
 }
 

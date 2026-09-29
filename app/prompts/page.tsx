@@ -29,6 +29,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     title,
     description,
     alternates: { canonical: catMeta ? `${BASE_URL}/prompts?cat=${catMeta.value}` : `${BASE_URL}/prompts` },
+    // 상세 페이지(app/prompts/[slug])와 같은 이유로 noindex — 프롬프트 30개 전부 본문이
+    // 800자 미만(2026-09-30 확인)이라 애드센스 심사 전까지 검색엔진엔 내보내지 않는다.
+    robots: { index: false, follow: true },
   };
 }
 

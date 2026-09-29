@@ -34,8 +34,10 @@ export interface AITool {
   tags: string[];
   free: boolean;
   popular?: boolean;
-  /** ktoolu가 직접 만든 도구인지 — 디렉토리에서 배지로 구분 표시 */
+  /** ktoolu가 직접 만든 도구인지 — 디렉토리에서 배지로 구분 표시, /made 페이지의 등재 기준 */
   madeByKtoolu?: boolean;
+  /** /made 카드에 쓰는 한 줄 설명. madeByKtoolu 도구 전용 */
+  tagline?: string;
   /** madeByKtoolu 도구 전용. 미지정 시 live로 취급 */
   status?: "live" | "waitlist";
   /** apex 안의 관련 가이드 페이지 */
@@ -64,6 +66,7 @@ export interface AITool {
 export const CORE_TOOL_IDS: ReadonlySet<string> = new Set([
   // 자체 제작
   "crop", "story",
+  // simsns는 /made 카드로만 노출하고 /tools/simsns는 간략 모드(noindex)로 둔다(2026-09-30).
   // 텍스트
   "chatgpt", "claude", "gemini", "grok", "perplexity", "deepseek",
   // 에이전트·자동화
@@ -1508,6 +1511,7 @@ export const aiTools: AITool[] = [
     tags: ["이미지 분할", "사진 자르기", "LINE 스티커", "ktoolu 제작"],
     free: true,
     madeByKtoolu: true,
+    tagline: "이미지 분할·사진 자르기·LINE 스티커 제출용 ZIP을 브라우저에서 무료로",
     status: "live",
     features: [
       "이미지 분할: 가로·세로 1~5칸, 분할선 드래그 조정, 전체 ZIP 다운로드",
@@ -1522,6 +1526,21 @@ export const aiTools: AITool[] = [
     useCases: ["직접 그린 LINE 스티커를 제출 규격에 맞추기", "네 컷 이미지를 칸별로 나누기", "SNS 비율에 맞춰 사진 자르기"],
     whoIsFor: ["LINE 스티커를 처음 만들어 보는 사람", "여러 장을 한꺼번에 규격에 맞춰야 하는 사람", "간단한 이미지 분할·자르기가 필요한 사람"],
     guides: [{ title: "LINE 스티커(스탬프) 규격 총정리", href: "/guides/line-sticker-size" }],
+  },
+  {
+    // 2026-09-30 등록. 서브도메인 앱의 공개 설정(app.json·appConfig)에서 확인한 사실만 적었다.
+    // 기능 목록·장단점은 확인하지 않아 비워 둠 — 채우려면 앱을 직접 써본 뒤에.
+    id: "simsns",
+    name: "SNS 극락/나락 시뮬레이터",
+    description: "내가 올린 글이 SNS에서 극락으로 갈지 나락으로 갈지, 반응을 미리 체험해보는 시뮬레이터. ktoolu가 직접 만들었습니다.",
+    longDescription: "SNS 극락/나락 시뮬레이터(영문명 Buzz or Burn)는 내가 올린 글에 SNS에서 어떤 반응이 달릴지 미리 체험해보는 웹 앱입니다. 글을 올리면 AI가 반응을 만들어 보여주기 때문에 인터넷 연결이 필요합니다. 브라우저에서 바로 열 수 있고, 휴대폰 홈 화면에 추가해 앱처럼 쓸 수도 있습니다. ktoolu가 직접 만들어 운영하고 있습니다.",
+    url: "https://simsns.ktoolu.com",
+    category: "other",
+    tags: ["SNS", "시뮬레이터", "Buzz or Burn", "ktoolu 제작"],
+    free: true,
+    madeByKtoolu: true,
+    tagline: "내 글이 SNS에서 극락으로 갈지 나락으로 갈지 미리 체험해보는 시뮬레이터",
+    status: "live",
   },
   {
     id: "story",

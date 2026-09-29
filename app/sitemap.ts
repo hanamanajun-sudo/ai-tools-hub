@@ -48,7 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(post.publishedAt ? { lastModified: new Date(post.publishedAt) } : {}),
   }));
 
-  const staticPaths = ["", "/posts", "/about", "/contact", "/privacy", "/story", "/guides/line-sticker-size"];
+  const staticPaths = ["", "/posts", "/about", "/contact", "/privacy", "/story", "/made", "/guides/line-sticker-size"];
   const staticPages: MetadataRoute.Sitemap = staticPaths.map((path) => ({
     url: `${BASE_URL}${path}`,
   }));

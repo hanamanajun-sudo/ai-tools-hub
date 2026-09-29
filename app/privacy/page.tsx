@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "ktoolu의 개인정보 수집·이용, 쿠키, 제3자 서비스 사용에 관한 안내입니다.",
 };
 
-const EFFECTIVE_DATE = "2026년 9월 11일";
+const EFFECTIVE_DATE = "2026년 9월 30일";
 
 // TODO(3단계 — /story 대기명단 병합 시 갱신 필요):
 // 대기명단 폼이 이 코드베이스에 합류하면 1절에 이메일 수집 항목을 추가할 것.
@@ -48,9 +48,13 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
           사이트 이용 자체에는 영향이 없습니다.
         </p>
         <p>
-          현재 이 사이트는 광고를 게재하고 있지 않습니다. 추후 Google AdSense 등 광고 서비스를
-          도입할 경우, 광고 파트너가 맞춤형 광고 제공을 위해 별도의 쿠키를 사용할 수 있으며, 이용자는
-          그 시점에{" "}
+          이 사이트는 Google AdSense를 통해 광고를 게재하거나 게재할 수 있습니다. 구글을 포함한
+          제3자 광고 공급업체는 이용자의 이전 방문 기록을 바탕으로 광고를 게재하기 위해 쿠키를
+          사용합니다. Google의 광고 쿠키를 통해 Google과 광고 파트너는 이 사이트 및 인터넷상의
+          다른 사이트 방문 기록을 바탕으로 광고를 보여줄 수 있습니다.
+        </p>
+        <p>
+          이용자는{" "}
           <a
             href="https://www.google.com/settings/ads"
             target="_blank"
@@ -59,7 +63,26 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
           >
             Google 광고 설정
           </a>
-          에서 맞춤 광고를 사용 중지할 수 있습니다.
+          에서 맞춤 광고를 사용 중지할 수 있으며,{" "}
+          <a
+            href="https://www.aboutads.info"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            www.aboutads.info
+          </a>
+          에서도 제3자 공급업체의 맞춤 광고용 쿠키 사용을 거부할 수 있습니다. Google이 광고
+          쿠키를 사용하는 방식은{" "}
+          <a
+            href="https://policies.google.com/technologies/partner-sites"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline"
+          >
+            Google 광고 정책
+          </a>
+          에서 확인할 수 있습니다.
         </p>
       </>
     ),
@@ -83,6 +106,17 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
           </li>
           <li><b>Cloudflare</b> — 사이트 호스팅 및 이미지 저장. 접속 로그가 서버에 기록됩니다.</li>
           <li><b>Supabase</b> — AI 도구 소개 페이지의 프롬프트·모델 랭킹 데이터 저장(읽기 전용, 이용자가 직접 입력하는 정보 없음).</li>
+          <li>
+            <b>Google AdSense</b> — 광고 게재. 광고 쿠키가 사용됩니다.{" "}
+            <a
+              href="https://policies.google.com/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Google 개인정보처리방침
+            </a>
+          </li>
         </ul>
       </>
     ),
@@ -119,10 +153,16 @@ const SECTIONS: { title: string; body: React.ReactNode }[] = [
   {
     title: "8. 방침 변경",
     body: (
-      <p>
-        이 방침이 변경될 경우 변경 내용과 시행일을 이 페이지에 게시합니다. 중요한 변경이 있는
-        경우에는 시행일 최소 7일 전에 공지합니다.
-      </p>
+      <>
+        <p>
+          이 방침이 변경될 경우 변경 내용과 시행일을 이 페이지에 게시합니다. 중요한 변경이 있는
+          경우에는 시행일 최소 7일 전에 공지합니다.
+        </p>
+        <p className="mt-3 font-medium text-foreground">변경 이력</p>
+        <ul className="list-disc list-inside space-y-1">
+          <li>2026년 9월 30일 — Google AdSense 광고 게재 관련 고지(3절·4절) 추가</li>
+        </ul>
+      </>
     ),
   },
 ];
