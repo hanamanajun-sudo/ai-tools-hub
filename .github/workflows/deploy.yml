@@ -29,12 +29,6 @@ jobs:
           NOTION_DATABASE_ID_KTOOLU: "5942d5ec28d143a3a7a47057d87616e1"
           NOTION_WAITLIST_DB_ID_KTOOLU: "3d3975d65268815eafc6f6b8e436c392"
 
-      - name: Create R2 bucket (if not exists)
-        run: npx wrangler r2 bucket create blog-assets 2>/dev/null || true
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
       - name: Deploy to Cloudflare Workers
         run: npx opennextjs-cloudflare deploy
         env:
