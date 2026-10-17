@@ -2,10 +2,8 @@ import Link from "next/link";
 import { Sparkles } from "lucide-react";
 
 const NAV_LINKS = [
-  { href: "/", label: "AI 도구" },
-  { href: "/prompts", label: "프롬프트 도서관" },
-  { href: "/posts", label: "블로그" },
-  { href: "/made", label: "직접 만든 것" },
+  { href: "/made", label: "작품" },
+  { href: "/posts", label: "글" },
 ];
 
 const INFO_LINKS = [
@@ -25,7 +23,7 @@ export function SiteFooter() {
               <span className="font-bold text-foreground">ktoolu</span>
             </div>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              최고의 AI 도구들을 한곳에서
+              직접 만든 도구와, 만들면서 써본 기록
             </p>
           </div>
 

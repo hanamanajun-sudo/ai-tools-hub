@@ -1,23 +1,18 @@
 import Link from "next/link";
-import { Sparkles, BookOpen, Wand2, Wrench, FileText, Image, Film, Code, Music, Bot, TrendingUp } from "lucide-react";
+import { Sparkles, BookOpen, Wrench, Info } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-// 실제 페이지 렌더링 순서와 동일한 카테고리 링크
-// 페이지 순서: 코딩 → 텍스트/글쓰기 → 자동화/에이전트 → 비디오 → 이미지 생성 → 기타 → 음악
-const CATEGORY_LINKS = [
-  { label: "AI 모델 랭킹", href: "/#model-rank", icon: <TrendingUp className="h-3 w-3" />, highlight: true },
-  { label: "코딩", href: "/#category-coding", icon: <Code className="h-3 w-3" /> },
-  { label: "텍스트 / 글쓰기", href: "/#category-text", icon: <FileText className="h-3 w-3" /> },
-  { label: "자동화 / 에이전트", href: "/#category-agent", icon: <Bot className="h-3 w-3" /> },
-  { label: "비디오", href: "/#category-video", icon: <Film className="h-3 w-3" /> },
-  { label: "이미지 생성", href: "/#category-image", icon: <Image className="h-3 w-3" /> },
-  { label: "기타", href: "/#category-other", icon: <Sparkles className="h-3 w-3" /> },
-  { label: "음악", href: "/#category-music", icon: <Music className="h-3 w-3" /> },
-];
-
+// 2026-10-18 리뉴얼: 내비는 작품 / 글 / 소개 세 개. 예전 2단(AI 도구 디렉터리 카테고리 줄)과
+// "프롬프트" 링크(robots.txt로 막은 페이지)는 뺐다.
 interface SiteHeaderProps {
-  activePage?: "blog" | "prompts" | "made";
+  activePage?: "blog" | "prompts" | "made" | "about";
   blogCount?: number;
+}
+
+function navClass(active: boolean) {
+  return `flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
+    active ? "text-foreground bg-accent" : "text-muted-foreground hover:text-foreground hover:bg-accent"
+  }`;
 }
 
 export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
@@ -30,75 +25,35 @@ export function SiteHeader({ activePage, blogCount }: SiteHeaderProps) {
         본문으로 바로가기
       </a>
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto max-w-7xl px-4">
-        {/* Row 1: Logo + Internal nav */}
-        <div className="flex h-12 items-center justify-between gap-2">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-lg font-bold tracking-tight">ktoolu</span>
-          </Link>
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="flex h-14 items-center justify-between gap-2">
+            <Link href="/" className="flex shrink-0 items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <span className="text-lg font-bold tracking-tight">ktoolu</span>
+            </Link>
 
-          <div className="flex items-center gap-1">
-            <Link
-              href="/posts"
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                activePage === "blog"
-                  ? "text-foreground bg-accent"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
-            >
-              <BookOpen className="h-4 w-4" />
-              <span className="hidden sm:inline">블로그</span>
-              {blogCount !== undefined && blogCount > 0 && (
-                <span className="rounded-full bg-primary/15 px-1.5 py-0.5 text-xs font-mono text-primary leading-none">
-                  {blogCount}
-                </span>
-              )}
-            </Link>
-            <Link
-              href="/prompts"
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                activePage === "prompts"
-                  ? "text-foreground bg-accent"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
-            >
-              <Wand2 className="h-4 w-4" />
-              <span className="hidden sm:inline">프롬프트</span>
-            </Link>
-            <Link
-              href="/made"
-              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
-                activePage === "made"
-                  ? "text-foreground bg-accent"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
-            >
-              <Wrench className="h-4 w-4" />
-              <span className="hidden sm:inline">만든 것</span>
-            </Link>
-            <ThemeToggle />
+            <nav aria-label="주 메뉴" className="flex items-center gap-1">
+              <Link href="/made" className={navClass(activePage === "made")}>
+                <Wrench className="h-4 w-4" />
+                <span className="hidden sm:inline">작품</span>
+              </Link>
+              <Link href="/posts" className={navClass(activePage === "blog")}>
+                <BookOpen className="h-4 w-4" />
+                <span className="hidden sm:inline">글</span>
+                {blogCount !== undefined && blogCount > 0 && (
+                  <span className="rounded-full bg-primary/15 px-1.5 py-0.5 font-mono text-xs leading-none text-primary">
+                    {blogCount}
+                  </span>
+                )}
+              </Link>
+              <Link href="/about" className={navClass(activePage === "about")}>
+                <Info className="h-4 w-4" />
+                <span className="hidden sm:inline">소개</span>
+              </Link>
+              <ThemeToggle />
+            </nav>
           </div>
         </div>
-
-        {/* Row 2: Category Links */}
-        <div className="flex items-center gap-0.5 border-t border-border/20 pt-1 pb-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-          {CATEGORY_LINKS.map((cat) => (
-            <Link
-              key={cat.label}
-              href={cat.href}
-              className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
-                cat.highlight
-                  ? "text-primary font-semibold bg-primary/5 hover:bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
-            >
-              {cat.icon}
-              {cat.label}
-            </Link>
-          ))}
-        </div>
-      </div>
       </header>
     </>
   );

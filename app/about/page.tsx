@@ -1,40 +1,31 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BookOpen, LayoutGrid, Target, TrendingUp, Zap } from "lucide-react";
+import { ArrowRight, BookOpen, Target, Wrench } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { DIRECTORY_TOOLS } from "@/lib/ai-tools-data";
-import { ALL_CATEGORIES } from "@/lib/post-categories";
 
 export const metadata: Metadata = {
   title: "ktoolu란? — ktoolu",
   description:
-    "ktoolu는 AI 도구를 소개하고, 그 도구로 직접 만들고 써본 기록을 남기는 곳입니다. 크툴루(Cthulhu)에서 영감을 받은 이름처럼, 심해보다 넓고 깊은 정보를 제공합니다.",
+    "ktoolu는 직접 만든 도구를 운영하고, 그걸 만들며 써본 AI 도구의 기록을 남기는 곳입니다. 크툴루(Cthulhu)에서 영감을 받은 이름처럼, 심해보다 넓고 깊은 정보를 제공합니다.",
 };
 
-const CATEGORY_DESCRIPTIONS: Record<string, string> = {
-  "AI 콘텐츠 제작": "AI로 글·이미지·자동화 파이프라인 직접 만들기",
-  "AI 도구 비교": "가격·한도까지 확인한 AI 툴 비교",
-  "유튜브 & 숏폼": "AI를 더한 유튜브 제작·성장 전략",
-  "AI 개발 · 자동화": "Claude Code, 로컬 LLM 등 개발 도구를 실제로 굴려본 기록",
-  "글쓰기 & 소설": "AI와 함께 이야기 구상하고 쓰기",
-  "게임 · 앱 만들기": "AI로 아이디어부터 프로토타입까지",
-};
+// 2026-10-18: 6개 카테고리 소개 대신, 콘셉트 재정의 때 정한 글 세 종류를 보여준다.
+const WRITING_KINDS = [
+  { title: "작품 이야기", body: "직접 만든 도구를 어떻게 쓰는지, 써보면 어떤 결과가 나오는지" },
+  { title: "만들면서 알게 된 것", body: "만드는 과정에서 다른 사람에게도 쓸모 있을 만한 것만" },
+  { title: "써본 AI 도구", body: "실제로 써본 도구의 날짜를 박은 체험기 — 모델이 바뀌어도 그때의 기록으로 남게" },
+];
 
 const PILLARS = [
   {
-    icon: LayoutGrid,
-    title: "AI 도구 디렉토리",
-    body: `${DIRECTORY_TOOLS.length}개의 AI 도구를 카테고리별로 정리했습니다. 직접 만든 도구는 따로 /made에서 소개해요. 장단점, 대안 도구까지 한 곳에서 확인할 수 있어요.`,
-  },
-  {
-    icon: TrendingUp,
-    title: "AI 모델 랭킹",
-    body: "지능·속도·비용·컨텍스트 지표를 매일 자동으로 수집해 상위 10개 모델을 갱신합니다. 사람이 요약한 뉴스가 아니라 실측 지표로 트렌드를 확인하세요.",
+    icon: Wrench,
+    title: "직접 만들어 운영합니다",
+    body: "이미지 도구, SNS 시뮬레이터, 취향 카드, 단어장 앱처럼 직접 만든 것들을 운영하고 있어요. 전부 '작품'에서 볼 수 있습니다.",
   },
   {
     icon: BookOpen,
-    title: "직접 만들어 보고 씁니다",
+    title: "써본 것만 씁니다",
     body: "발표 자료를 요약만 하지 않아요. 도구를 직접 써보고, 때로는 직접 만들어보면서 알게 된 것만 글로 남깁니다.",
   },
   {
@@ -47,7 +38,7 @@ const PILLARS = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader activePage="about" />
 
       <main id="main-content">
         {/* 히어로 */}
@@ -102,13 +93,13 @@ export default function AboutPage() {
           <div className="mx-auto max-w-4xl px-4">
             <div className="text-center mb-10">
               <h2 className="text-2xl font-bold text-foreground mb-2">무엇을 다루나요?</h2>
-              <p className="text-sm text-muted-foreground">6가지 카테고리로 AI 콘텐츠 제작의 궁금증을 해결해요</p>
+              <p className="text-sm text-muted-foreground">세 가지 글을 씁니다</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-              {ALL_CATEGORIES.map((cat) => (
-                <div key={cat} className="rounded-xl border border-border/50 bg-card p-5">
-                  <h3 className="font-bold text-foreground mb-1 text-sm">{cat}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{CATEGORY_DESCRIPTIONS[cat]}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+              {WRITING_KINDS.map((k) => (
+                <div key={k.title} className="rounded-xl border border-border/50 bg-card p-5">
+                  <h3 className="font-bold text-foreground mb-1 text-sm">{k.title}</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{k.body}</p>
                 </div>
               ))}
             </div>
@@ -123,9 +114,9 @@ export default function AboutPage() {
           <div className="mx-auto max-w-4xl px-4">
             <div className="text-center mb-10">
               <h2 className="text-2xl font-bold text-foreground mb-2">왜 ktoolu인가요?</h2>
-              <p className="text-sm text-muted-foreground">AI로 만드는 사람들을 위해 지키는 4가지 원칙</p>
+              <p className="text-sm text-muted-foreground">AI로 만드는 사람들을 위해 지키는 3가지 원칙</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {PILLARS.map((p) => (
                 <div key={p.title} className="flex gap-4 rounded-xl border border-border/50 bg-card p-5">
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
@@ -150,18 +141,18 @@ export default function AboutPage() {
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link
-                href="/"
+                href="/made"
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity"
               >
-                AI 도구 둘러보기
+                작품 보러 가기
                 <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
               </Link>
               <Link
                 href="/posts"
                 className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground hover:bg-secondary/50 transition-colors"
               >
-                <Zap className="h-4 w-4" strokeWidth={1.5} />
-                가이드 보기
+                <BookOpen className="h-4 w-4" strokeWidth={1.5} />
+                글 읽기
               </Link>
             </div>
           </div>

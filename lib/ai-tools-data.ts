@@ -34,10 +34,9 @@ export interface AITool {
   tags: string[];
   free: boolean;
   popular?: boolean;
-  /** ktoolu가 직접 만든 도구인지 — 디렉토리에서 배지로 구분 표시, /made 페이지의 등재 기준 */
+  /** ktoolu가 직접 만든 도구인지 — 서드파티 디렉터리·추천 목록에서 제외하는 기준.
+   * 작품 목록(홈·/made)은 lib/works.ts에서 따로 관리한다. */
   madeByKtoolu?: boolean;
-  /** /made 카드에 쓰는 한 줄 설명. madeByKtoolu 도구 전용 */
-  tagline?: string;
   /** madeByKtoolu 도구 전용. 미지정 시 live로 취급 */
   status?: "live" | "waitlist";
   /** apex 안의 관련 가이드 페이지 */
@@ -1511,7 +1510,6 @@ export const aiTools: AITool[] = [
     tags: ["이미지 분할", "사진 자르기", "LINE 스티커", "ktoolu 제작"],
     free: true,
     madeByKtoolu: true,
-    tagline: "이미지 분할·사진 자르기·LINE 스티커 제출용 ZIP을 브라우저에서 무료로",
     status: "live",
     features: [
       "이미지 분할: 가로·세로 1~5칸, 분할선 드래그 조정, 전체 ZIP 다운로드",
@@ -1539,7 +1537,6 @@ export const aiTools: AITool[] = [
     tags: ["SNS", "시뮬레이터", "Buzz or Burn", "ktoolu 제작"],
     free: true,
     madeByKtoolu: true,
-    tagline: "내 글이 SNS에서 극락으로 갈지 나락으로 갈지 미리 체험해보는 시뮬레이터",
     status: "live",
   },
   {
@@ -1558,12 +1555,6 @@ export const aiTools: AITool[] = [
     whoIsFor: ["AI로 장편을 쓰는데 설정 관리에 지친 사람"],
   },
 ];
-
-/** madeByKtoolu 이면서 운영 중(live)인 것만 — /made 페이지와 홈 "ktoolu가 만든 도구"
- * 섹션이 같은 목록을 쓴다. 대기명단(waitlist) 단계인 story는 아직 열어볼 게 없어 뺀다. */
-export const LIVE_MADE_TOOLS = aiTools.filter(
-  (t) => t.madeByKtoolu && (t.status ?? "live") === "live"
-);
 
 /** 서드파티 도구 디렉터리(랭킹·카테고리·카드 그리드)에 실제로 보이는 도구.
  * ktoolu 자체 제작(madeByKtoolu)은 여기서 빼고 /made로만 안내한다.

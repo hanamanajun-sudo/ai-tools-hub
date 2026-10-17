@@ -7,8 +7,8 @@ import { getPosts } from "@/lib/notion";
 import { ALL_CATEGORIES, CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from "@/lib/post-categories";
 
 export const metadata: Metadata = {
-  title: "블로그 - ktoolu",
-  description: "AI 도구를 소개하고, 그 도구로 직접 만들어 본 기록을 씁니다.",
+  title: "글 - ktoolu",
+  description: "직접 만든 것과, 만들면서 실제로 써본 AI 도구의 기록을 씁니다.",
   alternates: { canonical: "https://ktoolu.com/posts" },
 };
 
@@ -24,6 +24,8 @@ export default async function PostsPage({ searchParams }: Props) {
   const posts = selectedCategory
     ? allPosts.filter((p) => p.category === selectedCategory)
     : allPosts;
+  // 글이 1편 이상 있는 카테고리만 탭으로 보여준다(2026-10-17 글 정리로 빈 카테고리가 생김)
+  const categories = ALL_CATEGORIES.filter((cat) => allPosts.some((p) => p.category === cat));
 
   return (
     <div className="min-h-screen bg-background">
@@ -32,12 +34,12 @@ export default async function PostsPage({ searchParams }: Props) {
       <main id="main-content" className="mx-auto max-w-4xl px-4 py-10">
         <div className="mb-6">
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground mb-2">
-            {selectedCategory ?? "블로그"}
+            {selectedCategory ?? "글"}
           </h1>
           <p className="text-muted-foreground">
             {selectedCategory
               ? `${posts.length}개의 글이 있어요`
-              : "AI 도구를 소개하고, 그 도구로 직접 만들어 본 기록을 씁니다."}
+              : "직접 만든 것과, 만들면서 실제로 써본 AI 도구의 기록을 씁니다."}
           </p>
         </div>
 
@@ -53,7 +55,7 @@ export default async function PostsPage({ searchParams }: Props) {
           >
             전체
           </Link>
-          {ALL_CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <Link
               key={cat}
               href={`/posts?category=${encodeURIComponent(cat)}`}

@@ -67,7 +67,7 @@ export default async function PostPage({ params }: Props) {
 
   const breadcrumbs = breadcrumbJsonLd([
     { name: "홈", url: BASE_URL },
-    { name: "블로그", url: `${BASE_URL}/posts` },
+    { name: "글", url: `${BASE_URL}/posts` },
     { name: post.title, url: postUrl },
   ]);
 

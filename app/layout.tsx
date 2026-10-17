@@ -32,19 +32,19 @@ export const metadata: Metadata = {
       "8a1a558c4ea1d19d9657d399ff82baf19d581d21", // apex 속성
     ],
   },
-  title: "ktoolu - 최고의 AI 도구 모음",
-  description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
+  title: "ktoolu - 직접 만든 도구와 써본 기록",
+  description: "직접 만들어 운영하는 웹 도구·앱과, 만들면서 실제로 써본 AI 도구의 기록.",
   openGraph: {
-    title: "ktoolu - 최고의 AI 도구 모음",
-    description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
+    title: "ktoolu - 직접 만든 도구와 써본 기록",
+    description: "직접 만들어 운영하는 웹 도구·앱과, 만들면서 실제로 써본 AI 도구의 기록.",
     siteName: "ktoolu",
     type: "website",
     locale: "ko_KR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ktoolu - 최고의 AI 도구 모음",
-    description: "텍스트, 이미지, 비디오, 코딩, 음악 등 최고의 AI 도구들을 한곳에서 탐색하세요.",
+    title: "ktoolu - 직접 만든 도구와 써본 기록",
+    description: "직접 만들어 운영하는 웹 도구·앱과, 만들면서 실제로 써본 AI 도구의 기록.",
   },
 };
 

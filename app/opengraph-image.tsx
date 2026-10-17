@@ -1,12 +1,12 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "ktoolu — 최고의 AI 도구 모음";
+export const alt = "ktoolu — 직접 만든 도구와 써본 기록";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const TITLE = "ktoolu";
-const SUBTITLE = "최고의 AI 도구를 한곳에서";
-const TAGS = ["텍스트", "이미지", "비디오", "코딩", "음악"];
+const SUBTITLE = "직접 만든 도구와, 만들면서 써본 기록";
+const TAGS = ["이미지 도구", "SNS 시뮬레이터", "취향 카드", "단어장 앱"];
 
 /** Google Fonts CSS2 API의 text= 서브셋팅으로 필요한 글리프만 가져와 OG 이미지에 임베드 */
 async function loadKoreanFont(text: string, weight: 400 | 700) {
