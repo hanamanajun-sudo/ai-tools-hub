@@ -3,6 +3,42 @@
 > 2026-09-12부로 이 저장소가 **ktoolu.com 본체**가 되었다. 구 ktoolu.com 코드베이스
 > (`클로드cowork/ktoolu.com`, Vercel)는 더 이상 도메인을 서빙하지 않는다.
 
+## 2026-10-18 — 메인 리뉴얼: 작품이 주인공 (`7b282ad`)
+
+### 한 일
+- **모델 랭킹 자동 수집의 정체 확인**: 사용자 PC의 Hermes 크론 "AI모델랭킹수집"(`b3403380eba4`,
+  매일 09:05, `hermes/scripts/aa_rank.py` → Artificial Analysis 스크래핑 → Supabase `ai_model_rank`).
+  **9/26부터 매일 "Artificial Analysis 데이터 수집 실패"**로 끝나고 있었고 Supabase 최신 데이터는
+  9/25 — 홈 랭킹 표는 3주 넘게 낡은 데이터를 보여주고 있었다. 인계 문서(`docs/HANDOFF_ai_model_rank_cron.md`)
+  규칙상 크론 중지는 사용자가 직접: `hermes cron pause b3403380eba4` (데이터는 안 지워짐)
+- **메인 리뉴얼**(사용자 동의 10/17):
+  - 홈 = 작품 5개(crop·simsns·snsno·afterlist·찍고보카) → 만드는 중 3개(축티어·여운·소설 도우미, 링크 없음)
+    → 글 13편 전부. AI 도구 디렉터리·AI 모델 랭킹 표 제거. 검색 SearchAction JSON-LD도 제거
+  - **측정(리뉴얼 전→후)**: 홈 링크 85→30, 외부 도구 사이트 링크 58→1(찍고보카 Play 스토어),
+    글 내부 링크 3→13, 본문 828→2,775자
+  - `lib/works.ts` 신설(작품·만드는 중 목록, 소개 문구는 각 작품 사이트의 meta description·Play 스토어 설명).
+    도구 데이터와 분리해 `/tools/[slug]` 얇은 페이지가 늘지 않게 함. `LIVE_MADE_TOOLS`·`tagline`은 대체돼 제거
+  - `components/work-card.tsx`(홈·/made 공용 카드), `/made`에 운영 중 + 만드는 중 섹션
+  - 헤더: 작품 / 글 / 소개(2단 카테고리 줄·프롬프트 링크 제거). 푸터·사이트 제목·설명·OG 이미지 문구 교체
+  - `/posts`: "블로그"→"글", 글 있는 카테고리만 탭(AI 콘텐츠 제작·AI 도구 비교·AI 개발 · 자동화)
+  - `/about`: 사실과 안 맞게 된 "AI 도구 디렉토리"·"AI 모델 랭킹" 원칙 제거(4→3가지), 6개 카테고리 소개를
+    글 세 종류(작품 이야기·만들면서 알게 된 것·써본 AI 도구)로 교체, CTA를 작품·글로
+- 라이브 확인: 홈·/made·/posts·/about·OG 이미지·robots·sitemap 전부 200, 홈 제목
+  "ktoolu - 직접 만든 도구와 써본 기록", 옛 문구("최고의 AI 도구"·"AI 모델 랭킹") 0건
+
+### 다음에 할 일
+- [ ] **(사용자 직접) Hermes 크론 중지**: `hermes cron pause b3403380eba4`
+- [ ] **작품 소개 글 5편**(crop·simsns·snsno·afterlist·찍고보카) — 홈 작품 카드에 글 링크가 생기도록.
+      리뉴얼의 효과는 이게 있어야 완성됨(지금 작품 카드는 "소개 문구 + 외부 링크"뿐)
+- [ ] **Claude Code 4편 → 1편 합치기** 후 4편 비공개
+- [ ] 쓰지 않게 된 컴포넌트 정리 여부: `components/tools-section.tsx`·`model-rank-table.tsx`·
+      `sticky-bottom-panel.tsx`, `lib/ai-tools-data.ts`의 `DIRECTORY_TOOLS`(tools-section만 사용)
+- [ ] 핵심 도구 상세 페이지 18개·`/category/*`(남은 디렉터리 흔적) 처리 결정 — 지금은 홈·메뉴에서 안 걸림.
+      `/category/*`의 "← 전체 AI 도구" 링크는 이제 홈이 디렉터리가 아니라 어색함. sitemap엔 도구 18개 아직 있음
+- [ ] (관찰) simsns.ktoolu.com 홈의 `<title>`이 비어 있음(meta description·og:title은 있음) — 서브도메인
+      저장소(`C:\dev\pingping`) 쪽 문제라 이번엔 손대지 않음
+- [ ] 재검토 요청은 작품 글이 몇 편 붙고 2~4주 뒤
+
 ## 2026-10-17 — 애드센스 반려("가치가 별로 없는 콘텐츠") 대응: robots.txt 차단
 
 ### 오늘 한 일
