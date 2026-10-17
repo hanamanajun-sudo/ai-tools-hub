@@ -62,4 +62,7 @@ export const MAKING_WORKS: MakingWork[] = [
   { id: "tier", name: "축티어", tagline: "티어표를 그리는 2D 티어 메이커" },
   { id: "yeoun", name: "여운", tagline: "AI와 대화를 나누는, 나를 기억하는 이야기" },
   { id: "novel", name: "소설 작성 도우미", tagline: "AI와 함께 소설 쓰기를 돕는 도구" },
+  // 2026-10-18 추가. 지금은 ktoolu 도메인이 아니라(vercel.app) 나중에 서브도메인으로 옮길 수 있음 —
+  // 운영 중으로 올릴 땐 주소를 서브도메인으로 바꾼 뒤 LIVE_WORKS로 옮길 것.
+  { id: "study", name: "스터디 루틴 메이트", tagline: "시험 날짜와 범위만 넣으면 하루 공부 분량이 자동으로 나와요" },
 ];
